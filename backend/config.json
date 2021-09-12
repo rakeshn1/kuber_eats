@@ -1,0 +1,10 @@
+{
+  "port" : 5676,
+  "dbConfiguration" : {
+    "host" : "nubereats.ccoingmmnx6h.us-east-2.rds.amazonaws.com",
+    "port" : 3306,
+    "userName" : "admin",
+    "password" : "nubereats",
+    "database" : "nubereats"
+  }
+}
