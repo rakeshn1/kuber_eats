@@ -8,13 +8,14 @@ import { RestaurantPage } from "./components/Restaurant-page/Restaurant-page.jsx
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 import { Basket } from "./components/Basket/Basket";
 import Login from "./components/LoginPage/login";
+import Dashboard from "./dashBoard"
 
 class App extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       basketOrders:
-        JSON.parse(window.localStorage.getItem("basketOrders")) || [],
+          JSON.parse(window.localStorage.getItem("basketOrders")) || [],
       isBasketOpen: false,
       isLoggedIn : false
     };
@@ -27,8 +28,8 @@ class App extends React.PureComponent {
   addToBasket = newOrderArray => {
     this.setState({ basketOrders: [...newOrderArray] });
     window.localStorage.setItem(
-      "basketOrders",
-      JSON.stringify([...newOrderArray])
+        "basketOrders",
+        JSON.stringify([...newOrderArray])
     );
   };
 
@@ -48,42 +49,50 @@ class App extends React.PureComponent {
 
   renderRestaurantPage = props => {
     return (
-      <RestaurantPage
-        match={props.match}
-        basketOrders={this.state.basketOrders}
-        addToBasket={this.addToBasket}
-      />
+        <RestaurantPage
+            match={props.match}
+            basketOrders={this.state.basketOrders}
+            addToBasket={this.addToBasket}
+        />
+    );
+  };
+  renderLoginPage = () => {
+    return (
+        <Login setIsLoggedIn={this.setIsLoggedIn}/>
     );
   };
 
   render() {
     if(!this.state.isLoggedIn){
       return(
-          <Login setIsLoggedIn={this.setIsLoggedIn}/>
+          <Router>
+            <Route path="/" exact component={this.renderLoginPage} />
+          </Router>
       )
     }else{
       return (
-          <>
-            <Router>
-              <ScrollToTop>
-                {this.state.isBasketOpen && (
-                    <Basket
-                        basketOrders={this.state.basketOrders}
-                        setOpenBasket={this.setOpenBasket}
-                        removeFromBasket={this.removeFromBasket}
-                        addToBasket={this.addToBasket}
-                    />
-                )}
-                <Header open={this.setOpenBasket} />
-                <Route path="/" exact component={Main} />
-                <Route
-                    path="/restaurant-page/:id"
-                    component={this.renderRestaurantPage}
-                />
-              </ScrollToTop>
-            </Router>
-            <Footer />
-          </>
+          <Dashboard obj = {this}/>
+          // <>
+          //   <Router>
+          //     <ScrollToTop>
+          //       {this.state.isBasketOpen && (
+          //           <Basket
+          //               basketOrders={this.state.basketOrders}
+          //               setOpenBasket={this.setOpenBasket}
+          //               removeFromBasket={this.removeFromBasket}
+          //               addToBasket={this.addToBasket}
+          //           />
+          //       )}
+          //       <Header open={this.setOpenBasket} />
+          //       <Route path="/" exact component={Main} />
+          //       <Route
+          //           path="/restaurant-page/:id"
+          //           component={this.renderRestaurantPage}
+          //       />
+          //     </ScrollToTop>
+          //   </Router>
+          //   <Footer />
+          // </>
       );
     }
   }

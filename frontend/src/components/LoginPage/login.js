@@ -61,13 +61,16 @@ export default function Login(props){
                                         Username / Password?
                                     </p>
                                 </li>
-                                <Link to = "/userSignUp">
-                                    <li>
-                                        <p className="txt2">
-                                            Don’t have an account? Sign up
-                                        </p>
-                                    </li>
-                                </Link>
+
+                                <li>
+							<span className="txt1">
+								Don’t have an account?
+							</span>
+
+                                    <p href="#" className="txt2">
+                                        Sign up
+                                    </p>
+                                </li>
                             </ul>
                         </form>
                     </div>
