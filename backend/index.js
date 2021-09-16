@@ -13,6 +13,7 @@ var connectionPool = require('./dbConnection')
 app.use(express.static(__dirname + '/public'));
 
 var usersRouter = require('./routes/users');
+const restaurantRouter = require('./routes/restaurants')
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -30,6 +31,7 @@ app.use(function(req, res, next) {
 });
 
 app.use('/users', usersRouter);
+app.use('/restaurants', restaurantRouter);
 
 async function main() {
     try{
