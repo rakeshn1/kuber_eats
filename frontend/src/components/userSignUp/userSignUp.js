@@ -1,9 +1,9 @@
 import React from "react"
-import "./login.css";
+import "../LoginPage/login.css";
 import { Link } from "react-router-dom";
 const axios = require('axios');
 
-export default function Login(props){
+export default function userSignUp(props){
     async function handleClick(event){
         try{
             event.preventDefault();
@@ -16,8 +16,7 @@ export default function Login(props){
                 }
             });
             if(response.status == 200){
-                //return <Redirect to={"/dashBoard"} />
-                props.setIsLoggedIn();
+
             }else{
                 alert(response.data)
             }
@@ -33,17 +32,31 @@ export default function Login(props){
                     <div className="wrap-login100 p-t-85 p-b-20">
                         <form className="login100-form validate-form" onSubmit={handleClick}>
 					<span className="login100-form-title p-b-70">
-						Welcome back
+						User Sign up
 					</span>
                             <div className="wrap-input100 validate-input m-t-85 m-b-35" validate="Enter username">
                                 <input className="input100" type="text" name="username" placeholder="Username"/>
                                 <span className="focus-input100" placeholder="Username"></span>
                             </div>
+                            <div className="wrap-input100 validate-input m-t-85 m-b-35" validate="Enter username">
+                                <input className="input100" type="number" name="username" placeholder="Phone"/>
+                                <span className="focus-input100" placeholder="Username"></span>
+                            </div>
+                            <div className="wrap-input100 validate-input m-t-85 m-b-35" validate="Enter username">
+                                <input className="input100" type="email" name="username" placeholder="Email ID"/>
+                                <span className="focus-input100" placeholder="Username"></span>
+                            </div>
 
                             <div className="wrap-input100 validate-input m-b-50" validate="Enter password">
                                 <input className="input100" type="password" name="password" placeholder="Password"/>
-                                    <span className="focus-input100" placeholder="Password"></span>
+                                <span className="focus-input100" placeholder="Password"></span>
                             </div>
+
+                            <div className="wrap-input100 validate-input m-b-50" validate="Enter password">
+                                <input className="input100" type="password" name="confirmPassword" placeholder="confirmPassword"/>
+                                <span className="focus-input100" placeholder="Password"></span>
+                            </div>
+
                             <br/>
                             <br/>
                             <div className="container-login100-form-btn">
@@ -61,13 +74,16 @@ export default function Login(props){
                                         Username / Password?
                                     </p>
                                 </li>
-                                <Link to = "/userSignUp">
-                                    <li>
-                                        <p className="txt2">
-                                            Don’t have an account? Sign up
-                                        </p>
-                                    </li>
-                                </Link>
+
+                                <li>
+							<span className="txt1">
+								Don’t have an account?
+							</span>
+
+                                    <p href="#" className="txt2">
+                                        Sign up
+                                    </p>
+                                </li>
                             </ul>
                         </form>
                     </div>

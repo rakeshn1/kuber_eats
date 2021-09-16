@@ -11,7 +11,7 @@ export function Header(props) {
       <Container>
         <div className="Header__wrapper">
           <div className="Header__logo-wrapper">
-            <Link className="Header__logo" to={"/"}></Link>
+            <Link className="Header__logo" to={"/dashBoard"}></Link>
           </div>
           <div className={"Header__order-delivery"}>
             <OrderDelivery />

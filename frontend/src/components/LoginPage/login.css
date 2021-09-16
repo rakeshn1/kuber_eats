@@ -14,7 +14,7 @@ body, html {
 }
 
 /*---------------------------------------------*/
-a {
+p {
   font-family: UberMoveText-Medium,Helvetica,sans-serif;
   font-size: 14px;
   line-height: 1.7;
@@ -26,17 +26,18 @@ a {
   -moz-transition: all 0.4s;
 }
 
-a:focus {
+p:focus {
   outline: none !important;
 }
 
-a:hover {
+p:hover {
   text-decoration: none;
   color: #333333;
+  cursor: pointer;
 }
 
 /*---------------------------------------------*/
-h1,h2,h3,h4,h5,h6 {
+h1,h2,h3,h4,h6 {
   margin: 0px;
 }
 
