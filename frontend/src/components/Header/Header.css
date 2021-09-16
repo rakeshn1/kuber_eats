@@ -1,0 +1,30 @@
+.Header {
+  padding: 1px;
+  margin: -1px;
+  box-shadow: 0 0 16px rgba(38, 38, 38, 0.16);
+  position: fixed;
+  top: 0;
+  width: calc(100% + 1px);
+  z-index: 10;
+  background: var(--white);
+}
+
+.Header__wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.Header__logo-wrapper {
+  display: flex;
+}
+
+.Header__logo {
+  width: 121px;
+  background: url("image/uber.svg") no-repeat center;
+  display: block;
+  background-size: contain;
+}
+
+.Header__order-delivery {
+  display: flex;
+}
