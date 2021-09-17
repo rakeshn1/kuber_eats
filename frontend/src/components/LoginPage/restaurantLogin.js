@@ -3,7 +3,7 @@ import "./login.css";
 import { Link } from "react-router-dom";
 const axios = require('axios');
 
-export default function Login(props){
+export default function RestaurantLogin(props){
     async function handleClick(event){
         try{
             event.preventDefault();
@@ -11,12 +11,11 @@ export default function Login(props){
                 method: 'post',
                 url: 'http://localhost:5676/users/login',
                 data: {
-                    "name": event.target.username.value,
+                    "name": event.target.email.value,
                     "password": event.target.password.value
                 }
             });
             if(response.status == 200){
-                //return <Redirect to={"/dashBoard"} />
                 props.setIsLoggedIn();
             }else{
                 alert(response.data)
@@ -33,16 +32,16 @@ export default function Login(props){
                     <div className="wrap-login100 p-t-85 p-b-20">
                         <form className="login100-form validate-form" onSubmit={handleClick}>
 					<span className="login100-form-title p-b-70">
-						Welcome back
+						Restaurant login
 					</span>
-                            <div className="wrap-input100 validate-input m-t-85 m-b-35" validate="Enter username">
-                                <input className="input100" type="text" name="username" placeholder="Username"/>
-                                <span className="focus-input100" placeholder="Username"></span>
+                            <div className="wrap-input100 validate-input m-t-85 m-b-35" validate="Enter email">
+                                <input className="input100" type="text" name="email" placeholder="Email"/>
+                                <span className="focus-input100" placeholder="Email"></span>
                             </div>
 
                             <div className="wrap-input100 validate-input m-b-50" validate="Enter password">
                                 <input className="input100" type="password" name="password" placeholder="Password"/>
-                                    <span className="focus-input100" placeholder="Password"></span>
+                                <span className="focus-input100" placeholder="Password"></span>
                             </div>
                             <br/>
                             <br/>
@@ -54,34 +53,34 @@ export default function Login(props){
                             <br/><br/>
                             <br/>
                             <ul className="login-more p-t-190">
-                                <Link to={"/userSignUp"}>
+                                <Link to={"/restaurantSignup"}>
                                     <li className="m-b-8">
                                         <p className="txt2">
-                                            Don't have an account? Sign up here
+                                            Don't have a restaurant account? Sign up here
                                         </p>
                                     </li>
                                 </Link>
                             </ul>
                             <br />
                             <ul className="login-more p-t-190">
-                                <Link to={"/restaurantSignup"}>
+                                <Link to={"/userSignUp"}>
                                     <li className="m-b-8">
-                                {/*<p className="txt1">*/}
-                                {/*	Forgot*/}
-                                {/*</p>*/}
+                                        {/*<p className="txt1">*/}
+                                        {/*	Forgot*/}
+                                        {/*</p>*/}
                                         <p className="txt2">
-                                            Restaurant Sign up
+                                            User Sign up
                                         </p>
                                     </li>
                                 </Link>
-                                <Link to={"/restaurantLogin"}>
+                                <Link to={"/"}>
                                     <li>
-                                {/*<p className="txt1">*/}
-                                {/*	Don’t have an account?*/}
-                                {/*</p>*/}
+                                        {/*<p className="txt1">*/}
+                                        {/*	Don’t have an account?*/}
+                                        {/*</p>*/}
 
                                         <p className="txt2">
-                                            Restaurant Login
+                                            User Login
                                         </p>
                                     </li>
                                 </Link>

@@ -1,9 +1,9 @@
 import React from "react"
-import "./login.css";
+import "../LoginPage/login.css";
 import { Link } from "react-router-dom";
 const axios = require('axios');
 
-export default function Login(props){
+export default function restaurantSignUp(props){
     async function handleClick(event){
         try{
             event.preventDefault();
@@ -16,8 +16,7 @@ export default function Login(props){
                 }
             });
             if(response.status == 200){
-                //return <Redirect to={"/dashBoard"} />
-                props.setIsLoggedIn();
+
             }else{
                 alert(response.data)
             }
@@ -33,55 +32,68 @@ export default function Login(props){
                     <div className="wrap-login100 p-t-85 p-b-20">
                         <form className="login100-form validate-form" onSubmit={handleClick}>
 					<span className="login100-form-title p-b-70">
-						Welcome back
+						Restaurant Sign up
 					</span>
-                            <div className="wrap-input100 validate-input m-t-85 m-b-35" validate="Enter username">
-                                <input className="input100" type="text" name="username" placeholder="Username"/>
+                            <div className="wrap-input100 validate-input m-t-85 m-b-35" validate="Enter Restaurant Name">
+                                <input className="input100" type="text" name="restaurantName" placeholder="Restaurant Name"/>
+                                <span className="focus-input100" placeholder="Restaurant Name"></span>
+                            </div>
+                            <div className="wrap-input100 validate-input m-t-85 m-b-35" validate="Enter Email ID">
+                                <input className="input100" type="email" name="email" placeholder="Email ID"/>
                                 <span className="focus-input100" placeholder="Username"></span>
+                            </div>
+                            <div className="wrap-input100 validate-input m-t-85 m-b-35" validate="Enter Location">
+                                <input className="input100" type="text" name="location" placeholder="Location"/>
+                                <span className="focus-input100" placeholder="Location"></span>
+                            </div>
+                            <div className="wrap-input100 validate-input m-b-50" validate="Enter password">
+                                <input className="input100" type="password" name="password" placeholder="Password"/>
+                                <span className="focus-input100" placeholder="Password"></span>
                             </div>
 
                             <div className="wrap-input100 validate-input m-b-50" validate="Enter password">
-                                <input className="input100" type="password" name="password" placeholder="Password"/>
-                                    <span className="focus-input100" placeholder="Password"></span>
+                                <input className="input100" type="password" name="confirmPassword" placeholder="Confirm Password"/>
+                                <span className="focus-input100" placeholder="Password"></span>
                             </div>
+
                             <br/>
                             <br/>
                             <div className="container-login100-form-btn">
                                 <button className="login100-form-btn">
-                                    Login
+                                    Sign Up
                                 </button>
                             </div>
                             <br/><br/>
                             <br/>
                             <ul className="login-more p-t-190">
-                                <Link to={"/userSignUp"}>
+                                <Link to={"/restaurantLogin"}>
                                     <li className="m-b-8">
                                         <p className="txt2">
-                                            Don't have an account? Sign up here
+                                            Restaurant Login
                                         </p>
                                     </li>
                                 </Link>
                             </ul>
                             <br />
                             <ul className="login-more p-t-190">
-                                <Link to={"/restaurantSignup"}>
+                                <Link to={"/userSignup"}>
                                     <li className="m-b-8">
-                                {/*<p className="txt1">*/}
-                                {/*	Forgot*/}
-                                {/*</p>*/}
+                                        {/*<p className="txt1">*/}
+                                        {/*	Forgot*/}
+                                        {/*</p>*/}
                                         <p className="txt2">
-                                            Restaurant Sign up
+                                            User Sign up
                                         </p>
                                     </li>
                                 </Link>
-                                <Link to={"/restaurantLogin"}>
+                                <Link to={"/"}>
                                     <li>
-                                {/*<p className="txt1">*/}
-                                {/*	Don’t have an account?*/}
-                                {/*</p>*/}
+                                        {/*<p className="txt1">*/}
+                                        {/*	Don’t have an account?*/}
+                                        {/*</p>*/}
 
                                         <p className="txt2">
-                                            Restaurant Login
+                                            User Login
                                         </p>
                                     </li>
                                 </Link>

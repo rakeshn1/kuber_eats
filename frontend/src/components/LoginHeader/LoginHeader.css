@@ -1,0 +1,31 @@
+.LoginHeader {
+    padding: 1px;
+    margin: -1px;
+    box-shadow: 0 0 16px rgba(38, 38, 38, 0.16);
+    position: fixed;
+    top: 0;
+    width: calc(100% + 1px);
+    z-index: 10;
+    background: var(--white);
+}
+
+.LoginHeader__wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: max-content;
+}
+
+.LoginHeader__logo-wrapper {
+    display: flex;
+}
+
+.LoginHeader__logo {
+    width: 400px;
+    background: no-repeat center;
+    display: block;
+    background-size: contain;
+    height: 75px;
+}
+
+
+

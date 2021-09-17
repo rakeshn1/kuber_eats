@@ -9,6 +9,10 @@ import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 import { Basket } from "./components/Basket/Basket";
 import Login from "./components/LoginPage/login";
 import Dashboard from "./dashBoard"
+import {LoginHeader} from "./components/LoginHeader/LoginHeader";
+import userSignUp from "./components/SignUp/userSignUp";
+import RestaurantLogin from "./components/LoginPage/restaurantLogin";
+import restaurantSignUp from "./components/SignUp/restaurantSignUp";
 
 class App extends React.PureComponent {
   constructor(props) {
@@ -66,7 +70,11 @@ class App extends React.PureComponent {
     if(!this.state.isLoggedIn){
       return(
           <Router>
+            <LoginHeader />
             <Route path="/" exact component={this.renderLoginPage} />
+            <Route path="/userSignUp" exact component={userSignUp} />
+            <Route path="/restaurantSignup" exact component={restaurantSignUp} />
+            <Route path="/restaurantLogin" exact component={RestaurantLogin} />
           </Router>
       )
     }else{

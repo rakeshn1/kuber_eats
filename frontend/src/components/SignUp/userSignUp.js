@@ -39,10 +39,6 @@ export default function userSignUp(props){
                                 <span className="focus-input100" placeholder="Username"></span>
                             </div>
                             <div className="wrap-input100 validate-input m-t-85 m-b-35" validate="Enter username">
-                                <input className="input100" type="number" name="username" placeholder="Phone"/>
-                                <span className="focus-input100" placeholder="Username"></span>
-                            </div>
-                            <div className="wrap-input100 validate-input m-t-85 m-b-35" validate="Enter username">
                                 <input className="input100" type="email" name="username" placeholder="Email ID"/>
                                 <span className="focus-input100" placeholder="Username"></span>
                             </div>
@@ -53,7 +49,7 @@ export default function userSignUp(props){
                             </div>
 
                             <div className="wrap-input100 validate-input m-b-50" validate="Enter password">
-                                <input className="input100" type="password" name="confirmPassword" placeholder="confirmPassword"/>
+                                <input className="input100" type="password" name="confirmPassword" placeholder="Confirm Password"/>
                                 <span className="focus-input100" placeholder="Password"></span>
                             </div>
 
@@ -61,29 +57,43 @@ export default function userSignUp(props){
                             <br/>
                             <div className="container-login100-form-btn">
                                 <button className="login100-form-btn">
-                                    Login
+                                    Sign Up
                                 </button>
                             </div>
                             <br/><br/>
+                            <br/>
                             <ul className="login-more p-t-190">
-                                <li className="m-b-8">
-							<span className="txt1">
-								Forgot
-							</span>
-                                    <p href="#" className="txt2">
-                                        Username / Password?
-                                    </p>
-                                </li>
+                                <Link to={"/"}>
+                                    <li className="m-b-8">
+                                        <p className="txt2">
+                                            Login
+                                        </p>
+                                    </li>
+                                </Link>
+                            </ul>
+                            <br />
+                            <ul className="login-more p-t-190">
+                                <Link to={"/restaurantSignup"}>
+                                    <li className="m-b-8">
+                                        {/*<p className="txt1">*/}
+                                        {/*	Forgot*/}
+                                        {/*</p>*/}
+                                        <p className="txt2">
+                                            Restaurant Sign up
+                                        </p>
+                                    </li>
+                                </Link>
+                                <Link to={"/restaurantLogin"}>
+                                    <li>
+                                        {/*<p className="txt1">*/}
+                                        {/*	Don’t have an account?*/}
+                                        {/*</p>*/}
 
-                                <li>
-							<span className="txt1">
-								Don’t have an account?
-							</span>
-
-                                    <p href="#" className="txt2">
-                                        Sign up
-                                    </p>
-                                </li>
+                                        <p className="txt2">
+                                            Restaurant Login
+                                        </p>
+                                    </li>
+                                </Link>
                             </ul>
                         </form>
                     </div>
