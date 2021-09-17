@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 const pool = require('../dbConnection');
 
 const selectQuery = "SELECT * FROM restaurants";
@@ -35,29 +37,52 @@ router.get('/', async function(req, res, next) {
 /*Create user*/
 router.post('/create', async function(req, res, next) {
     try{
+        const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+
+        let sqlQuery = "INSERT INTO restaurants (title, email, Password) VALUES (?,?,?)";
+        console.log(sqlQuery)
+        const [rows] = await pool.query(sqlQuery,[req.body.title, req.body.email, hashedPassword]);
+        console.log(rows)
+        if(rows.affectedRows){
+            res.status(200).json({msg: "Successfully created a Restaurant user"});
+        }else{
+            throw new Error("DB didn't return success response");
+        }
+    }catch (e) {
+        console.error("Error creating a Restaurant user:")
+        console.error(e)
+        res.status(400).json({
+            msg: "Error creating a Restaurant user: "+e
+        })
+    }
+});
+
+/*Update details*/
+router.put('/update', async function(req, res, next) {
+    try{
         req.body.location = JSON.stringify(req.body.location)
         req.body.categories = JSON.stringify(req.body.categories)
         req.body.tags = JSON.stringify(req.body.tags)
         req.body.etaRange = JSON.stringify(req.body.etaRange)
         req.body.rawRatingStats = JSON.stringify(req.body.rawRatingStats)
         req.body.publicContact = JSON.stringify(req.body.publicContact)
-        let sqlQuery = "INSERT INTO restaurants (title, imageUrl, largeImageUrl, location, categories, tags, etaRange, rawRatingStats, publicContact, priceBucket) VALUES (?,?,?,?,?,?,?,?,?,?)";
+        let sqlQuery = "UPDATE restaurants SET imageUrl = ?, largeImageUrl = ?, location = ?, categories = ?, tags = ?, etaRange = ?, rawRatingStats = ?, publicContact = ?, priceBucket = ? WHERE id = ?";
         console.log(sqlQuery)
         const [rows] = await pool.query(sqlQuery,
-            [req.body.title,req.body.imageUrl,req.body.largeImageUrl,req.body.location,req.body.categories,
-                     req.body.tags,req.body.etaRange,req.body.rawRatingStats,req.body.publicContact,req.body.priceBucket]
+            [req.body.imageUrl,req.body.largeImageUrl,req.body.location,req.body.categories,
+                req.body.tags, req.body.etaRange, req.body.rawRatingStats, req.body.publicContact, req.body.priceBucket, req.body.id]
         );
         console.log(rows)
         if(rows.affectedRows){
-            res.status(200).json({msg: "Successfully created a restaurant entry"});
+            res.status(200).json({msg: "Successfully updated a restaurant entry"});
         }else{
             throw new Error("DB didn't return success response");
         }
     }catch (e) {
-        console.error("Error creating a restaurant entry:")
+        console.error("Error updating a restaurant entry:")
         console.error(e)
         res.status(400).json({
-            msg: "Error creating a restaurant entry: "+e
+            msg: "Error updating a restaurant entry: "+e
         })
     }
 });
@@ -79,14 +104,14 @@ router.post('/login', async function(req, res, next) {
                 }
             }
             if(flag){
-                console.log("User credentials are valid");
+                console.log("Restaurant User credentials are valid");
                 res.status(200).json({msg: "User credentials are correct"});
             }else{
-                console.log("User credentials are Invalid");
-                res.status(400).json({msg: "User name or password is invalid"});
+                console.log("Restaurant User credentials are Invalid");
+                res.status(400).json({msg: "Restaurant User name or password is invalid"});
             }
         }else{
-            res.status(400).json({msg: "No users  present"});
+            res.status(400).json({msg: "No Restaurant users  present"});
         }
     }catch (e) {
         console.error("Error checking login credentials:")
