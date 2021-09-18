@@ -1,9 +1,12 @@
 import React from "react"
+import {connect} from "react-redux";
 import "./login.css";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import {setUser} from "../../redux/user";
 const axios = require('axios');
 
-export default function Login(props){
+ function Login(props){
+    const history = useHistory();
     async function handleClick(event){
         try{
             event.preventDefault();
@@ -17,7 +20,8 @@ export default function Login(props){
             });
             if(response.status == 200){
                 //return <Redirect to={"/dashBoard"} />
-                props.setIsLoggedIn();
+                props.setUser({id:1});
+                history.push("/dashBoard")
             }else{
                 alert(response.data)
             }
@@ -93,3 +97,11 @@ export default function Login(props){
         </>
     )
 }
+
+function mapDispatchToProps(dispatch){
+     return {
+         setUser : userData => dispatch(setUser(userData))
+     }
+}
+
+export default connect(null, mapDispatchToProps)(Login);

@@ -1,4 +1,5 @@
 import React from "react";
+import {connect} from "react-redux";
 import "./App.css";
 import { Header } from "./components/Header/Header.jsx";
 import { Main } from "./components/Main/Main.jsx";
@@ -9,7 +10,6 @@ import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 import { Basket } from "./components/Basket/Basket";
 import Login from "./components/LoginPage/login";
 import Dashboard from "./dashBoard"
-import {LoginHeader} from "./components/LoginHeader/LoginHeader";
 import userSignUp from "./components/SignUp/userSignUp";
 import RestaurantLogin from "./components/LoginPage/restaurantLogin";
 import restaurantSignUp from "./components/SignUp/restaurantSignUp";
@@ -20,8 +20,7 @@ class App extends React.PureComponent {
     this.state = {
       basketOrders:
           JSON.parse(window.localStorage.getItem("basketOrders")) || [],
-      isBasketOpen: false,
-      isLoggedIn : false
+      isBasketOpen: false
     };
   }
 
@@ -66,44 +65,71 @@ class App extends React.PureComponent {
     );
   };
 
+  renderDashboard = () =>{
+    return(
+        <Dashboard obj = {this}/>
+    )
+  }
+
   render() {
-    if(!this.state.isLoggedIn){
+    //if(!this.state.isLoggedIn){
       return(
           <Router>
-            <LoginHeader />
-            <Route path="/" exact component={this.renderLoginPage} />
-            <Route path="/userSignUp" exact component={userSignUp} />
-            <Route path="/restaurantSignup" exact component={restaurantSignUp} />
-            <Route path="/restaurantLogin" exact component={RestaurantLogin} />
+            <ScrollToTop>
+              {this.state.isBasketOpen && (
+                  <Basket
+                      basketOrders={this.state.basketOrders}
+                      setOpenBasket={this.setOpenBasket}
+                      removeFromBasket={this.removeFromBasket}
+                      addToBasket={this.addToBasket}
+                  />
+              )}
+              <Header open={this.setOpenBasket} login = {this.props.user}/>
+              <Route path="/" exact component={this.renderLoginPage} />
+              <Route path="/userSignUp" exact component={userSignUp} />
+              <Route path="/restaurantSignup" exact component={restaurantSignUp} />
+              <Route path="/restaurantLogin" exact component={RestaurantLogin} />
+              <Route path="/dashBoard" exact component={Main} />
+              <Route
+                  path="/restaurant-page/:id"
+                  component={this.renderRestaurantPage}
+              />
+            </ScrollToTop>
+            <Footer />
           </Router>
       )
-    }else{
-      return (
-          <Dashboard obj = {this}/>
-          // <>
-          //   <Router>
-          //     <ScrollToTop>
-          //       {this.state.isBasketOpen && (
-          //           <Basket
-          //               basketOrders={this.state.basketOrders}
-          //               setOpenBasket={this.setOpenBasket}
-          //               removeFromBasket={this.removeFromBasket}
-          //               addToBasket={this.addToBasket}
-          //           />
-          //       )}
-          //       <Header open={this.setOpenBasket} />
-          //       <Route path="/" exact component={Main} />
-          //       <Route
-          //           path="/restaurant-page/:id"
-          //           component={this.renderRestaurantPage}
-          //       />
-          //     </ScrollToTop>
-          //   </Router>
-          //   <Footer />
-          // </>
-      );
-    }
+    // }else{
+    //   return (<></>
+    //       // <Dashboard obj = {this}/>
+    //       // <>
+    //       //   <Router>
+    //       //     <ScrollToTop>
+    //       //       {this.state.isBasketOpen && (
+    //       //           <Basket
+    //       //               basketOrders={this.state.basketOrders}
+    //       //               setOpenBasket={this.setOpenBasket}
+    //       //               removeFromBasket={this.removeFromBasket}
+    //       //               addToBasket={this.addToBasket}
+    //       //           />
+    //       //       )}
+    //       //       <Header open={this.setOpenBasket} />
+    //       //       <Route path="/" exact component={Main} />
+    //       //       <Route
+    //       //           path="/restaurant-page/:id"
+    //       //           component={this.renderRestaurantPage}
+    //       //       />
+    //       //     </ScrollToTop>
+    //       //   </Router>
+    //       //   <Footer />
+    //       // </>
+    //   );
+    // }
+  }
+}
+function mapStateToProps(globalState){
+  return {
+    user : globalState.user
   }
 }
 
-export default App;
+export default connect(mapStateToProps, {})(App);

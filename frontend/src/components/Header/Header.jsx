@@ -13,10 +13,14 @@ export function Header(props) {
           <div className="Header__logo-wrapper">
             <Link className="Header__logo" to={"/"}></Link>
           </div>
-          <div className={"Header__order-delivery"}>
-            <OrderDelivery />
-          </div>
-          <PersonalAreaBar open={props.open} />
+          {props.login && (
+              <>
+                <div className={"Header__order-delivery"}>
+                  <OrderDelivery />
+                </div>
+              <PersonalAreaBar open={props.open} />
+              </>
+          )}
         </div>
       </Container>
     </header>
