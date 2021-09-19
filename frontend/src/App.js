@@ -1,18 +1,23 @@
-import React, {useEffect} from "react";
-import {connect} from "react-redux";
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
 import "./App.css";
 import { Header } from "./components/Header/Header.jsx";
 import { Main } from "./components/Main/Main.jsx";
 import { Footer } from "./components/Footer/Footer.jsx";
-import { BrowserRouter as Router, Route, Redirect, withRouter } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Redirect,
+  withRouter
+} from "react-router-dom";
 import { RestaurantPage } from "./components/Restaurant-page/Restaurant-page.jsx";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 import { Basket } from "./components/Basket/Basket";
 import Login from "./components/LoginPage/login";
-import Dashboard from "./dashBoard"
-import userSignUp from "./components/SignUp/userSignUp";
+import Dashboard from "./dashBoard";
+import UserSignUp from "./components/SignUp/UserSignUp";
 import RestaurantLogin from "./components/LoginPage/restaurantLogin";
-import restaurantSignUp from "./components/SignUp/restaurantSignUp";
+import RestaurantSignUp from "./components/SignUp/RestaurantSignUp";
 import UserProfile from "./components/Profile/UserProfile";
 
 // const Routing = (props) =>{
@@ -30,13 +35,13 @@ class App extends React.PureComponent {
     super(props);
     this.state = {
       basketOrders:
-          JSON.parse(window.localStorage.getItem("basketOrders")) || [],
+        JSON.parse(window.localStorage.getItem("basketOrders")) || [],
       isBasketOpen: false
     };
   }
 
   componentDidMount() {
-    if(!this.props.user){
+    if (!this.props.user) {
       //this.props.history.push('/')
       // return <Redirect to={"/"} />
     }
@@ -49,8 +54,8 @@ class App extends React.PureComponent {
   addToBasket = newOrderArray => {
     this.setState({ basketOrders: [...newOrderArray] });
     window.localStorage.setItem(
-        "basketOrders",
-        JSON.stringify([...newOrderArray])
+      "basketOrders",
+      JSON.stringify([...newOrderArray])
     );
   };
 
@@ -70,54 +75,50 @@ class App extends React.PureComponent {
 
   renderRestaurantPage = props => {
     return (
-        <RestaurantPage
-            match={props.match}
-            basketOrders={this.state.basketOrders}
-            addToBasket={this.addToBasket}
-        />
+      <RestaurantPage
+        match={props.match}
+        basketOrders={this.state.basketOrders}
+        addToBasket={this.addToBasket}
+      />
     );
   };
   renderLoginPage = () => {
-    return (
-        <Login setIsLoggedIn={this.setIsLoggedIn}/>
-    );
+    return <Login setIsLoggedIn={this.setIsLoggedIn} />;
   };
 
-  renderDashboard = () =>{
-    return(
-        <Dashboard obj = {this}/>
-    )
-  }
+  renderDashboard = () => {
+    return <Dashboard obj={this} />;
+  };
 
   render() {
     //if(!this.state.isLoggedIn){
-      return(
-          <Router>
-            {/*<Routing user ={this.props.user} />*/}
-            <ScrollToTop>
-              {this.state.isBasketOpen && (
-                  <Basket
-                      basketOrders={this.state.basketOrders}
-                      setOpenBasket={this.setOpenBasket}
-                      removeFromBasket={this.removeFromBasket}
-                      addToBasket={this.addToBasket}
-                  />
-              )}
-              <Header open={this.setOpenBasket} login = {this.props.user}/>
-              <Route path="/" exact component={this.renderLoginPage} />
-              <Route path="/userSignUp" exact component={userSignUp} />
-              <Route path="/restaurantSignup" exact component={restaurantSignUp} />
-              <Route path="/restaurantLogin" exact component={RestaurantLogin} />
-              <Route path="/dashBoard" exact component={Main} />
-              <Route
-                  path="/restaurant-page/:id"
-                  component={this.renderRestaurantPage}
-              />
-              <Route path="/userProfile" exact component={UserProfile} />
-            </ScrollToTop>
-            <Footer />
-          </Router>
-      )
+    return (
+      <Router>
+        {/*<Routing user ={this.props.user} />*/}
+        <ScrollToTop>
+          {this.state.isBasketOpen && (
+            <Basket
+              basketOrders={this.state.basketOrders}
+              setOpenBasket={this.setOpenBasket}
+              removeFromBasket={this.removeFromBasket}
+              addToBasket={this.addToBasket}
+            />
+          )}
+          <Header open={this.setOpenBasket} login={this.props.user} />
+          <Route path="/" exact component={this.renderLoginPage} />
+          <Route path="/userSignUp" exact component={UserSignUp} />
+          <Route path="/restaurantSignup" exact component={RestaurantSignUp} />
+          <Route path="/restaurantLogin" exact component={RestaurantLogin} />
+          <Route path="/dashBoard" exact component={Main} />
+          <Route
+            path="/restaurant-page/:id"
+            component={this.renderRestaurantPage}
+          />
+          <Route path="/userProfile" exact component={UserProfile} />
+        </ScrollToTop>
+        <Footer />
+      </Router>
+    );
     // }else{
     //   return (<></>
     //       // <Dashboard obj = {this}/>
@@ -147,11 +148,14 @@ class App extends React.PureComponent {
   }
 }
 
-function mapStateToProps(globalState){
+function mapStateToProps(globalState) {
   return {
-    user : globalState.user
-  }
+    user: globalState.user
+  };
 }
 
 const WithRouterApp = withRouter(App);
-export default connect(mapStateToProps, {})(WithRouterApp);
+export default connect(
+  mapStateToProps,
+  {}
+)(WithRouterApp);

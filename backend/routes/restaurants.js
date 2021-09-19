@@ -95,7 +95,7 @@ router.post('/login', async function(req, res, next) {
         if(rows.length > 0){
             for(let i = 0; i < rows.length; i++){
                 let row = rows[i];
-                if(row.name === req.body.name){
+                if(row.email === req.body.email){
                     let result = await bcrypt.compare(req.body.password, row.Password);
                     if(result){
                         flag = true;

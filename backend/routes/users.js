@@ -28,11 +28,12 @@ router.post('/create', async function(req, res, next) {
   try{
     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
 
-    let sqlQuery = "INSERT users VALUES ("+req.body.id+",'"+ req.body.name +"','"+ hashedPassword +"',"+ req.body.number +","+ req.body.email +")";
+    let sqlQuery = "INSERT INTO users (name, email, password) VALUES (?,?,?)";
     console.log(sqlQuery)
-    const [rows] = await pool.query(sqlQuery);
+    const [rows] = await pool.query(sqlQuery,[req.body.name, req.body.email, hashedPassword]);
     console.log(rows)
     if(rows.affectedRows){
+      console.log("Successfully created user");
       res.status(200).json({msg: "Successfully created user"});
     }else{
       throw new Error("DB didn't return success response");
@@ -50,13 +51,18 @@ router.post('/create', async function(req, res, next) {
 router.post('/login', async function(req, res, next) {
   try{
     const [rows] = await pool.query(selectQuery);
-    let flag = false
+    let flag = false;
+    let userData;
     if(rows.length > 0){
       for(let i = 0; i < rows.length; i++){
         let row = rows[i];
         if(row.name === req.body.name){
-          let result = await bcrypt.compare(req.body.password, row.Password);
+          let result = await bcrypt.compare(req.body.password, row.password);
           if(result){
+            userData = {
+              id: row.id,
+              name : row.name
+            }
             flag = true;
             break;
           }
@@ -64,7 +70,7 @@ router.post('/login', async function(req, res, next) {
       }
       if(flag){
         console.log("User credentials are valid");
-        res.status(200).json({msg: "User credentials are correct"});
+        res.status(200).json(userData);
       }else{
         console.log("User credentials are Invalid");
         res.status(400).json({msg: "User name or password is invalid"});
