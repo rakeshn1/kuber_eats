@@ -1,10 +1,10 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {connect} from "react-redux";
 import "./App.css";
 import { Header } from "./components/Header/Header.jsx";
 import { Main } from "./components/Main/Main.jsx";
 import { Footer } from "./components/Footer/Footer.jsx";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect, withRouter } from "react-router-dom";
 import { RestaurantPage } from "./components/Restaurant-page/Restaurant-page.jsx";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 import { Basket } from "./components/Basket/Basket";
@@ -13,6 +13,17 @@ import Dashboard from "./dashBoard"
 import userSignUp from "./components/SignUp/userSignUp";
 import RestaurantLogin from "./components/LoginPage/restaurantLogin";
 import restaurantSignUp from "./components/SignUp/restaurantSignUp";
+import UserProfile from "./components/Profile/UserProfile";
+
+// const Routing = (props) =>{
+//   const history = useHistory()
+//   useEffect(()=>{
+//     if(!props.user){
+//       history.push('/')
+//     }
+//   },[])
+//   return (<></>)
+// }
 
 class App extends React.PureComponent {
   constructor(props) {
@@ -22,6 +33,13 @@ class App extends React.PureComponent {
           JSON.parse(window.localStorage.getItem("basketOrders")) || [],
       isBasketOpen: false
     };
+  }
+
+  componentDidMount() {
+    if(!this.props.user){
+      //this.props.history.push('/')
+      // return <Redirect to={"/"} />
+    }
   }
 
   setOpenBasket = () => {
@@ -75,6 +93,7 @@ class App extends React.PureComponent {
     //if(!this.state.isLoggedIn){
       return(
           <Router>
+            {/*<Routing user ={this.props.user} />*/}
             <ScrollToTop>
               {this.state.isBasketOpen && (
                   <Basket
@@ -94,6 +113,7 @@ class App extends React.PureComponent {
                   path="/restaurant-page/:id"
                   component={this.renderRestaurantPage}
               />
+              <Route path="/userProfile" exact component={UserProfile} />
             </ScrollToTop>
             <Footer />
           </Router>
@@ -126,10 +146,12 @@ class App extends React.PureComponent {
     // }
   }
 }
+
 function mapStateToProps(globalState){
   return {
     user : globalState.user
   }
 }
 
-export default connect(mapStateToProps, {})(App);
+const WithRouterApp = withRouter(App);
+export default connect(mapStateToProps, {})(WithRouterApp);
