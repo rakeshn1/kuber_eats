@@ -1,0 +1,92 @@
+.PMain {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  scroll-behavior: auto;
+  min-height: 100vh;
+}
+
+.PMain__city {
+  font-size: 30px;
+  line-height: 34px;
+  color: var(--font_black);
+  margin-top: 56px;
+  margin-bottom: 16px;
+}
+
+.PMain__restaurants-list {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: flex-start;
+  margin-left: -32px;
+  margin-bottom: 80px;
+}
+
+.PMain__search {
+  width: 100%;
+  padding-bottom: 15px;
+  padding-top: 8px;
+  border-bottom: 1px solid var(--border_grey);
+}
+
+.PRestaurants-choose {
+  flex-basis: 100%;
+  padding-left: 32px;
+  flex-grow: 0;
+  margin-bottom: 16px;
+  padding-bottom: 20px;
+  scroll-behavior: auto;
+}
+
+.PRestaurants-choose__link {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-right: 0;
+  text-decoration: none;
+  scroll-behavior: auto;
+}
+
+.PRestaurants-choose__photo {
+  width: 300px;
+  height: 256px;
+  margin-left: 1px;
+  position: relative;
+  top: 0;
+  transition: top 0.3s ease-out;
+  object-fit: cover;
+  scroll-behavior: auto;
+}
+
+.PRestaurants-choose__name {
+  font-size: 18px;
+  line-height: 24px;
+  color: var(--font_black);
+  scroll-behavior: auto;
+}
+
+.PRestaurants-choose__about {
+  font-size: 16px;
+  line-height: 21px;
+  color: var(--font_grey);
+  scroll-behavior: auto;
+}
+.PSearch {
+  position: relative;
+  background: #efefef;
+  width: 100%;
+  padding-bottom: 15px;
+  padding-top: 8px;
+  border: 1px solid var(--background_black);
+}
+
+.PSearch__text {
+  background: #efefef;
+  width: 100%;
+  padding-left: 10px;
+  font-size: 20px;
+  line-height: 20px;
+  border: black;
+  outline: black;
+}
