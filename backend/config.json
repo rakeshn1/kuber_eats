@@ -1,4 +1,5 @@
 {
+  "host" : "localhost",
   "port" : 5676,
   "dbConfiguration" : {
     "host" : "nubereats.ccoingmmnx6h.us-east-2.rds.amazonaws.com",

@@ -3,6 +3,8 @@ var router = express.Router();
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const pool = require('../dbConnection');
+const upload = require('../fileUploader')
+const configurations = require('../config.json');
 
 const selectQuery = "SELECT * FROM users";
 
@@ -61,7 +63,14 @@ router.post('/login', async function(req, res, next) {
           if(result){
             userData = {
               id: row.id,
-              name : row.name
+              name : row.name,
+              nickname : row.nickname,
+              number : row.number,
+              email : row.email,
+              dob : row.dob,
+              address : row.address,
+              imageUrl : row.imageUrl,
+              favorites : row.favorites
             }
             flag = true;
             break;
@@ -83,6 +92,28 @@ router.post('/login', async function(req, res, next) {
     console.error(e)
     res.status(400).json({
       msg: "Error checking login credentials: "+e
+    })
+  }
+});
+
+/*Check Login credentials*/
+router.post('/uploadImage', upload.single('image') ,async function(req, res, next) {
+  try{
+    console.log(req.body)
+      if(req.file){
+        let url = `http://${configurations.host}:${configurations.port}/images/${req.file.filename}`
+        req.file.imageUrl = url;
+        console.log(req.file);
+        res.status(200).json(req.file);
+      }else{
+        console.log("File upload failed");
+        res.status(400).json({msg: "File upload failed"});
+      }
+  }catch (e) {
+    console.error("Error uploading image file:")
+    console.error(e)
+    res.status(400).json({
+      msg: "Error uploading image file: "+e
     })
   }
 });
