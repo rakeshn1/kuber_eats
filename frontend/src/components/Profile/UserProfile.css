@@ -90,3 +90,9 @@
   border: black;
   outline: black;
 }
+
+.Pidentifiers {
+  font-size: 20px;
+  line-height: 34px;
+  color: var(--font_black);
+}

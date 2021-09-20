@@ -19,6 +19,7 @@ import UserSignUp from "./components/SignUp/UserSignUp";
 import RestaurantLogin from "./components/LoginPage/restaurantLogin";
 import RestaurantSignUp from "./components/SignUp/RestaurantSignUp";
 import UserProfile from "./components/Profile/UserProfile";
+import { setUser } from "./redux/user";
 
 // const Routing = (props) =>{
 //   const history = useHistory()
@@ -41,6 +42,10 @@ class App extends React.PureComponent {
   }
 
   componentDidMount() {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      this.props.setUser(user);
+    }
     if (!this.props.user) {
       //this.props.history.push('/')
       // return <Redirect to={"/"} />
@@ -154,8 +159,14 @@ function mapStateToProps(globalState) {
   };
 }
 
+function mapDispatchToProps(dispatch) {
+  return {
+    setUser: userData => dispatch(setUser(userData))
+  };
+}
+
 const WithRouterApp = withRouter(App);
 export default connect(
   mapStateToProps,
-  {}
+  mapDispatchToProps
 )(WithRouterApp);

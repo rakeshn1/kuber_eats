@@ -4,7 +4,7 @@ import "./login.css";
 import { Link, useHistory } from "react-router-dom";
 import { setUser } from "../../redux/user";
 import Swal from "sweetalert2";
-const axios = require("axios");
+import axios from "axios";
 
 function Login(props) {
   const history = useHistory();
@@ -21,6 +21,7 @@ function Login(props) {
       });
       if (response.status == 200) {
         //return <Redirect to={"/dashBoard"} />
+        localStorage.setItem("user", JSON.stringify(response.data));
         props.setUser(response.data);
         history.push("/dashBoard");
       } else {
