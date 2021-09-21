@@ -22,7 +22,24 @@ export function setImageUrl(url) {
   };
 }
 
-export default function userReducer(state = null, action) {
+let initialState = {
+  id: "",
+  name: "",
+  nickname: "",
+  email: "",
+  dob: "",
+  number: "",
+  imageUrl: "",
+  address: {
+    addressLine: "",
+    city: "",
+    state: "",
+    country: "",
+    pinCode: ""
+  }
+};
+
+export default function userReducer(state = initialState, action) {
   switch (action.type) {
     case SET_USER:
       return action.payload;

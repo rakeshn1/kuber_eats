@@ -25,14 +25,14 @@ function Login(props) {
         props.setUser(response.data);
         history.push("/dashBoard");
       } else {
-        throw new Error(response.data.msg);
+        throw new Error("Username/Password is invalid");
       }
     } catch (e) {
       console.log(e);
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "Error:" + e
+        text: e
       });
     }
   }
