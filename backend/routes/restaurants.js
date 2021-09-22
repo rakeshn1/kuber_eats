@@ -95,6 +95,7 @@ router.post('/login', async (req, res) => {
   try {
     const [rows] = await pool.query(selectQuery);
     let flag = false;
+    let restaurantData;
     if (rows.length > 0) {
       // eslint-disable-next-line no-plusplus
       for (let i = 0; i < rows.length; i++) {
@@ -103,6 +104,17 @@ router.post('/login', async (req, res) => {
           // eslint-disable-next-line no-await-in-loop
           const result = await bcrypt.compare(req.body.password, row.Password);
           if (result) {
+            restaurantData = {
+              id: row.id,
+              title: row.title,
+              email: row.email,
+              publicContact: row.publicContact,
+              largeImageUrl: row.largeImageUrl,
+              imageUrl: row.imageUrl,
+              location: row.location,
+              timings: row.timings,
+              categories: row.categories,
+            };
             flag = true;
             break;
           }
@@ -110,7 +122,7 @@ router.post('/login', async (req, res) => {
       }
       if (flag) {
         console.log('Restaurant User credentials are valid');
-        res.status(200).json({ msg: 'User credentials are correct' });
+        res.status(200).json(restaurantData);
       } else {
         console.log('Restaurant User credentials are Invalid');
         res.status(400).json({ msg: 'Restaurant User name or password is invalid' });

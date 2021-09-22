@@ -1,9 +1,8 @@
-'use strict';
 /*
 Mysql DB connection
  */
 const mysql = require('mysql2');
-const config = require('./config.json')
+const config = require('./config.json');
 
 const pool = mysql.createPool({
   connectionLimit: 100,
