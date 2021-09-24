@@ -63,12 +63,12 @@ router.post('/create', async (req, res) => {
 /* Update details */
 router.put('/update', async (req, res) => {
   try {
-    req.body.location = JSON.stringify(req.body.location);
+    // req.body.location = JSON.stringify(req.body.location);
     req.body.categories = JSON.stringify(req.body.categories);
-    req.body.tags = JSON.stringify(req.body.tags);
-    req.body.etaRange = JSON.stringify(req.body.etaRange);
-    req.body.rawRatingStats = JSON.stringify(req.body.rawRatingStats);
-    req.body.publicContact = JSON.stringify(req.body.publicContact);
+    // req.body.tags = JSON.stringify(req.body.tags);
+    // req.body.etaRange = JSON.stringify(req.body.etaRange);
+    // req.body.rawRatingStats = JSON.stringify(req.body.rawRatingStats);
+    // req.body.publicContact = JSON.stringify(req.body.publicContact);
     const sqlQuery = 'UPDATE restaurants SET imageUrl = ?, largeImageUrl = ?, location = ?, categories = ?, tags = ?, etaRange = ?, rawRatingStats = ?, publicContact = ?, priceBucket = ? WHERE id = ?';
     console.log(sqlQuery);
     const [rows] = await pool.query(sqlQuery,
@@ -113,7 +113,7 @@ router.post('/login', async (req, res) => {
               imageUrl: row.imageUrl,
               location: row.location,
               timings: row.timings,
-              categories: row.categories,
+              categories: JSON.parse(row.categories),
             };
             flag = true;
             break;

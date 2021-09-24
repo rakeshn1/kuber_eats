@@ -1,30 +1,39 @@
 import React from "react";
 import "./login.css";
 import { Link, useHistory } from "react-router-dom";
-const axios = require("axios");
+import { connect } from "react-redux";
+import { setRestaurant } from "../../redux/restaurant";
+import { BACKEND_HOST, BACKEND_PORT } from "../../config";
+import axios from "axios";
+import Swal from "sweetalert2";
 
-export default function RestaurantLogin(props) {
+function RestaurantLogin(props) {
   const history = useHistory();
   async function handleClick(event) {
     try {
       event.preventDefault();
       const response = await axios({
         method: "post",
-        url: "http://localhost:5676/restaurants/login",
+        url: `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/login`,
         data: {
           email: event.target.email.value,
           password: event.target.password.value
         }
       });
       if (response.status == 200) {
-        props.setIsLoggedIn();
-        history.push("/dashBoard");
+        localStorage.setItem("restaurant", JSON.stringify(response.data));
+        props.setRestaurant(response.data);
+        history.push("/restaurantDashBoard");
       } else {
-        alert(response.data);
+        throw new Error("Username/Password is invalid");
       }
     } catch (e) {
       console.log(e);
-      alert(e);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: e
+      });
     }
   }
   return (
@@ -108,3 +117,14 @@ export default function RestaurantLogin(props) {
     </>
   );
 }
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setRestaurant: restaurantData => dispatch(setRestaurant(restaurantData))
+  };
+}
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(RestaurantLogin);
