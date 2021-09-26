@@ -36,11 +36,13 @@ function RestaurantDashboard(props) {
 
   const handleClick = async event => {
     try {
-      let categories = [];
-      optionSelected.forEach(ele => {
-        categories.push({ id: ele.value, name: ele.label });
-      });
       event.preventDefault();
+      let categoriesToSend;
+      if (optionSelected.length > 0) {
+        categoriesToSend = optionSelected;
+      } else {
+        categoriesToSend = props.restaurantData.categories;
+      }
       let updatedData = {
         id: props.restaurantData.id,
         title: event.target.title.value,
@@ -50,7 +52,7 @@ function RestaurantDashboard(props) {
         largeImageUrl: props.restaurantData.largeImageUrl,
         location: event.target.location.value,
         timings: event.target.time1.value + "-" + event.target.time2.value,
-        categories: categories
+        categories: categoriesToSend
       };
       const response = await axios({
         method: "put",
@@ -112,6 +114,14 @@ function RestaurantDashboard(props) {
       return true;
     }
     return false;
+  };
+
+  const selectValues = () => {
+    if (optionSelected.length > 0) {
+      return optionSelected;
+    } else {
+      return props.restaurantData.categories;
+    }
   };
 
   return (
@@ -201,8 +211,7 @@ function RestaurantDashboard(props) {
                     className="PSearch__text"
                     placeholder="Phone number"
                     defaultValue={
-                      props.restaurantData &&
-                      parseInt(props.restaurantData.publicContact)
+                      props.restaurantData && props.restaurantData.publicContact
                     }
                     id={"search"}
                   />
@@ -217,7 +226,7 @@ function RestaurantDashboard(props) {
                     placeholder="DOB"
                     defaultValue={
                       props.restaurantData &&
-                      props.restaurantData.timings.split[0]
+                      props.restaurantData.timings.split("-")[0]
                     }
                     id={"search"}
                   />
@@ -231,7 +240,7 @@ function RestaurantDashboard(props) {
                     placeholder="DOB"
                     defaultValue={
                       props.restaurantData &&
-                      props.restaurantData.timings.split[1]
+                      props.restaurantData.timings.split("-")[1]
                     }
                     id={"search"}
                   />
@@ -254,8 +263,7 @@ function RestaurantDashboard(props) {
                     }}
                     onChange={handleChange}
                     allowSelectAll={true}
-                    defaultValue={props.restaurantData.categories}
-                    value={optionSelected || props.restaurantData.categories}
+                    value={selectValues()}
                   />
                 </div>
                 <br />

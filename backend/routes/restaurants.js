@@ -64,17 +64,21 @@ router.post('/create', async (req, res) => {
 router.put('/update', async (req, res) => {
   try {
     // req.body.location = JSON.stringify(req.body.location);
-    req.body.categories = JSON.stringify(req.body.categories);
-    // req.body.tags = JSON.stringify(req.body.tags);
+    const categories = [];
+    req.body.categories.forEach((ele) => {
+      categories.push({ id: ele.value, name: ele.label });
+    });
+    req.body.categories = JSON.stringify(categories);
+    // req.body.timings = JSON.stringify(req.body.timings);
     // req.body.etaRange = JSON.stringify(req.body.etaRange);
     // req.body.rawRatingStats = JSON.stringify(req.body.rawRatingStats);
     // req.body.publicContact = JSON.stringify(req.body.publicContact);
-    const sqlQuery = 'UPDATE restaurants SET imageUrl = ?, largeImageUrl = ?, location = ?, categories = ?, tags = ?, etaRange = ?, rawRatingStats = ?, publicContact = ?, priceBucket = ? WHERE id = ?';
+    const sqlQuery = 'UPDATE restaurants SET imageUrl = ?, largeImageUrl = ?, location = ?, categories = ?, tags = ?, etaRange = ?, rawRatingStats = ?, publicContact = ?, priceBucket = ?, timings = ? WHERE id = ?';
     console.log(sqlQuery);
     const [rows] = await pool.query(sqlQuery,
       [req.body.imageUrl, req.body.largeImageUrl, req.body.location, req.body.categories,
         // eslint-disable-next-line max-len
-        req.body.tags, req.body.etaRange, req.body.rawRatingStats, req.body.publicContact, req.body.priceBucket, req.body.id]);
+        req.body.tags, req.body.etaRange, req.body.rawRatingStats, req.body.publicContact, req.body.priceBucket, req.body.timings, req.body.id]);
     console.log(rows);
     if (rows.affectedRows) {
       res.status(200).json({ msg: 'Successfully updated a restaurant entry' });
@@ -104,16 +108,21 @@ router.post('/login', async (req, res) => {
           // eslint-disable-next-line no-await-in-loop
           const result = await bcrypt.compare(req.body.password, row.Password);
           if (result) {
+            const categories = [];
+            row.categories = JSON.parse(row.categories);
+            row.categories.forEach((ele) => {
+              categories.push({ value: ele.id, label: ele.name });
+            });
             restaurantData = {
               id: row.id,
               title: row.title,
               email: row.email,
-              publicContact: row.publicContact,
+              publicContact: parseFloat(row.publicContact),
               largeImageUrl: row.largeImageUrl,
               imageUrl: row.imageUrl,
               location: row.location,
               timings: row.timings,
-              categories: JSON.parse(row.categories),
+              categories,
             };
             flag = true;
             break;

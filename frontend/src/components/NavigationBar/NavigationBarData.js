@@ -35,19 +35,19 @@ export const NavigationBarData = [
 export const RestaurantNavigationBarData = [
   {
     title: "Home",
-    path: "/dashBoard",
+    path: "/restaurantPage",
     icon: <AiIcons.AiFillHome />,
     cName: "nav-text"
   },
   {
-    title: "Profile",
-    path: "/userProfile",
+    title: "Dishes",
+    path: "/dishes",
     icon: <CgIcons.CgProfile />,
     cName: "nav-text"
   },
   {
     title: "Orders",
-    path: "/userOrders",
+    path: "/restaurantOrders",
     icon: <BiIcons.BiReceipt />,
     cName: "nav-text"
   },

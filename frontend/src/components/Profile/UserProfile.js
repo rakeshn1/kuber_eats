@@ -49,6 +49,7 @@ function UserProfile(props) {
       });
       if (response.status == 200) {
         Swal.fire("Successfully saved the data", "", "success");
+        localStorage.setItem("user", JSON.stringify(updatedData));
         props.setUser(updatedData);
       } else {
         throw new Error(response.data.msg);
