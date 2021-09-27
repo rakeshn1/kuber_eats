@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import "./UserProfile.css";
 import { Container } from "../../Container/Container";
@@ -11,6 +11,7 @@ import Allcountries from "../countries.json";
 
 function UserProfile(props) {
   const imageUploader = React.useRef(null);
+  const [edit, setEdit] = useState(false);
   // componentDidMount() {
   //     (async () => {
   //         const response = await fetch(
@@ -51,6 +52,7 @@ function UserProfile(props) {
         Swal.fire("Successfully saved the data", "", "success");
         localStorage.setItem("user", JSON.stringify(updatedData));
         props.setUser(updatedData);
+        setEdit(() => false);
       } else {
         throw new Error(response.data.msg);
       }
@@ -93,6 +95,11 @@ function UserProfile(props) {
     }
   };
 
+  const handleEdit = () => {
+    setEdit(() => true);
+    window.scrollTo(0, 0);
+  };
+
   return (
     <Container>
       <main className="PMain">
@@ -118,10 +125,12 @@ function UserProfile(props) {
                   display: "none"
                 }}
               />
-              <MdIcons.MdModeEdit
-                style={{ height: "30px", width: "50px", cursor: "pointer" }}
-                onClick={() => imageUploader.current.click()}
-              ></MdIcons.MdModeEdit>
+              {edit && (
+                <MdIcons.MdModeEdit
+                  style={{ height: "30px", width: "50px", cursor: "pointer" }}
+                  onClick={() => imageUploader.current.click()}
+                ></MdIcons.MdModeEdit>
+              )}
               <br />
               <p className="Pidentifiers">Name</p>
               <div className="PSearch">
@@ -130,6 +139,7 @@ function UserProfile(props) {
                   name="name"
                   className="PSearch__text"
                   placeholder="Name"
+                  disabled={!edit}
                   defaultValue={props.userData && props.userData.name}
                   id={"search"}
                 />
@@ -142,6 +152,7 @@ function UserProfile(props) {
                   name="email"
                   className="PSearch__text"
                   placeholder="Email"
+                  disabled={!edit}
                   defaultValue={props.userData && props.userData.email}
                   id={"search"}
                 />
@@ -153,6 +164,7 @@ function UserProfile(props) {
                   type="text"
                   name="nickname"
                   className="PSearch__text"
+                  disabled={!edit}
                   placeholder="No nickname? Uh Boring.."
                   defaultValue={props.userData && props.userData.nickname}
                   id={"search"}
@@ -166,6 +178,7 @@ function UserProfile(props) {
                   name="number"
                   className="PSearch__text"
                   placeholder="Phone number"
+                  disabled={!edit}
                   defaultValue={props.userData && props.userData.number}
                   id={"search"}
                 />
@@ -178,6 +191,7 @@ function UserProfile(props) {
                   name="dob"
                   className="PSearch__text"
                   placeholder="DOB"
+                  disabled={!edit}
                   defaultValue={props.userData && props.userData.dob}
                   id={"search"}
                 />
@@ -191,6 +205,7 @@ function UserProfile(props) {
                   name="addressLine"
                   className="PSearch__text"
                   placeholder="Address Line"
+                  disabled={!edit}
                   defaultValue={
                     props.userData &&
                     props.userData.address &&
@@ -207,6 +222,7 @@ function UserProfile(props) {
                   name="city"
                   className="PSearch__text"
                   placeholder="City"
+                  disabled={!edit}
                   defaultValue={
                     props.userData &&
                     props.userData.address &&
@@ -223,6 +239,7 @@ function UserProfile(props) {
                   name="state"
                   className="PSearch__text"
                   placeholder="State"
+                  disabled={!edit}
                   defaultValue={
                     props.userData &&
                     props.userData.address &&
@@ -238,6 +255,7 @@ function UserProfile(props) {
                   style={{ display: "block" }}
                   name="country"
                   className="PSearch"
+                  disabled={!edit}
                   defaultValue="United States"
                 >
                   {Allcountries.countries.map(item => (
@@ -255,6 +273,7 @@ function UserProfile(props) {
                   name="pinCode"
                   className="PSearch__text"
                   placeholder="Pin Code"
+                  disabled={!edit}
                   defaultValue={
                     props.userData &&
                     props.userData.address &&
@@ -264,10 +283,19 @@ function UserProfile(props) {
                 />
               </div>
               <br />
-              <div className="Pcontainer-login100-form-btn">
-                <button className="Plogin100-form-btn">Save</button>
-              </div>
+              {edit && (
+                <div className="Pcontainer-login100-form-btn">
+                  <button className="Plogin100-form-btn">Save</button>
+                </div>
+              )}
             </form>
+            {!edit && (
+              <div className="Pcontainer-login100-form-btn">
+                <button className="Plogin100-form-btn" onClick={handleEdit}>
+                  Edit
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </main>

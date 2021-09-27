@@ -148,4 +148,50 @@ router.post('/login', async (req, res) => {
   }
 });
 
+router.post('/addDish', async (req, res) => {
+  try {
+    const sqlQuery = 'INSERT INTO Dishes (title, imageUrl, ingredients, description, price, category, rules, customizationIds, restaurantID) VALUES (?,?,?,?,?,?,?,?,?)';
+    console.log(sqlQuery);
+    const [rows] = await pool.query(sqlQuery,
+      [req.body.title, req.body.imageUrl, req.body.ingredients, req.body.description,
+        // eslint-disable-next-line max-len
+        req.body.price, req.body.category, req.body.rules, req.body.customizationIds, req.body.restaurantID]);
+    console.log(rows);
+    if (rows.affectedRows) {
+      res.status(200).json({ msg: 'Successfully created a dish' });
+    } else {
+      throw new Error("DB didn't return success response");
+    }
+  } catch (e) {
+    console.error('Error creating a dish:');
+    console.error(e);
+    res.status(400).json({
+      msg: `Error creating a dish: ${e}`,
+    });
+  }
+});
+
+router.put('/editDish', async (req, res) => {
+  try {
+    const sqlQuery = 'UPDATE Dishes SET title = ?, imageUrl = ?, ingredients = ?, description = ?, price = ?, category = ?, rules = ?, customizationIds = ? WHERE id = ?';
+    console.log(sqlQuery);
+    const [rows] = await pool.query(sqlQuery,
+      [req.body.title, req.body.imageUrl, req.body.ingredients, req.body.description,
+        // eslint-disable-next-line max-len
+        req.body.price, req.body.category, req.body.rules, req.body.customizationIds, req.body.id]);
+    console.log(rows);
+    if (rows.affectedRows) {
+      res.status(200).json({ msg: 'Successfully updated a dish' });
+    } else {
+      throw new Error("DB didn't return success response");
+    }
+  } catch (e) {
+    console.error('Error updating a dish:');
+    console.error(e);
+    res.status(400).json({
+      msg: `Error updating a dish: ${e}`,
+    });
+  }
+});
+
 module.exports = router;

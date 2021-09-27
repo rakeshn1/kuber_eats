@@ -75,7 +75,7 @@
 }
 .PSearch {
   position: relative;
-  background: #efefef;
+  background: #f8f6f6;
   width: calc(100% + 32px);
   padding-bottom: 15px;
   padding-top: 8px;
@@ -84,7 +84,7 @@
 }
 
 .PSearch__text {
-  background: #efefef;
+  background: #f8f6f6;
   width: 100%;
   padding-left: 20px;
   font-size: 20px;
