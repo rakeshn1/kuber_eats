@@ -21,7 +21,7 @@ function RestaurantDashboard(props) {
   const imageUploader = React.useRef(null);
 
   const [restaurantMenu, setRestaurantMenu] = useState({});
-  const [id, setId] = useState(props.match.params.id);
+  const [edit, setEdit] = useState(false);
   const [optionSelected, setOptionSelected] = useState([]);
 
   useEffect(() => {
@@ -63,6 +63,7 @@ function RestaurantDashboard(props) {
         Swal.fire("Successfully saved the data", "", "success");
         localStorage.setItem("restaurant", JSON.stringify(updatedData));
         props.setRestaurant(updatedData);
+        setEdit(() => false);
       } else {
         throw new Error(response.data.msg);
       }
@@ -107,6 +108,11 @@ function RestaurantDashboard(props) {
 
   const handleChange = selected => {
     setOptionSelected(() => selected);
+  };
+
+  const handleEdit = () => {
+    setEdit(() => true);
+    window.scrollTo(0, 0);
   };
 
   const isNotEmpty = obj => {
@@ -156,10 +162,12 @@ function RestaurantDashboard(props) {
                     display: "none"
                   }}
                 />
-                <MdIcons.MdModeEdit
-                  style={{ height: "30px", width: "50px", cursor: "pointer" }}
-                  onClick={() => imageUploader.current.click()}
-                ></MdIcons.MdModeEdit>
+                {edit && (
+                  <MdIcons.MdModeEdit
+                    style={{ height: "30px", width: "50px", cursor: "pointer" }}
+                    onClick={() => imageUploader.current.click()}
+                  ></MdIcons.MdModeEdit>
+                )}
                 <br />
                 <p className="Pidentifiers">Name</p>
                 <div className="PSearch">
@@ -168,6 +176,7 @@ function RestaurantDashboard(props) {
                     name="title"
                     className="PSearch__text"
                     placeholder="Title"
+                    disabled={!edit}
                     defaultValue={
                       props.restaurantData && props.restaurantData.title
                     }
@@ -182,6 +191,7 @@ function RestaurantDashboard(props) {
                     name="email"
                     className="PSearch__text"
                     placeholder="Email"
+                    disabled={!edit}
                     defaultValue={
                       props.restaurantData && props.restaurantData.email
                     }
@@ -196,6 +206,7 @@ function RestaurantDashboard(props) {
                     name="location"
                     className="PSearch__text"
                     placeholder="Location"
+                    disabled={!edit}
                     defaultValue={
                       props.restaurantData && props.restaurantData.location
                     }
@@ -210,6 +221,7 @@ function RestaurantDashboard(props) {
                     name="publicContact"
                     className="PSearch__text"
                     placeholder="Phone number"
+                    disabled={!edit}
                     defaultValue={
                       props.restaurantData && props.restaurantData.publicContact
                     }
@@ -224,6 +236,7 @@ function RestaurantDashboard(props) {
                     name="time1"
                     className="PSearch__text"
                     placeholder="DOB"
+                    disabled={!edit}
                     defaultValue={
                       props.restaurantData &&
                       props.restaurantData.timings.split("-")[0]
@@ -238,6 +251,7 @@ function RestaurantDashboard(props) {
                     name="time2"
                     className="PSearch__text"
                     placeholder="DOB"
+                    disabled={!edit}
                     defaultValue={
                       props.restaurantData &&
                       props.restaurantData.timings.split("-")[1]
@@ -258,6 +272,7 @@ function RestaurantDashboard(props) {
                     isMulti
                     closeMenuOnSelect={false}
                     hideSelectedOptions={false}
+                    disabled={!edit}
                     components={{
                       Option
                     }}
@@ -267,10 +282,19 @@ function RestaurantDashboard(props) {
                   />
                 </div>
                 <br />
-                <div className="Pcontainer-login100-form-btn">
-                  <button className="Plogin100-form-btn">Save</button>
-                </div>
+                {edit && (
+                  <div className="Pcontainer-login100-form-btn">
+                    <button className="Plogin100-form-btn">Save</button>
+                  </div>
+                )}
               </form>
+              {!edit && (
+                <div className="Pcontainer-login100-form-btn">
+                  <button className="Plogin100-form-btn" onClick={handleEdit}>
+                    Edit
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </main>

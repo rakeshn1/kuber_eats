@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./RestaurantDashboard.css";
+import { connect } from "react-redux";
 import { RestaurantMenu } from "./RestaurantMenu";
 import { PropositionType } from "../Restaurant-page/Proposition-type/Proposition-type";
+import { BACKEND_HOST, BACKEND_PORT } from "../../config";
 
-export class RestaurantDishDisplay extends React.PureComponent {
+class RestaurantDishDisplay extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,7 +16,8 @@ export class RestaurantDishDisplay extends React.PureComponent {
   componentDidMount() {
     (async () => {
       const response = await fetch(
-        `https://uber-eats-mates.herokuapp.com/api/v1/restaurants/6585ad84-b9b0-4ab0-be54-f22657cd29bc`
+        `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/${this.props.restaurantData.id}`
+        //`https://uber-eats-mates.herokuapp.com/api/v1/restaurants/6585ad84-b9b0-4ab0-be54-f22657cd29bc`
       );
       const loadedRestaurant = await response.json();
       await this.setState({
@@ -42,3 +45,14 @@ export class RestaurantDishDisplay extends React.PureComponent {
     );
   }
 }
+
+function mapStateToProps(globalState) {
+  return {
+    restaurantData: globalState.restaurant
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  null
+)(RestaurantDishDisplay);

@@ -5,12 +5,28 @@ import { Container } from "../../Container/Container";
 import * as MdIcons from "react-icons/md";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { setImageUrl, removeDish } from "../../redux/dish";
+import { setImageUrl, setDish } from "../../redux/dish";
 import { default as ReactSelect } from "react-select";
 import { DishCategory } from "../DropDown/DishCategory";
 import Option from "../DropDown/Option";
+import { BACKEND_HOST } from "../../config";
+import { BACKEND_PORT } from "../../config";
+import { useHistory } from "react-router-dom";
 
 function AddDish(props) {
+  const history = useHistory();
+  let initialState = {
+    id: "",
+    title: "",
+    imageUrl: "",
+    ingredients: "",
+    description: "",
+    price: "",
+    category: "",
+    rules: "",
+    customizationIds: "",
+    restaurantID: ""
+  };
   const imageUploader = React.useRef(null);
   const [edit, setEdit] = useState(false);
   const [optionSelected, setOptionSelected] = useState([]);
@@ -24,29 +40,63 @@ function AddDish(props) {
   async function handleClick(event) {
     try {
       event.preventDefault();
-      let updatedData = {
-        id: props.dishData.id,
-        title: event.target.title.value,
-        ingredients: event.target.ingredients.value,
-        description: event.target.description.value,
-        price: event.target.price.value,
-        category: event.target.category.value,
-        imageUrl: props.dishData.imageUrl,
-        rules: event.target.rules.value,
-        customizationIds: event.target.customizationIds.value,
-        restaurantID: props.dishData.restaurantID
-      };
-      const response = await axios({
-        method: "put",
-        url: "http://localhost:5676/users/update",
-        data: updatedData
-      });
-      if (response.status == 200) {
-        Swal.fire("Successfully saved the data", "", "success");
-        localStorage.setItem("user", JSON.stringify(updatedData));
-        props.removeDish();
+      if (edit) {
+        let categoriesToSend;
+        if (optionSelected.length > 0) {
+          categoriesToSend = optionSelected;
+        } else {
+          categoriesToSend = props.dishData.category;
+        }
+        let updatedData = {
+          id: props.dishData.id,
+          title: event.target.title.value,
+          ingredients: event.target.ingredients.value,
+          description: event.target.description.value,
+          price: event.target.price.value,
+          category: categoriesToSend,
+          imageUrl: props.dishData.imageUrl,
+          rules: props.dishData.rules,
+          customizationIds: props.dishData.customizationIds,
+          restaurantID: props.restaurantData.id
+        };
+        const response = await axios({
+          method: "put",
+          url: `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/editDish`,
+          data: updatedData
+        });
+        if (response.status == 200) {
+          Swal.fire("Successfully saved the data", "", "success");
+          localStorage.setItem("user", JSON.stringify(updatedData));
+          props.setDish(initialState);
+          history.push("/dishes");
+        } else {
+          throw new Error(response.data.msg);
+        }
       } else {
-        throw new Error(response.data.msg);
+        let updatedData = {
+          title: event.target.title.value,
+          ingredients: event.target.ingredients.value,
+          description: event.target.description.value,
+          price: event.target.price.value,
+          category: optionSelected,
+          imageUrl: props.dishData.imageUrl,
+          // rules: props.dishData.rules.value,
+          // customizationIds: event.target.customizationIds.value,
+          restaurantID: props.restaurantData.id
+        };
+        const response = await axios({
+          method: "post",
+          url: `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/addDish`,
+          data: updatedData
+        });
+        if (response.status == 200) {
+          Swal.fire("Successfully saved the data", "", "success");
+          localStorage.setItem("user", JSON.stringify(updatedData));
+          props.setDish(initialState);
+          history.push("/dishes");
+        } else {
+          throw new Error(response.data.msg);
+        }
       }
     } catch (e) {
       console.log(e);
@@ -95,7 +145,7 @@ function AddDish(props) {
     if (optionSelected.length > 0) {
       return optionSelected;
     } else {
-      return props.restaurantData.categories;
+      return props.dishData.category;
     }
   };
 
@@ -117,7 +167,7 @@ function AddDish(props) {
               <img
                 src={props.dishData && props.dishData.imageUrl}
                 className="PRestaurants-choose__photo"
-                alt={"User1"}
+                alt={"Dish image"}
               />
               <input
                 type="file"
@@ -138,10 +188,10 @@ function AddDish(props) {
               <div className="PSearch">
                 <input
                   type="text"
-                  name="name"
+                  name="title"
                   className="PSearch__text"
                   placeholder="Name"
-                  defaultValue={props.dishData && props.dishData.name}
+                  defaultValue={props.dishData && props.dishData.title}
                   id={"search"}
                 />
               </div>
@@ -150,12 +200,10 @@ function AddDish(props) {
               <div className="PSearch">
                 <input
                   type="text"
-                  name="email"
+                  name="ingredients"
                   className="PSearch__text"
                   placeholder="Main Ingredients"
-                  defaultValue={
-                    props.dishData && props.dishData.mainIngredients
-                  }
+                  defaultValue={props.dishData && props.dishData.ingredients}
                   id={"search"}
                 />
               </div>
@@ -164,7 +212,7 @@ function AddDish(props) {
               <div className="PSearch">
                 <input
                   type="text"
-                  name="nickname"
+                  name="description"
                   className="PSearch__text"
                   placeholder="Description"
                   defaultValue={props.dishData && props.dishData.description}
@@ -176,7 +224,7 @@ function AddDish(props) {
               <div className="PSearch">
                 <input
                   type="number"
-                  name="number"
+                  name="price"
                   className="PSearch__text"
                   placeholder="Price"
                   defaultValue={props.dishData && props.dishData.price}
@@ -184,11 +232,12 @@ function AddDish(props) {
                 />
               </div>
               <br />
+              <p className="Pidentifiers">Dish Category</p>
               <div
                 className="PSearch"
                 data-toggle="popover"
                 data-trigger="focus"
-                data-content="Please select Cuisine(s)"
+                data-content="Please select a category"
               >
                 <ReactSelect
                   options={DishCategory}
@@ -200,12 +249,14 @@ function AddDish(props) {
                   }}
                   onChange={handleChange}
                   allowSelectAll={false}
-                  value={optionSelected}
+                  value={selectValues()}
                 />
               </div>
               <br />
               <div className="Pcontainer-login100-form-btn">
-                <button className="Plogin100-form-btn">Save</button>
+                <button className="Plogin100-form-btn">
+                  {edit ? "Update" : "Add"}
+                </button>
               </div>
             </form>
           </div>
@@ -217,14 +268,15 @@ function AddDish(props) {
 
 function mapStateToProps(globalState) {
   return {
-    dishData: globalState.dish
+    dishData: globalState.dish,
+    restaurantData: globalState.restaurant
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     setImage: url => dispatch(setImageUrl(url)),
-    removeDish: dishData => dispatch(removeDish())
+    setDish: dishData => dispatch(setDish(dishData))
   };
 }
 

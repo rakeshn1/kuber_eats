@@ -119,7 +119,6 @@
   flex-basis: 50%;
   padding-right: 0;
   min-height: 160px;
-  cursor: pointer;
 }
 
 .RDish__wrapper {
@@ -173,4 +172,8 @@
   flex-grow: 0;
   flex-shrink: 0;
   object-fit: cover;
+}
+
+input:disabled {
+  color: #757373;
 }

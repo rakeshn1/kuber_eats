@@ -37,6 +37,71 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/:id', async (req, res) => {
+  try {
+    const restaurantQuery = `SELECT * FROM restaurants WHERE id = ${req.params.id}`;
+    const dishQuery = `SELECT * FROM Dishes WHERE restaurantID = ${req.params.id}`;
+    const [restaurantData] = await pool.query(restaurantQuery);
+    const [dishData] = await pool.query(dishQuery);
+    if (restaurantData.length > 0) {
+      const rows = restaurantData.map((row) => {
+        // eslint-disable-next-line no-param-reassign
+        const rowData = {};
+        rowData.uuid = row.id;
+        rowData.title = row.title;
+        rowData.imageUrl = row.imageUrl;
+        rowData.largeImageUrl = row.largeImageUrl;
+        rowData.location = JSON.parse(row.location);
+        rowData.categories = JSON.parse(row.categories);
+        rowData.tags = JSON.parse(row.tags);
+        rowData.etaRange = JSON.parse(row.etaRange);
+        rowData.rawRatingStats = JSON.parse(row.rawRatingStats);
+        rowData.publicContact = JSON.parse(row.publicContact);
+        rowData.sections = [];
+        rowData.items = {};
+        const sectionMap = {};
+        if (dishData.length > 0) {
+          dishData.forEach((dish) => {
+            // eslint-disable-next-line no-param-reassign
+            dish.uuid = dish.id;
+            // eslint-disable-next-line no-param-reassign
+            dish.itemDescription = dish.description;
+            // eslint-disable-next-line no-param-reassign
+            dish.category = JSON.parse(dish.category);
+            dish.category.forEach((cat) => {
+              if (sectionMap.cat) {
+                sectionMap.cat.itemUuids.push(dish.uuid);
+              } else {
+                sectionMap.cat = {
+                  uuid: cat.value + Date.now(),
+                  title: cat.value,
+                  itemUuids: [],
+                };
+                sectionMap.cat.itemUuids.push(dish.uuid);
+              }
+            });
+            rowData.items[dish.uuid] = dish;
+          });
+          // eslint-disable-next-line guard-for-in,no-restricted-syntax
+          for (const key in sectionMap) {
+            rowData.sections.push(sectionMap[key]);
+          }
+        }
+        return rowData;
+      });
+      console.log(rows);
+      console.log('Fetched the restaurant data from DB');
+      res.status(200).json(rows[0]);
+    }
+  } catch (e) {
+    console.error('Error fetching data from DB:');
+    console.error(e);
+    res.status(400).json({
+      msg: `Error fetching data from DB: ${e}`,
+    });
+  }
+});
+
 /* Create user */
 router.post('/create', async (req, res) => {
   try {
@@ -150,6 +215,7 @@ router.post('/login', async (req, res) => {
 
 router.post('/addDish', async (req, res) => {
   try {
+    req.body.category = JSON.stringify(req.body.category);
     const sqlQuery = 'INSERT INTO Dishes (title, imageUrl, ingredients, description, price, category, rules, customizationIds, restaurantID) VALUES (?,?,?,?,?,?,?,?,?)';
     console.log(sqlQuery);
     const [rows] = await pool.query(sqlQuery,
@@ -173,6 +239,7 @@ router.post('/addDish', async (req, res) => {
 
 router.put('/editDish', async (req, res) => {
   try {
+    req.body.category = JSON.stringify(req.body.category);
     const sqlQuery = 'UPDATE Dishes SET title = ?, imageUrl = ?, ingredients = ?, description = ?, price = ?, category = ?, rules = ?, customizationIds = ? WHERE id = ?';
     console.log(sqlQuery);
     const [rows] = await pool.query(sqlQuery,

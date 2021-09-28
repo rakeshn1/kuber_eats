@@ -35,7 +35,7 @@ export const NavigationBarData = [
 export const RestaurantNavigationBarData = [
   {
     title: "Home",
-    path: "/restaurantPage",
+    path: "/restaurantDashBoard",
     icon: <AiIcons.AiFillHome />,
     cName: "nav-text"
   },

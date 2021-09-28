@@ -8,6 +8,8 @@ import Swal from "sweetalert2";
 import TextField from "@mui/material/TextField";
 import { setImageUrl, setUser } from "../../redux/user";
 import Allcountries from "../countries.json";
+import { BACKEND_HOST } from "../../config";
+import { BACKEND_PORT } from "../../config";
 
 function UserProfile(props) {
   const imageUploader = React.useRef(null);
@@ -45,7 +47,7 @@ function UserProfile(props) {
       };
       const response = await axios({
         method: "put",
-        url: "http://localhost:5676/users/update",
+        url: `http://${BACKEND_HOST}:${BACKEND_PORT}/users/update`,
         data: updatedData
       });
       if (response.status == 200) {

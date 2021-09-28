@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./RestaurantDashboard.css";
-import { RestaurantDish } from "./RestaurantDish";
+import RestaurantDish from "./RestaurantDish";
 
 export class RestaurantMenu extends React.PureComponent {
   constructor(props) {
@@ -22,7 +22,7 @@ export class RestaurantMenu extends React.PureComponent {
                       {section.itemUuids.map((item, i) => {
                         return (
                           <RestaurantDish
-                            key={item.id}
+                            key={item}
                             restaurantMenu={this.props.restaurantMenu}
                             id={item}
                           />
