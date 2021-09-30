@@ -1,6 +1,6 @@
 import React from "react";
 import "./UserFavorites.css";
-import { RestaurantChoose } from "../Restaurants-choose/Restaurants-choose";
+import RestaurantChoose from "../Restaurants-choose/Restaurants-choose";
 import { Container } from "../../Container/Container";
 
 export class UserFavorites extends React.Component {

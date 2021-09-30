@@ -265,7 +265,7 @@ router.put('/editDish', async (req, res) => {
 
 router.post('/orders', async (req, res) => {
   try {
-    const query = 'SELECT * FROM orders o natural join users u where o.restaurantID = ?';
+    const query = 'SELECT o.id, o.description, o.totalCost, o.dateTime, o.deliveryStatus, o.deliveryType, o.status, o.customerID,o.restaurantID, u.name, u.nickname, u.number, u.dob, u.email, u.address, u.imageUrl  FROM orders o join users u on o.customerID = u.id where o.restaurantID = ?';
     const [rows] = await pool.query(query, req.body.restaurantID);
     if (rows.length > 0) {
       const rowData = rows.map((row) => ({
@@ -303,8 +303,8 @@ router.post('/orders', async (req, res) => {
 router.put('/orderUpdate', async (req, res) => {
   try {
     const sqlQuery = 'UPDATE orders SET deliveryStatus = ? WHERE id = ?';
-    console.log(sqlQuery);
-    const [rows] = await pool.query(sqlQuery,[req.body.deliveryStatus, req.body.id]);
+    const [rows] = await pool.query(sqlQuery, [req.body.deliveryStatus, req.body.id]);
+    console.log(sqlQuery, req.body.id);
     console.log(rows);
     if (rows.affectedRows) {
       res.status(200).json({ msg: 'Successfully updated the delivery status' });

@@ -1,7 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { useHistory } from "react-router-dom";
 import {
   Table,
   TableHead,
@@ -13,13 +12,13 @@ import {
 import "./restaurantOrders.css";
 import { Container } from "../../Container/Container";
 import axios from "axios";
-import Swal from "sweetalert2";
+import Swal from "@sweetalert/with-react";
+import Swal2 from "sweetalert2";
 import { BACKEND_HOST, BACKEND_PORT } from "../../config";
-import * as MdIcons from "react-icons/md";
-import { removeUser, setUser } from "../../redux/user";
 import { default as ReactSelect } from "react-select";
 import { OrderDeliveryTypes } from "../DropDown/OrderDeliveryTypes";
 import Option from "../DropDown/Option";
+import Test from "./modal";
 
 const UserOrders = props => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -33,9 +32,9 @@ const UserOrders = props => {
     try {
       const response = await axios({
         method: "post",
-        url: `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/orders`,
+        url: `http://${BACKEND_HOST}:${BACKEND_PORT}/users/orders`,
         data: {
-          restaurantID: props.userData.id || (user ? user.id : 100)
+          userID: props.userData.id || (user ? user.id : 100)
         }
       });
       if (response.status == 200) {
@@ -46,7 +45,7 @@ const UserOrders = props => {
       }
     } catch (e) {
       console.log(e);
-      Swal.fire({
+      Swal2.fire({
         icon: "error",
         title: "Oops...",
         text: e
@@ -82,7 +81,7 @@ const UserOrders = props => {
       setFilterOrders(() => {
         return orders.filter(prev => {
           for (let i = 0; i < selected.length; i++) {
-            if (selected[i].value == prev.status) {
+            if (selected[i].value == prev.deliveryStatus) {
               return true;
             }
           }
@@ -93,11 +92,15 @@ const UserOrders = props => {
     }
   };
 
+  const viewCustomer = order => {
+    Swal(<Test order={order} />);
+  };
+
   return (
-    <main className="TRestaurant-page">
+    <main className="TRestaurant-pageU">
       <Container>
         <main className="TdMain">
-          <h4>Filter orders based on order status:</h4>
+          <h3>Filter orders based on order status:</h3>
           <div
             className="filter"
             data-toggle="popover"
@@ -120,37 +123,34 @@ const UserOrders = props => {
           </div>
           <br />
           <Table className="TdMain">
-            <TableHead>
-              <TableRow>
-                <TableCell className="px-0">Restaurant</TableCell>
-                <TableCell className="px-0">Description</TableCell>
-              </TableRow>
-            </TableHead>
             <TableBody>
               {filterOrders
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((order, index) => (
-                  <TableRow
-                    key={index}
-                    onClick={() => viewCustomer(order)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <TableCell className="px-01">
-                      <h3>{order.name}</h3>
-                    </TableCell>
-                    <TableCell className="px-01">
-                      {order.description.slice(0, 50)}...
-                    </TableCell>
-                    <TableCell className="px-01">${order.totalCost}</TableCell>
-                    <TableCell className="px-01">{order.status}</TableCell>
-                    <TableCell className="px-01">
-                      {order.deliveryType}
-                    </TableCell>
-                    <TableCell className="px-01">
-                      {order.deliveryStatus}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                .map((order, index) => {
+                  let total = 0;
+                  order.description &&
+                    JSON.parse(order.description).map(basketOrder => {
+                      total += basketOrder.count;
+                      return false;
+                    });
+                  return (
+                    <TableRow
+                      key={index}
+                      onClick={() => viewCustomer(order)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <TableCell className="px-01">
+                        <h2>{order.name}</h2>
+                        <p>
+                          {" "}
+                          {total} items for ${order.totalCost} on{" "}
+                          {order.dateTime}
+                        </p>
+                        <u>View receipt</u>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
             </TableBody>
           </Table>
 

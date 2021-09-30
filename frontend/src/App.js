@@ -23,6 +23,7 @@ import UserProfile from "./components/Profile/UserProfile";
 import RestaurantDishDisplay from "./components/RestaurantDashboard/RestaurantDishDisplay";
 import AddDish from "./components/AddDish/AddDish";
 import PaginationTable from "./components/Orders/restaurantOrders";
+import UserOrders from "./components/Orders/UserOrders";
 import { UserFavorites } from "./components/Favorites/UserFavorites";
 import { setUser } from "./redux/user";
 import { setRestaurant } from "./redux/restaurant";
@@ -139,6 +140,7 @@ class App extends React.PureComponent {
           />
           <Route path="/userProfile" exact component={UserProfile} />
           <Route path="/userFavorites" exact component={UserFavorites} />
+          <Route path="/userOrders" exact component={UserOrders} />
           <Route path="/dishes" exact component={RestaurantDishDisplay} />
           <Route path="/addDish" exact component={AddDish} />
           <Route path="/restaurantOrders" exact component={PaginationTable} />

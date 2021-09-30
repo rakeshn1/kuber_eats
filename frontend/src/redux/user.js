@@ -1,6 +1,7 @@
 import { SET_USER } from "./constants";
 import { REMOVE_USER } from "./constants";
 import { SET_USER_IMAGE_URL } from "./constants";
+import { CHANGE_FAVORITE } from "./constants";
 
 export function setUser(data) {
   return {
@@ -22,6 +23,13 @@ export function setImageUrl(url) {
   };
 }
 
+export function changeFavorite(restaurantID) {
+  return {
+    type: CHANGE_FAVORITE,
+    payload: restaurantID
+  };
+}
+
 let initialState = {
   id: "",
   name: "",
@@ -36,7 +44,8 @@ let initialState = {
     state: "",
     country: "",
     pinCode: ""
-  }
+  },
+  favorites: []
 };
 
 export default function userReducer(state = initialState, action) {
@@ -49,6 +58,18 @@ export default function userReducer(state = initialState, action) {
       return Object.assign({}, state, {
         imageUrl: action.payload
       });
+    case CHANGE_FAVORITE: {
+      const updated = state.favorites;
+      const index = updated.indexOf(action.payload);
+      if (index > -1) {
+        updated.splice(index, 1);
+      } else {
+        updated.push(action.payload);
+      }
+      return Object.assign({}, state, {
+        favorites: updated
+      });
+    }
     default:
       return state;
   }

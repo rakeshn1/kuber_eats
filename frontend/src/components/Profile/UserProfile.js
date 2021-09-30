@@ -45,7 +45,8 @@ function UserProfile(props) {
           state: event.target.state.value,
           country: event.target.country.value,
           pinCode: event.target.pinCode.value
-        }
+        },
+        favorites: props.userData.favorites
       };
       const response = await axios({
         method: "put",

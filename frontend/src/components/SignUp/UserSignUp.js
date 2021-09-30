@@ -2,6 +2,7 @@ import React from "react";
 import "./UserSignUp.css";
 import Swal from "sweetalert2";
 import { Link, useHistory } from "react-router-dom";
+import { BACKEND_HOST, BACKEND_PORT } from "../../config";
 const axios = require("axios");
 
 function UserSignUp(props) {
@@ -11,11 +12,12 @@ function UserSignUp(props) {
       event.preventDefault();
       const response = await axios({
         method: "post",
-        url: "http://localhost:5676/users/create",
+        url: `http://${BACKEND_HOST}:${BACKEND_PORT}/users/create`,
         data: {
           name: event.target.username.value,
           email: event.target.email.value,
-          password: event.target.password.value
+          password: event.target.password.value,
+          favorites: []
         }
       });
       if (response.status == 200) {

@@ -13,13 +13,20 @@ import {
 import "./restaurantOrders.css";
 import { Container } from "../../Container/Container";
 import axios from "axios";
-import Swal from "sweetalert2";
+import Swal from "@sweetalert/with-react";
+import Swal2 from "sweetalert2";
 import { BACKEND_HOST, BACKEND_PORT } from "../../config";
 import * as MdIcons from "react-icons/md";
 import { removeUser, setUser } from "../../redux/user";
 import { default as ReactSelect } from "react-select";
 import { OrderTypes } from "../DropDown/OrderTypes";
+import {
+  allDeliveryTypes,
+  allDeliveryStatus,
+  allOrderStatus
+} from "../DropDown/CommonDropDownOptions";
 import Option from "../DropDown/Option";
+import Test from "./modal";
 
 const PaginationTable = props => {
   const history = useHistory();
@@ -49,7 +56,7 @@ const PaginationTable = props => {
       }
     } catch (e) {
       console.log(e);
-      Swal.fire({
+      Swal2.fire({
         icon: "error",
         title: "Oops...",
         text: e
@@ -80,9 +87,8 @@ const PaginationTable = props => {
   };
 
   const editStatus = (description, options, orderId) => {
-    Swal.fire({
-      title: "Order details",
-      html: '<div class="ordDet">' + description + "</div>",
+    Swal2.fire({
+      title: "Update status",
       input: "select",
       inputOptions: options,
       inputPlaceholder: "Update the status of the order",
@@ -124,18 +130,11 @@ const PaginationTable = props => {
             return response.data;
           })
           .catch(error => {
-            Swal.showValidationMessage(`Update failed: ${error}`);
+            Swal2.showValidationMessage(`Update failed: ${error}`);
           });
       },
-      allowOutsideClick: () => !Swal.isLoading()
+      allowOutsideClick: () => !Swal2.isLoading()
     });
-    //     .then((result) => {
-    //     if (result) {
-    //         Swal.fire({
-    //             title: `Status Updated`
-    //         })
-    //     }
-    // })
   };
 
   const viewCustomer = order => {
@@ -168,6 +167,10 @@ const PaginationTable = props => {
     } else {
       setFilterOrders(() => orders);
     }
+  };
+
+  const viewCustomerOrder = order => {
+    Swal(<Test order={order} restView={true} />);
   };
 
   return (
@@ -211,49 +214,69 @@ const PaginationTable = props => {
             <TableBody>
               {filterOrders
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((order, index) => (
-                  <TableRow key={index}>
-                    <TableCell
-                      className="px-01"
-                      style={{ cursor: "pointer", color: "blue" }}
-                      onClick={() => viewCustomer(order)}
-                    >
-                      {order.name}
-                    </TableCell>
-                    <TableCell className="px-01">
-                      {order.description.slice(0, 50)}...
-                    </TableCell>
-                    <TableCell className="px-01">${order.totalCost}</TableCell>
-                    <TableCell className="px-01">{order.status}</TableCell>
-                    <TableCell className="px-01">
-                      {order.deliveryType}
-                    </TableCell>
-                    <TableCell className="px-01">
-                      {order.deliveryStatus}
-                    </TableCell>
-                    <TableCell className="px-01">
-                      <MdIcons.MdModeEdit
-                        title={"Click to view details and edit the status"}
-                        style={{
-                          height: "20px",
-                          width: "40px",
-                          cursor: "pointer"
-                        }}
-                        onClick={() =>
-                          editStatus(
-                            order.description,
-                            order.deliveryType &&
-                              order.deliveryType.toLocaleLowerCase() ==
-                                "delivery"
-                              ? deliveryOptions
-                              : pickUpOptions,
-                            order.id
-                          )
-                        }
-                      ></MdIcons.MdModeEdit>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                .map((order, index) => {
+                  let total = 0;
+                  order.description &&
+                    JSON.parse(order.description).map(basketOrder => {
+                      total += basketOrder.count;
+                      return false;
+                    });
+                  return (
+                    <TableRow key={index}>
+                      <TableCell
+                        className="px-01"
+                        style={{ cursor: "pointer", color: "#159dca" }}
+                        onClick={() => viewCustomer(order)}
+                      >
+                        {order.name}
+                      </TableCell>
+                      <TableCell
+                        className="px-01"
+                        style={{ cursor: "pointer", color: "black" }}
+                        onClick={() => viewCustomerOrder(order)}
+                      >
+                        <p>
+                          {" "}
+                          {total} items ordered on {order.dateTime}
+                        </p>
+                        <u>View details</u>
+                      </TableCell>
+                      <TableCell className="px-01">
+                        ${order.totalCost}
+                      </TableCell>
+                      <TableCell className="px-01">
+                        {allOrderStatus[order.status]}
+                      </TableCell>
+                      <TableCell className="px-01">
+                        {allDeliveryTypes[order.deliveryType]}
+                      </TableCell>
+                      <TableCell className="px-01">
+                        {allDeliveryStatus[order.deliveryStatus]}
+                      </TableCell>
+                      <TableCell className="px-01">
+                        <MdIcons.MdModeEdit
+                          title={"Click to view details and edit the status"}
+                          style={{
+                            height: "20px",
+                            width: "40px",
+                            cursor: "pointer"
+                          }}
+                          onClick={() =>
+                            editStatus(
+                              order.description,
+                              order.deliveryType &&
+                                order.deliveryType.toLocaleLowerCase() ==
+                                  "delivery"
+                                ? deliveryOptions
+                                : pickUpOptions,
+                              order.id
+                            )
+                          }
+                        ></MdIcons.MdModeEdit>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
             </TableBody>
           </Table>
 
