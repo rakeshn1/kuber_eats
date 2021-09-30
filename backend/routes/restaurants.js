@@ -69,15 +69,17 @@ router.get('/:id', async (req, res) => {
             // eslint-disable-next-line no-param-reassign
             dish.category = JSON.parse(dish.category);
             dish.category.forEach((cat) => {
-              if (sectionMap.cat) {
-                sectionMap.cat.itemUuids.push(dish.uuid);
+              const catValue = cat.value;
+              if (sectionMap[catValue]) {
+                sectionMap[catValue].itemUuids.push(dish.uuid);
               } else {
-                sectionMap.cat = {
-                  uuid: cat.value + Date.now(),
-                  title: cat.value,
+                const newEntry = {
+                  uuid: catValue + Date.now(),
+                  title: catValue,
                   itemUuids: [],
                 };
-                sectionMap.cat.itemUuids.push(dish.uuid);
+                sectionMap[catValue] = newEntry;
+                sectionMap[catValue].itemUuids.push(dish.uuid);
               }
             });
             rowData.items[dish.uuid] = dish;
@@ -257,6 +259,63 @@ router.put('/editDish', async (req, res) => {
     console.error(e);
     res.status(400).json({
       msg: `Error updating a dish: ${e}`,
+    });
+  }
+});
+
+router.post('/orders', async (req, res) => {
+  try {
+    const query = 'SELECT * FROM orders o natural join users u where o.restaurantID = ?';
+    const [rows] = await pool.query(query, req.body.restaurantID);
+    if (rows.length > 0) {
+      const rowData = rows.map((row) => ({
+        id: row.id,
+        description: row.description,
+        totalCost: row.totalCost,
+        dateTime: row.dateTime,
+        deliveryStatus: row.deliveryStatus,
+        status: row.status,
+        deliveryType: row.deliveryType,
+        customerID: row.customerID,
+        restaurantID: row.restaurantID,
+        name: row.name,
+        nickname: row.nickname,
+        number: row.number,
+        email: row.email,
+        dob: JSON.parse(row.dob),
+        address: JSON.parse(row.address),
+        imageUrl: row.imageUrl,
+        favorites: row.favorites,
+      }));
+      console.log(rowData);
+      console.log('Fetched the restaurant orders from DB');
+      res.status(200).json(rowData);
+    }
+  } catch (e) {
+    console.error('Error fetching orders from DB:');
+    console.error(e);
+    res.status(400).json({
+      msg: `Error fetching data from DB: ${e}`,
+    });
+  }
+});
+
+router.put('/orderUpdate', async (req, res) => {
+  try {
+    const sqlQuery = 'UPDATE orders SET deliveryStatus = ? WHERE id = ?';
+    console.log(sqlQuery);
+    const [rows] = await pool.query(sqlQuery,[req.body.deliveryStatus, req.body.id]);
+    console.log(rows);
+    if (rows.affectedRows) {
+      res.status(200).json({ msg: 'Successfully updated the delivery status' });
+    } else {
+      throw new Error("DB didn't return success response");
+    }
+  } catch (e) {
+    console.error('Error updating the delivery status:');
+    console.error(e);
+    res.status(400).json({
+      msg: `Error updating the delivery status: ${e}`,
     });
   }
 });

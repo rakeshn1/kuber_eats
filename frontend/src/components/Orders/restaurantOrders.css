@@ -1,0 +1,68 @@
+.TRestaurant-page {
+  margin-top: 75px;
+  scroll-behavior: smooth;
+  min-height: 100vh;
+}
+
+.TdMain {
+  display: flex;
+  flex-direction: column;
+  scroll-behavior: auto;
+}
+.filter {
+  width: 300px;
+}
+
+.px-0 {
+  font-family: UberMoveText-Medium, Helvetica, sans-serif;
+  font-size: 16px;
+  color: #1e1717;
+  line-height: 1.2;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.ordDet {
+  padding: 16px;
+  display: flex;
+  flex-basis: 50%;
+  padding-right: 0;
+  min-height: 160px;
+  display: flex;
+  border: 1px solid var(--border_grey);
+  position: relative;
+  width: 100%;
+  font-family: UberMoveText-Medium, Helvetica, sans-serif;
+}
+
+.thead,
+tr {
+  background-color: #f8f6f6;
+  height: 1000px;
+}
+
+.tr,
+th {
+  white-space: nowrap;
+  padding: 1rem;
+  text-align: center;
+  text-decoration: black;
+  background-color: #a9a6a6;
+  font-weight: bolder;
+  font-size: large;
+}
+
+tbody,
+tr:nth-child(odd) {
+  background-color: white;
+}
+
+.tbody,
+tr,
+td {
+  white-space: nowrap;
+  width: 20%;
+  overflow-wrap: break-word;
+  padding: 0.5rem;
+  height: auto !important;
+}

@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "./RestaurantDashboard.css";
 import { default as ReactSelect } from "react-select";
-import { DashboardPreview } from "./DashboardPreview";
+import DashboardPreview from "./DashboardPreview";
 import * as MdIcons from "react-icons/md";
 import Allcountries from "../countries.json";
 import axios from "axios";
 import Swal from "sweetalert2";
-import {
-  setRestaurant,
-  setRestaurantImageUrl,
-  setRestaurantLargeImageUrl
-} from "../../redux/restaurant";
+import { setRestaurant, setRestaurantImageUrl } from "../../redux/restaurant";
 import { connect } from "react-redux";
 import { Container } from "../../Container/Container";
 import { BACKEND_HOST, BACKEND_PORT } from "../../config";
@@ -27,7 +23,7 @@ function RestaurantDashboard(props) {
   useEffect(() => {
     (async () => {
       const response = await fetch(
-        `https://uber-eats-mates.herokuapp.com/api/v1/restaurants/6585ad84-b9b0-4ab0-be54-f22657cd29bc` //${this.state.id}`
+        `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/${props.restaurantData.id}` //${this.state.id}`
       );
       const loadedRestaurant = await response.json();
       setRestaurantMenu(() => loadedRestaurant);
@@ -86,7 +82,7 @@ function RestaurantDashboard(props) {
         bodyFormData.append("image", file);
         const response = await axios({
           method: "post",
-          url: "http://localhost:5676/users/uploadImage",
+          url: `http://${BACKEND_HOST}:${BACKEND_PORT}/users/uploadImage`,
           data: bodyFormData,
           headers: { "Content-Type": "multipart/form-data" }
         });
@@ -133,7 +129,7 @@ function RestaurantDashboard(props) {
   return (
     <main className="RRestaurant-page">
       {isNotEmpty(restaurantMenu) ? (
-        <DashboardPreview restaurantMenu={restaurantMenu} />
+        <DashboardPreview edit={edit} restaurantMenu={restaurantMenu} />
       ) : (
         ""
       )}
@@ -312,7 +308,6 @@ function mapStateToProps(globalState) {
 function mapDispatchToProps(dispatch) {
   return {
     setRestaurantImageUrl: url => dispatch(setRestaurantImageUrl(url)),
-    setLargeImage: url => dispatch(setRestaurantLargeImageUrl(url)),
     setRestaurant: restaurantData => dispatch(setRestaurant(restaurantData))
   };
 }

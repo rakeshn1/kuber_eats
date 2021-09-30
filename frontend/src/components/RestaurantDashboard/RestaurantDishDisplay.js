@@ -5,45 +5,39 @@ import { RestaurantMenu } from "./RestaurantMenu";
 import { PropositionType } from "../Restaurant-page/Proposition-type/Proposition-type";
 import { BACKEND_HOST, BACKEND_PORT } from "../../config";
 
-class RestaurantDishDisplay extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      restaurantMenu: {}
-    };
-  }
+function RestaurantDishDisplay(props) {
+  const [restaurantMenu, setRestaurantMenu] = useState({});
+  const restaurant = JSON.parse(localStorage.getItem("restaurant"));
 
-  componentDidMount() {
+  useEffect(() => {
     (async () => {
+      const url = `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/${props
+        .restaurantData.id || (restaurant ? restaurant.id : 100)}`;
       const response = await fetch(
-        `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/${this.props.restaurantData.id}`
+        url
         //`https://uber-eats-mates.herokuapp.com/api/v1/restaurants/6585ad84-b9b0-4ab0-be54-f22657cd29bc`
       );
       const loadedRestaurant = await response.json();
-      await this.setState({
-        restaurantMenu: loadedRestaurant
-      });
+      setRestaurantMenu(() => loadedRestaurant);
     })();
-  }
+  }, []);
 
-  isNotEmpty(obj) {
+  function isNotEmpty(obj) {
     for (let key in obj) {
       return true;
     }
     return false;
   }
 
-  render() {
-    return (
-      <main className="RRestaurant-page">
-        {this.isNotEmpty(this.state.restaurantMenu) ? (
-          <RestaurantMenu restaurantMenu={this.state.restaurantMenu} />
-        ) : (
-          ""
-        )}
-      </main>
-    );
-  }
+  return (
+    <main className="RRestaurant-page">
+      {isNotEmpty(restaurantMenu) ? (
+        <RestaurantMenu restaurantMenu={restaurantMenu} />
+      ) : (
+        ""
+      )}
+    </main>
+  );
 }
 
 function mapStateToProps(globalState) {

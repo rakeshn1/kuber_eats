@@ -7,6 +7,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import TextField from "@mui/material/TextField";
 import { setImageUrl, setUser } from "../../redux/user";
+import { useHistory } from "react-router-dom";
 import Allcountries from "../countries.json";
 import { BACKEND_HOST } from "../../config";
 import { BACKEND_PORT } from "../../config";
@@ -14,6 +15,7 @@ import { BACKEND_PORT } from "../../config";
 function UserProfile(props) {
   const imageUploader = React.useRef(null);
   const [edit, setEdit] = useState(false);
+  const history = useHistory();
   // componentDidMount() {
   //     (async () => {
   //         const response = await fetch(
@@ -102,10 +104,16 @@ function UserProfile(props) {
     window.scrollTo(0, 0);
   };
 
+  const backToOrders = () => {
+    history.push("/restaurantOrders");
+  };
+
   return (
     <Container>
       <main className="PMain">
-        <p className="PMain__city">Your Profile</p>
+        <p className="PMain__city">
+          {props.isUserLoggedIn ? "Your" : "Customer"} Profile
+        </p>
         <div className="PMain__restaurants-list">
           <div className="PRestaurants-choose">
             <form
@@ -285,19 +293,29 @@ function UserProfile(props) {
                 />
               </div>
               <br />
-              {edit && (
-                <div className="Pcontainer-login100-form-btn">
-                  <button className="Plogin100-form-btn">Save</button>
-                </div>
-              )}
+              {props.isUserLoggedIn &&
+                (edit && (
+                  <div className="Pcontainer-login100-form-btn">
+                    <button className="Plogin100-form-btn">Save</button>
+                  </div>
+                ))}
             </form>
-            {!edit && (
-              <div className="Pcontainer-login100-form-btn">
-                <button className="Plogin100-form-btn" onClick={handleEdit}>
-                  Edit
-                </button>
-              </div>
-            )}
+            {props.isUserLoggedIn &&
+              (!edit && (
+                <div className="Pcontainer-login100-form-btn">
+                  <button className="Plogin100-form-btn" onClick={handleEdit}>
+                    Edit
+                  </button>
+                </div>
+              ))}
+            {!props.isUserLoggedIn &&
+              (!edit && (
+                <div className="Pcontainer-login100-form-btn">
+                  <button className="Plogin100-form-btn" onClick={backToOrders}>
+                    Back
+                  </button>
+                </div>
+              ))}
           </div>
         </div>
       </main>
@@ -307,7 +325,8 @@ function UserProfile(props) {
 
 function mapStateToProps(globalState) {
   return {
-    userData: globalState.user
+    userData: globalState.user,
+    isUserLoggedIn: globalState.isUserLoggedIn
   };
 }
 

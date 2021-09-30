@@ -3,8 +3,10 @@ import { connect } from "react-redux";
 import "./login.css";
 import { Link, useHistory } from "react-router-dom";
 import { setUser } from "../../redux/user";
+import { setIsUserLoggedIn } from "../../redux/userLogin";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { BACKEND_HOST, BACKEND_PORT } from "../../config";
 
 function Login(props) {
   const history = useHistory();
@@ -13,7 +15,7 @@ function Login(props) {
       event.preventDefault();
       const response = await axios({
         method: "post",
-        url: "http://localhost:5676/users/login",
+        url: `http://${BACKEND_HOST}:${BACKEND_PORT}/users/login`,
         data: {
           name: event.target.username.value,
           password: event.target.password.value
@@ -22,6 +24,7 @@ function Login(props) {
       if (response.status == 200) {
         //return <Redirect to={"/dashBoard"} />
         localStorage.setItem("user", JSON.stringify(response.data));
+        props.setIsUserLoggedIn();
         props.setUser(response.data);
         history.push("/dashBoard");
       } else {
@@ -116,7 +119,8 @@ function Login(props) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    setUser: userData => dispatch(setUser(userData))
+    setUser: userData => dispatch(setUser(userData)),
+    setIsUserLoggedIn: () => dispatch(setIsUserLoggedIn())
   };
 }
 

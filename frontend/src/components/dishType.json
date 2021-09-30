@@ -1,0 +1,9 @@
+{
+  "dishType": [
+    { "id": "appetizer", "name": "Appetizer" },
+    { "id": "salads", "name": "Salads" },
+    { "id": "mainCourse", "name": "MainCourse" },
+    { "id": "desserts", "name": "Desserts" },
+    { "id": "beverages", "name": "Beverages" }
+  ]
+}

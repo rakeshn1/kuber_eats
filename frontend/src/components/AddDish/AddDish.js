@@ -66,7 +66,6 @@ function AddDish(props) {
         });
         if (response.status == 200) {
           Swal.fire("Successfully saved the data", "", "success");
-          localStorage.setItem("user", JSON.stringify(updatedData));
           props.setDish(initialState);
           history.push("/dishes");
         } else {
@@ -117,7 +116,7 @@ function AddDish(props) {
         bodyFormData.append("image", file);
         const response = await axios({
           method: "post",
-          url: "http://localhost:5676/users/uploadImage",
+          url: `http://${BACKEND_HOST}:${BACKEND_PORT}/users/uploadImage`,
           data: bodyFormData,
           headers: { "Content-Type": "multipart/form-data" }
         });

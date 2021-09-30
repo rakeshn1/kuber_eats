@@ -15,11 +15,17 @@ import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 import { Basket } from "./components/Basket/Basket";
 import Login from "./components/LoginPage/login";
 import Dashboard from "./dashBoard";
+import RestaurantDashboard from "./components/RestaurantDashboard/RestaurantDashboard";
 import UserSignUp from "./components/SignUp/UserSignUp";
 import RestaurantLogin from "./components/LoginPage/restaurantLogin";
 import RestaurantSignUp from "./components/SignUp/RestaurantSignUp";
 import UserProfile from "./components/Profile/UserProfile";
+import RestaurantDishDisplay from "./components/RestaurantDashboard/RestaurantDishDisplay";
+import AddDish from "./components/AddDish/AddDish";
+import PaginationTable from "./components/Orders/restaurantOrders";
+import { UserFavorites } from "./components/Favorites/UserFavorites";
 import { setUser } from "./redux/user";
+import { setRestaurant } from "./redux/restaurant";
 
 // const Routing = (props) =>{
 //   const history = useHistory()
@@ -43,6 +49,10 @@ class App extends React.PureComponent {
 
   componentDidMount() {
     const user = JSON.parse(localStorage.getItem("user"));
+    const restaurant = JSON.parse(localStorage.getItem("restaurant"));
+    if (restaurant) {
+      this.props.setRestaurant(restaurant);
+    }
     if (user) {
       this.props.setUser(user);
     }
@@ -109,17 +119,29 @@ class App extends React.PureComponent {
               addToBasket={this.addToBasket}
             />
           )}
-          <Header open={this.setOpenBasket} login={this.props.user} />
+          <Header
+            open={this.setOpenBasket}
+            login={this.props.user || this.props.restaurant}
+          />
           <Route path="/" exact component={this.renderLoginPage} />
           <Route path="/userSignUp" exact component={UserSignUp} />
           <Route path="/restaurantSignup" exact component={RestaurantSignUp} />
           <Route path="/restaurantLogin" exact component={RestaurantLogin} />
           <Route path="/dashBoard" exact component={Main} />
           <Route
+            path="/restaurantDashBoard"
+            exact
+            component={RestaurantDashboard}
+          />
+          <Route
             path="/restaurant-page/:id"
             component={this.renderRestaurantPage}
           />
           <Route path="/userProfile" exact component={UserProfile} />
+          <Route path="/userFavorites" exact component={UserFavorites} />
+          <Route path="/dishes" exact component={RestaurantDishDisplay} />
+          <Route path="/addDish" exact component={AddDish} />
+          <Route path="/restaurantOrders" exact component={PaginationTable} />
         </ScrollToTop>
         <Footer />
       </Router>
@@ -155,13 +177,15 @@ class App extends React.PureComponent {
 
 function mapStateToProps(globalState) {
   return {
-    user: globalState.user
+    user: globalState.user,
+    restaurant: globalState.restaurant
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    setUser: userData => dispatch(setUser(userData))
+    setUser: userData => dispatch(setUser(userData)),
+    setRestaurant: restaurantData => dispatch(setRestaurant(restaurantData))
   };
 }
 

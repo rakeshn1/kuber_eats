@@ -25,6 +25,12 @@ function RestaurantDish(props) {
                 restaurantMenu.items[props.id].title}
             </span>
             <span className="RDish__recipe">
+              {" "}
+              Ingredients:
+              {restaurantMenu.items[props.id] &&
+                restaurantMenu.items[props.id].ingredients}
+            </span>
+            <span className="RDish__recipe">
               {restaurantMenu.items[props.id] &&
                 restaurantMenu.items[props.id].itemDescription}
             </span>
