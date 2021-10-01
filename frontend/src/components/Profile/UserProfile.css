@@ -76,7 +76,7 @@
 .PSearch {
   position: relative;
   background: #f8f6f6;
-  width: calc(100% + 32px);
+  width: calc(50%);
   padding-bottom: 15px;
   padding-top: 8px;
   border: 1px solid var(--background_black);

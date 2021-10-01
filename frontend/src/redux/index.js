@@ -4,6 +4,7 @@ import restaurantReducer from "./restaurant";
 import dishReducer from "./dish";
 import userLoginReducer from "./userLogin";
 import restaurantLoginReducer from "./restaurantLogin";
+import signUpReducer from "./signUp";
 
 const storeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
   restaurant: restaurantReducer,
   dish: dishReducer,
   isUserLoggedIn: userLoginReducer,
-  isRestaurantLoggedIn: restaurantLoginReducer
+  isRestaurantLoggedIn: restaurantLoginReducer,
+  signUpMessage: signUpReducer
 });
 
 const store = createStore(rootReducer, storeEnhancers());

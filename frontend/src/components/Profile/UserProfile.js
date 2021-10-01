@@ -80,7 +80,7 @@ function UserProfile(props) {
         bodyFormData.append("image", file);
         const response = await axios({
           method: "post",
-          url: "http://localhost:5676/users/uploadImage",
+          url: `http://${BACKEND_HOST}:${BACKEND_PORT}/users/uploadImage`,
           data: bodyFormData,
           headers: { "Content-Type": "multipart/form-data" }
         });

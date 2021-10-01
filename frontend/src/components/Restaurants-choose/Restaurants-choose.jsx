@@ -8,8 +8,8 @@ import { BACKEND_HOST, BACKEND_PORT } from "../../config";
 import Swal from "sweetalert2";
 
 function RestaurantChoose(props) {
-  const likedImageUrl = "http://localhost:5676/images/like.png";
-  const unLikedImageUrl = "http://localhost:5676/images/heart.png";
+  const likedImageUrl = `http://${BACKEND_HOST}:${BACKEND_PORT}/images/like.png`;
+  const unLikedImageUrl = `http://${BACKEND_HOST}:${BACKEND_PORT}/images/heart.png`;
   const [imageUrl, setImageUrl] = useState(unLikedImageUrl);
 
   const handleClick = async e => {

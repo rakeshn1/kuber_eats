@@ -12,17 +12,26 @@
 .Header__wrapper {
   display: flex;
   justify-content: space-between;
+  padding-top: 10px;
+  padding-bottom: 15px;
 }
 
 .Header__logo-wrapper {
+  padding-left: 40px;
   display: flex;
 }
 
 .Header__logo {
-  width: 121px;
+  width: 170px;
   background: url("image/uber.svg") no-repeat center;
   display: block;
   background-size: contain;
+}
+
+.Header__logo-image {
+  width: 170px;
+  background-size: contain;
+  margin-left: 30px;
 }
 
 .Header__order-delivery {

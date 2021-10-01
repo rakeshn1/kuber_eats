@@ -146,7 +146,7 @@ function RestaurantDashboard(props) {
                 <img
                   src={props.restaurantData && props.restaurantData.imageUrl}
                   className="RdRestaurants-choose__photo"
-                  alt={"User1"}
+                  alt={"Restaurant Photo"}
                 />
                 <input
                   type="file"
@@ -234,7 +234,7 @@ function RestaurantDashboard(props) {
                     placeholder="DOB"
                     disabled={!edit}
                     defaultValue={
-                      props.restaurantData &&
+                      props.restaurantData.timings &&
                       props.restaurantData.timings.split("-")[0]
                     }
                     id={"search"}
@@ -249,7 +249,7 @@ function RestaurantDashboard(props) {
                     placeholder="DOB"
                     disabled={!edit}
                     defaultValue={
-                      props.restaurantData &&
+                      props.restaurantData.timings &&
                       props.restaurantData.timings.split("-")[1]
                     }
                     id={"search"}

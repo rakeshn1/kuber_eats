@@ -176,10 +176,12 @@ router.post('/login', async (req, res) => {
           const result = await bcrypt.compare(req.body.password, row.Password);
           if (result) {
             const categories = [];
-            row.categories = JSON.parse(row.categories);
-            row.categories.forEach((ele) => {
-              categories.push({ value: ele.id, label: ele.name });
-            });
+            if (row.categories) {
+              row.categories = JSON.parse(row.categories);
+              row.categories.forEach((ele) => {
+                categories.push({ value: ele.id, label: ele.name });
+              });
+            }
             restaurantData = {
               id: row.id,
               title: row.title,
