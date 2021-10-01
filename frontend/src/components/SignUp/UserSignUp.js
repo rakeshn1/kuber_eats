@@ -3,6 +3,8 @@ import "./UserSignUp.css";
 import Swal from "sweetalert2";
 import { Link, useHistory } from "react-router-dom";
 import { BACKEND_HOST, BACKEND_PORT } from "../../config";
+import { setSignUp, removeSignUp } from "../../redux/signUp";
+import { connect } from "react-redux";
 const axios = require("axios");
 
 function UserSignUp(props) {
@@ -21,8 +23,7 @@ function UserSignUp(props) {
         }
       });
       if (response.status == 200) {
-        Swal.fire("Sign up successful!", "Get ready to crave", "success");
-        history.push("/");
+        await props.setSignUp();
       } else {
         throw new Error(response.data.msg);
       }
@@ -35,8 +36,16 @@ function UserSignUp(props) {
       });
     }
   }
+
+  function callSuccess() {
+    Swal.fire(`${props.signUpMessage}!`, "Get ready to crave", "success");
+    props.removeSignUp();
+    history.push("/");
+  }
+
   return (
     <>
+      {props.signUpMessage && <div>{callSuccess()}</div>}
       <div className="limiter">
         <div className="container-login100">
           <div className="wrap-login100 p-t-85 p-b-20">
@@ -139,4 +148,20 @@ function UserSignUp(props) {
   );
 }
 
-export default UserSignUp;
+function mapStateToProps(globalState) {
+  return {
+    signUpMessage: globalState.signUpMessage
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setSignUp: () => dispatch(setSignUp()),
+    removeSignUp: () => dispatch(removeSignUp())
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(UserSignUp);

@@ -2,16 +2,19 @@ import React from "react";
 import "./UserSignUp.css";
 import { Link, useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
+import { BACKEND_HOST, BACKEND_PORT } from "../../config";
+import { removeSignUp, setSignUp } from "../../redux/signUp";
+import { connect } from "react-redux";
 const axios = require("axios");
 
-export default function RestaurantSignUp(props) {
+function RestaurantSignUp(props) {
   const history = useHistory();
   async function handleClick(event) {
     try {
       event.preventDefault();
       const response = await axios({
         method: "post",
-        url: "http://localhost:5676/restaurants/create",
+        url: `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/create`,
         data: {
           title: event.target.restaurantName.value,
           email: event.target.email.value,
@@ -20,12 +23,7 @@ export default function RestaurantSignUp(props) {
         }
       });
       if (response.status == 200) {
-        Swal.fire(
-          "Sign up successful!",
-          "Your restaurant has been added",
-          "success"
-        );
-        history.push("/restaurantLogin");
+        await props.setSignUp();
       } else {
         throw new Error(response.data.msg);
       }
@@ -38,8 +36,20 @@ export default function RestaurantSignUp(props) {
       });
     }
   }
+
+  function callSuccess() {
+    Swal.fire(
+      `${props.signUpMessage}!`,
+      "Your restaurant has been added",
+      "success"
+    );
+    props.removeSignUp();
+    history.push("/restaurantLogin");
+  }
+
   return (
     <>
+      {props.signUpMessage && <div>{callSuccess()}</div>}
       <div className="limiter">
         <div className="container-login100">
           <div className="wrap-login100 p-t-85 p-b-20">
@@ -157,3 +167,21 @@ export default function RestaurantSignUp(props) {
     </>
   );
 }
+
+function mapStateToProps(globalState) {
+  return {
+    signUpMessage: globalState.signUpMessage
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setSignUp: () => dispatch(setSignUp()),
+    removeSignUp: () => dispatch(removeSignUp())
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(RestaurantSignUp);

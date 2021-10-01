@@ -26,7 +26,7 @@ function Login(props) {
         localStorage.setItem("user", JSON.stringify(response.data));
         props.setIsUserLoggedIn();
         props.setUser(response.data);
-        history.push("/dashBoard");
+        history.push("/userProfile");
       } else {
         throw new Error("Username/Password is invalid");
       }

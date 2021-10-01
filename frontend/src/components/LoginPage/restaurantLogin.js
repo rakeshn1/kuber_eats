@@ -3,6 +3,7 @@ import "./login.css";
 import { Link, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import { setRestaurant } from "../../redux/restaurant";
+import { setIsRestaurantLoggedIn } from "../../redux/restaurantLogin";
 import { BACKEND_HOST, BACKEND_PORT } from "../../config";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -22,6 +23,7 @@ function RestaurantLogin(props) {
       });
       if (response.status == 200) {
         localStorage.setItem("restaurant", JSON.stringify(response.data));
+        props.setIsRestaurantLoggedIn();
         props.setRestaurant(response.data);
         history.push("/restaurantDashBoard");
       } else {
@@ -120,7 +122,8 @@ function RestaurantLogin(props) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    setRestaurant: restaurantData => dispatch(setRestaurant(restaurantData))
+    setRestaurant: restaurantData => dispatch(setRestaurant(restaurantData)),
+    setIsRestaurantLoggedIn: () => dispatch(setIsRestaurantLoggedIn())
   };
 }
 

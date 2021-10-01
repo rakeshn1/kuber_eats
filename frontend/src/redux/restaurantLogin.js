@@ -1,13 +1,13 @@
 import { SET_IS_RESTAURANT_LOGGED_IN } from "./constants";
 import { REMOVE_IS_RESTAURANT_LOGGED_IN } from "./constants";
 
-export function setIsUserLoggedIn() {
+export function setIsRestaurantLoggedIn() {
   return {
     type: SET_IS_RESTAURANT_LOGGED_IN
   };
 }
 
-export function unSetIsUserLoggedIn() {
+export function unSetIsRestaurantLoggedIn() {
   return {
     type: REMOVE_IS_RESTAURANT_LOGGED_IN
   };
