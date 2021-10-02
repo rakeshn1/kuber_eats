@@ -449,3 +449,9 @@ iframe {
   transform: translateY(-50%);
   left: 0;
 }
+
+.invalid-feedback {
+  font-size: 15px;
+  color: red;
+  margin-left: 4px;
+}

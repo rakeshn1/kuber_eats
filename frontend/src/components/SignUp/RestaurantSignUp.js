@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./UserSignUp.css";
 import { Link, useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -9,23 +9,39 @@ const axios = require("axios");
 
 function RestaurantSignUp(props) {
   const history = useHistory();
+
+  const initState = {
+    email: "",
+    password: "",
+    confirmPassword: ""
+  };
+  const [error, setError] = useState(initState);
+  const [password, setPassword] = useState("");
+
   async function handleClick(event) {
     try {
       event.preventDefault();
-      const response = await axios({
-        method: "post",
-        url: `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/create`,
-        data: {
-          title: event.target.restaurantName.value,
-          email: event.target.email.value,
-          location: event.target.location.value,
-          password: event.target.password.value
+      if (formValid(error)) {
+        const response = await axios({
+          method: "post",
+          url: `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/create`,
+          data: {
+            title: event.target.restaurantName.value,
+            email: event.target.email.value,
+            location: event.target.location.value,
+            password: event.target.password.value
+          }
+        });
+        if (response.status == 200) {
+          await props.setSignUp();
+        } else {
+          throw new Error(response.data.msg);
         }
-      });
-      if (response.status == 200) {
-        await props.setSignUp();
       } else {
-        throw new Error(response.data.msg);
+        Swal.fire({
+          title: "Please enter all the values in required format",
+          confirmButtonColor: "black"
+        });
       }
     } catch (e) {
       console.log(e);
@@ -36,6 +52,49 @@ function RestaurantSignUp(props) {
       });
     }
   }
+
+  const formValid = error => {
+    const values = Object.values(error);
+    for (let i = 0; i < values.length; i++) {
+      if (values[i].length > 0) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const formValChange = e => {
+    e.preventDefault();
+    const { name, value } = e.target;
+    let newError = { ...error };
+
+    switch (name) {
+      case "email":
+        newError.email = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+          value
+        )
+          ? ""
+          : "Enter a valid email address";
+        break;
+      case "password":
+        newError.password = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/.test(
+          value
+        )
+          ? ""
+          : "Password should contain at least 8 characters, a number, an upperCase letter and a lower case letter";
+        setPassword(() => value);
+        break;
+      case "confirmPassword":
+        newError.confirmPassword =
+          password === value ? "" : "Passwords do not match";
+      default:
+        break;
+    }
+
+    setError(() => {
+      return newError;
+    });
+  };
 
   function callSuccess() {
     Swal.fire(
@@ -79,10 +138,17 @@ function RestaurantSignUp(props) {
                 className="wrap-input100 validate-input m-t-85 m-b-35"
                 validate="Enter Email ID"
               >
+                {error.email.length > 0 && (
+                  <>
+                    {" "}
+                    <span className="invalid-feedback">{error.email}</span>
+                  </>
+                )}
                 <input
                   className="input100"
                   type="email"
                   name="email"
+                  onChange={formValChange}
                   placeholder="Email ID"
                 />
                 <span className="focus-input100" placeholder="Username"></span>
@@ -103,10 +169,17 @@ function RestaurantSignUp(props) {
                 className="wrap-input100 validate-input m-b-50"
                 validate="Enter password"
               >
+                {error.password.length > 0 && (
+                  <>
+                    {" "}
+                    <span className="invalid-feedback">{error.password}</span>
+                  </>
+                )}
                 <input
                   className="input100"
                   type="password"
                   name="password"
+                  onChange={formValChange}
                   placeholder="Password"
                 />
                 <span className="focus-input100" placeholder="Password"></span>
@@ -116,10 +189,19 @@ function RestaurantSignUp(props) {
                 className="wrap-input100 validate-input m-b-50"
                 validate="Enter password"
               >
+                {error.confirmPassword.length > 0 && (
+                  <>
+                    {" "}
+                    <span className="invalid-feedback">
+                      {error.confirmPassword}
+                    </span>
+                  </>
+                )}
                 <input
                   className="input100"
                   type="password"
                   name="confirmPassword"
+                  onChange={formValChange}
                   placeholder="Confirm Password"
                 />
                 <span className="focus-input100" placeholder="Password"></span>

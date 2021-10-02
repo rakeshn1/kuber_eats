@@ -28,9 +28,9 @@ function Header(props) {
           )}
         </div>
         <>
-          {/*<div className={"Header__order-delivery"}>*/}
-          {/*  <OrderDelivery />*/}
-          {/*</div>*/}
+          <div className={"Header__order-delivery"}>
+            <OrderDelivery />
+          </div>
           <PersonalAreaBar open={props.open} />
         </>
       </div>

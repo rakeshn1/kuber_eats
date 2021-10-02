@@ -19,6 +19,11 @@ function RestaurantDashboard(props) {
   const [restaurantMenu, setRestaurantMenu] = useState({});
   const [edit, setEdit] = useState(false);
   const [optionSelected, setOptionSelected] = useState([]);
+  const initState = {
+    email: "",
+    publicContact: ""
+  };
+  const [error, setError] = useState(initState);
 
   useEffect(() => {
     (async () => {
@@ -33,35 +38,42 @@ function RestaurantDashboard(props) {
   const handleClick = async event => {
     try {
       event.preventDefault();
-      let categoriesToSend;
-      if (optionSelected.length > 0) {
-        categoriesToSend = optionSelected;
+      if (formValid(error)) {
+        let categoriesToSend;
+        if (optionSelected.length > 0) {
+          categoriesToSend = optionSelected;
+        } else {
+          categoriesToSend = props.restaurantData.categories;
+        }
+        let updatedData = {
+          id: props.restaurantData.id,
+          title: event.target.title.value,
+          email: event.target.email.value,
+          publicContact: event.target.publicContact.value,
+          imageUrl: props.restaurantData.imageUrl,
+          largeImageUrl: props.restaurantData.largeImageUrl,
+          location: event.target.location.value,
+          timings: event.target.time1.value + "-" + event.target.time2.value,
+          categories: categoriesToSend
+        };
+        const response = await axios({
+          method: "put",
+          url: `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/update`,
+          data: updatedData
+        });
+        if (response.status == 200) {
+          Swal.fire("Successfully saved the data", "", "success");
+          localStorage.setItem("restaurant", JSON.stringify(updatedData));
+          props.setRestaurant(updatedData);
+          setEdit(() => false);
+        } else {
+          throw new Error(response.data.msg);
+        }
       } else {
-        categoriesToSend = props.restaurantData.categories;
-      }
-      let updatedData = {
-        id: props.restaurantData.id,
-        title: event.target.title.value,
-        email: event.target.email.value,
-        publicContact: event.target.publicContact.value,
-        imageUrl: props.restaurantData.imageUrl,
-        largeImageUrl: props.restaurantData.largeImageUrl,
-        location: event.target.location.value,
-        timings: event.target.time1.value + "-" + event.target.time2.value,
-        categories: categoriesToSend
-      };
-      const response = await axios({
-        method: "put",
-        url: `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/update`,
-        data: updatedData
-      });
-      if (response.status == 200) {
-        Swal.fire("Successfully saved the data", "", "success");
-        localStorage.setItem("restaurant", JSON.stringify(updatedData));
-        props.setRestaurant(updatedData);
-        setEdit(() => false);
-      } else {
-        throw new Error(response.data.msg);
+        Swal.fire({
+          title: "Please enter all the values in required format",
+          confirmButtonColor: "black"
+        });
       }
     } catch (e) {
       console.log(e);
@@ -126,6 +138,45 @@ function RestaurantDashboard(props) {
     }
   };
 
+  const formValid = error => {
+    const values = Object.values(error);
+    for (let i = 0; i < values.length; i++) {
+      if (values[i].length > 0) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const formValChange = e => {
+    e.preventDefault();
+    const { name, value } = e.target;
+    let newError = { ...error };
+
+    switch (name) {
+      case "email":
+        newError.email = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+          value
+        )
+          ? ""
+          : "Enter a valid email address";
+        break;
+      case "publicContact":
+        newError.publicContact =
+          JSON.stringify(value).match(/\d/g).length === 10 &&
+          /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g.test(value)
+            ? ""
+            : "Enter a 10 digit phone number";
+        break;
+      default:
+        break;
+    }
+
+    setError(() => {
+      return newError;
+    });
+  };
+
   return (
     <main className="RRestaurant-page">
       {isNotEmpty(restaurantMenu) ? (
@@ -181,12 +232,19 @@ function RestaurantDashboard(props) {
                 </div>
                 <br />
                 <p className="Pidentifiers">Email</p>
+                {error.email.length > 0 && (
+                  <>
+                    {" "}
+                    <span className="invalid-feedback">{error.email}</span>
+                  </>
+                )}
                 <div className="PSearch">
                   <input
                     type="text"
                     name="email"
                     className="PSearch__text"
                     placeholder="Email"
+                    onChange={formValChange}
                     disabled={!edit}
                     defaultValue={
                       props.restaurantData && props.restaurantData.email
@@ -211,12 +269,21 @@ function RestaurantDashboard(props) {
                 </div>
                 <br />
                 <p className="Pidentifiers">Phone number</p>
+                {error.publicContact.length > 0 && (
+                  <>
+                    {" "}
+                    <span className="invalid-feedback">
+                      {error.publicContact}
+                    </span>
+                  </>
+                )}
                 <div className="PSearch">
                   <input
                     type="number"
                     name="publicContact"
                     className="PSearch__text"
                     placeholder="Phone number"
+                    onChange={formValChange}
                     disabled={!edit}
                     defaultValue={
                       props.restaurantData && props.restaurantData.publicContact

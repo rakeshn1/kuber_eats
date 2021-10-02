@@ -15,6 +15,12 @@ import { BACKEND_PORT } from "../../config";
 function UserProfile(props) {
   const imageUploader = React.useRef(null);
   const [edit, setEdit] = useState(false);
+  const initState = {
+    email: "",
+    number: ""
+  };
+  const [error, setError] = useState(initState);
+
   const history = useHistory();
   // componentDidMount() {
   //     (async () => {
@@ -31,35 +37,42 @@ function UserProfile(props) {
   async function handleClick(event) {
     try {
       event.preventDefault();
-      let updatedData = {
-        id: props.userData.id,
-        name: event.target.name.value,
-        email: event.target.email.value,
-        nickname: event.target.nickname.value,
-        dob: event.target.dob.value,
-        number: event.target.number.value,
-        imageUrl: props.userData.imageUrl,
-        address: {
-          addressLine: event.target.addressLine.value,
-          city: event.target.city.value,
-          state: event.target.state.value,
-          country: event.target.country.value,
-          pinCode: event.target.pinCode.value
-        },
-        favorites: props.userData.favorites
-      };
-      const response = await axios({
-        method: "put",
-        url: `http://${BACKEND_HOST}:${BACKEND_PORT}/users/update`,
-        data: updatedData
-      });
-      if (response.status == 200) {
-        Swal.fire("Successfully saved the data", "", "success");
-        localStorage.setItem("user", JSON.stringify(updatedData));
-        props.setUser(updatedData);
-        setEdit(() => false);
+      if (formValid(error)) {
+        let updatedData = {
+          id: props.userData.id,
+          name: event.target.name.value,
+          email: event.target.email.value,
+          nickname: event.target.nickname.value,
+          dob: event.target.dob.value,
+          number: event.target.number.value,
+          imageUrl: props.userData.imageUrl,
+          address: {
+            addressLine: event.target.addressLine.value,
+            city: event.target.city.value,
+            state: event.target.state.value,
+            country: event.target.country.value,
+            pinCode: event.target.pinCode.value
+          },
+          favorites: props.userData.favorites
+        };
+        const response = await axios({
+          method: "put",
+          url: `http://${BACKEND_HOST}:${BACKEND_PORT}/users/update`,
+          data: updatedData
+        });
+        if (response.status == 200) {
+          Swal.fire("Successfully saved the data", "", "success");
+          localStorage.setItem("user", JSON.stringify(updatedData));
+          props.setUser(updatedData);
+          setEdit(() => false);
+        } else {
+          throw new Error(response.data.msg);
+        }
       } else {
-        throw new Error(response.data.msg);
+        Swal.fire({
+          title: "Please enter all the values in required format",
+          confirmButtonColor: "black"
+        });
       }
     } catch (e) {
       console.log(e);
@@ -107,6 +120,45 @@ function UserProfile(props) {
 
   const backToOrders = () => {
     history.push("/restaurantOrders");
+  };
+
+  const formValid = error => {
+    const values = Object.values(error);
+    for (let i = 0; i < values.length; i++) {
+      if (values[i].length > 0) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const formValChange = e => {
+    e.preventDefault();
+    const { name, value } = e.target;
+    let newError = { ...error };
+
+    switch (name) {
+      case "email":
+        newError.email = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+          value
+        )
+          ? ""
+          : "Enter a valid email address";
+        break;
+      case "number":
+        newError.number =
+          JSON.stringify(value).match(/\d/g).length === 10 &&
+          /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g.test(value)
+            ? ""
+            : "Enter a 10 digit phone number";
+        break;
+      default:
+        break;
+    }
+
+    setError(() => {
+      return newError;
+    });
   };
 
   return (
@@ -157,12 +209,19 @@ function UserProfile(props) {
               </div>
               <br />
               <p className="Pidentifiers">Email</p>
+              {error.email.length > 0 && (
+                <>
+                  {" "}
+                  <span className="invalid-feedback">{error.email}</span>
+                </>
+              )}
               <div className="PSearch">
                 <input
                   type="text"
                   name="email"
                   className="PSearch__text"
                   placeholder="Email"
+                  onChange={formValChange}
                   disabled={!edit}
                   defaultValue={props.userData && props.userData.email}
                   id={"search"}
@@ -183,12 +242,19 @@ function UserProfile(props) {
               </div>
               <br />
               <p className="Pidentifiers">Phone number</p>
+              {error.number.length > 0 && (
+                <>
+                  {" "}
+                  <span className="invalid-feedback">{error.number}</span>
+                </>
+              )}
               <div className="PSearch">
                 <input
                   type="number"
                   name="number"
                   className="PSearch__text"
                   placeholder="Phone number"
+                  onChange={formValChange}
                   disabled={!edit}
                   defaultValue={props.userData && props.userData.number}
                   id={"search"}
