@@ -11,22 +11,28 @@ const selectQuery = 'SELECT * FROM restaurants';
 /* GET users listing. */
 router.get('/', async (req, res) => {
   try {
-    let [rows] = await pool.query(selectQuery);
+    const [rows] = await pool.query(selectQuery);
+    let rowsToSend;
     if (rows.length > 0) {
-      rows = rows.map((row) => {
-        // eslint-disable-next-line no-param-reassign
-        row.uuid = row.id;
-        row.location = JSON.parse(row.location);
-        row.categories = JSON.parse(row.categories);
-        row.tags = JSON.parse(row.tags);
-        row.etaRange = JSON.parse(row.etaRange);
-        row.rawRatingStats = JSON.parse(row.rawRatingStats);
-        row.publicContact = JSON.parse(row.publicContact);
-        return row;
+      rowsToSend = rows.map((row) => {
+        const rowData = {};
+        rowData.uuid = row.id;
+        rowData.title = row.title;
+        rowData.imageUrl = row.imageUrl;
+        rowData.largeImageUrl = row.largeImageUrl;
+        rowData.location = row.location;
+        rowData.categories = JSON.parse(row.categories);
+        rowData.tags = JSON.parse(row.tags);
+        rowData.etaRange = JSON.parse(row.etaRange);
+        rowData.rawRatingStats = JSON.parse(row.rawRatingStats);
+        rowData.publicContact = JSON.parse(row.publicContact);
+        rowData.deliveryType = JSON.parse(row.deliveryType);
+        rowData.dietary = JSON.parse(row.dietary);
+        return rowData;
       });
       console.log(rows);
       console.log('Fetched the restaurant data from DB');
-      res.status(200).json(rows);
+      res.status(200).json(rowsToSend);
     }
   } catch (e) {
     console.error('Error fetching data from DB:');
@@ -51,12 +57,14 @@ router.get('/:id', async (req, res) => {
         rowData.title = row.title;
         rowData.imageUrl = row.imageUrl;
         rowData.largeImageUrl = row.largeImageUrl;
-        rowData.location = JSON.parse(row.location);
+        rowData.location = row.location;
         rowData.categories = JSON.parse(row.categories);
         rowData.tags = JSON.parse(row.tags);
         rowData.etaRange = JSON.parse(row.etaRange);
         rowData.rawRatingStats = JSON.parse(row.rawRatingStats);
         rowData.publicContact = JSON.parse(row.publicContact);
+        rowData.deliveryType = JSON.parse(row.deliveryType);
+        rowData.dietary = JSON.parse(row.dietary);
         rowData.sections = [];
         rowData.items = {};
         const sectionMap = {};
@@ -108,10 +116,12 @@ router.get('/:id', async (req, res) => {
 router.post('/create', async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+    const deliveryType = JSON.stringify(req.body.deliveryType);
 
-    const sqlQuery = 'INSERT INTO restaurants (title, email, Password) VALUES (?,?,?)';
+    const sqlQuery = 'INSERT INTO restaurants (title, email, Password, deliveryType) VALUES (?,?,?, ?)';
     console.log(sqlQuery);
-    const [rows] = await pool.query(sqlQuery, [req.body.title, req.body.email, hashedPassword]);
+    const [rows] = await pool.query(sqlQuery, [req.body.title, req.body.email,
+      hashedPassword, deliveryType]);
     console.log(rows);
     if (rows.affectedRows) {
       res.status(200).json({ msg: 'Successfully created a Restaurant user' });
@@ -136,16 +146,16 @@ router.put('/update', async (req, res) => {
       categories.push({ id: ele.value, name: ele.label });
     });
     req.body.categories = JSON.stringify(categories);
-    // req.body.timings = JSON.stringify(req.body.timings);
-    // req.body.etaRange = JSON.stringify(req.body.etaRange);
+    req.body.deliveryType = JSON.stringify(req.body.deliveryType);
+    req.body.dietary = JSON.stringify(req.body.dietary);
     // req.body.rawRatingStats = JSON.stringify(req.body.rawRatingStats);
     // req.body.publicContact = JSON.stringify(req.body.publicContact);
-    const sqlQuery = 'UPDATE restaurants SET imageUrl = ?, largeImageUrl = ?, location = ?, categories = ?, tags = ?, etaRange = ?, rawRatingStats = ?, publicContact = ?, priceBucket = ?, timings = ? WHERE id = ?';
+    const sqlQuery = 'UPDATE restaurants SET imageUrl = ?, largeImageUrl = ?, location = ?, categories = ?, tags = ?, etaRange = ?, rawRatingStats = ?, publicContact = ?, priceBucket = ?, timings = ?, deliveryType = ?, dietary = ? WHERE id = ?';
     console.log(sqlQuery);
     const [rows] = await pool.query(sqlQuery,
       [req.body.imageUrl, req.body.largeImageUrl, req.body.location, req.body.categories,
         // eslint-disable-next-line max-len
-        req.body.tags, req.body.etaRange, req.body.rawRatingStats, req.body.publicContact, req.body.priceBucket, req.body.timings, req.body.id]);
+        req.body.tags, req.body.etaRange, req.body.rawRatingStats, req.body.publicContact, req.body.priceBucket, req.body.timings, req.body.deliveryType, req.body.dietary, req.body.id]);
     console.log(rows);
     if (rows.affectedRows) {
       res.status(200).json({ msg: 'Successfully updated a restaurant entry' });
@@ -192,6 +202,8 @@ router.post('/login', async (req, res) => {
               location: row.location,
               timings: row.timings,
               categories,
+              deliveryType: JSON.parse(row.deliveryType),
+              dietary: JSON.parse(row.dietary),
             };
             flag = true;
             break;

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import "./App.css";
 import Header from "./components/Header/Header.jsx";
-import { Main } from "./components/Main/Main.jsx";
+import Main from "./components/Main/Main.jsx";
 import { Footer } from "./components/Footer/Footer.jsx";
 import {
   BrowserRouter as Router,
@@ -27,6 +27,8 @@ import UserOrders from "./components/Orders/UserOrders";
 import { UserFavorites } from "./components/Favorites/UserFavorites";
 import { setUser } from "./redux/user";
 import { setRestaurant } from "./redux/restaurant";
+import { setIsUserLoggedIn } from "./redux/userLogin";
+import { setIsRestaurantLoggedIn } from "./redux/restaurantLogin";
 
 // const Routing = (props) =>{
 //   const history = useHistory()
@@ -51,11 +53,21 @@ class App extends React.PureComponent {
   componentDidMount() {
     const user = JSON.parse(localStorage.getItem("user"));
     const restaurant = JSON.parse(localStorage.getItem("restaurant"));
+    const isUserLoggedIn = JSON.parse(localStorage.getItem("isUserLoggedIn"));
+    const isRestaurantLoggedIn = JSON.parse(
+      localStorage.getItem("isRestaurantLoggedIn")
+    );
     if (restaurant) {
       this.props.setRestaurant(restaurant);
     }
     if (user) {
       this.props.setUser(user);
+    }
+    if (isUserLoggedIn) {
+      this.props.setIsUserLoggedIn();
+    }
+    if (isRestaurantLoggedIn) {
+      this.props.setIsRestaurantLoggedIn();
     }
     if (!this.props.user) {
       //this.props.history.push('/')
@@ -187,7 +199,9 @@ function mapStateToProps(globalState) {
 function mapDispatchToProps(dispatch) {
   return {
     setUser: userData => dispatch(setUser(userData)),
-    setRestaurant: restaurantData => dispatch(setRestaurant(restaurantData))
+    setRestaurant: restaurantData => dispatch(setRestaurant(restaurantData)),
+    setIsUserLoggedIn: () => dispatch(setIsUserLoggedIn()),
+    setIsRestaurantLoggedIn: () => dispatch(setIsRestaurantLoggedIn())
   };
 }
 

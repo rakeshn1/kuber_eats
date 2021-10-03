@@ -29,7 +29,8 @@ function RestaurantSignUp(props) {
             title: event.target.restaurantName.value,
             email: event.target.email.value,
             location: event.target.location.value,
-            password: event.target.password.value
+            password: event.target.password.value,
+            deliveryType: [{ value: "delivery", label: "Delivery" }]
           }
         });
         if (response.status == 200) {

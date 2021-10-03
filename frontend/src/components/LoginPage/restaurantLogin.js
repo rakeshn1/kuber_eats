@@ -23,6 +23,7 @@ function RestaurantLogin(props) {
       });
       if (response.status == 200) {
         localStorage.setItem("restaurant", JSON.stringify(response.data));
+        localStorage.setItem("isRestaurantLoggedIn", true);
         props.setIsRestaurantLoggedIn();
         props.setRestaurant(response.data);
         history.push("/restaurantDashBoard");

@@ -24,6 +24,7 @@ function Login(props) {
       if (response.status == 200) {
         //return <Redirect to={"/dashBoard"} />
         localStorage.setItem("user", JSON.stringify(response.data));
+        localStorage.setItem("isUserLoggedIn", JSON.stringify(true));
         props.setIsUserLoggedIn();
         props.setUser(response.data);
         history.push("/dashBoard");

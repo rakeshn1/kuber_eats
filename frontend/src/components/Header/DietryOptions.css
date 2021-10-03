@@ -1,0 +1,71 @@
+.DietryOptions {
+  position: fixed;
+  top: 0;
+  min-height: 101vh;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 20;
+  overflow-y: scroll;
+}
+
+.DietryOptions__header {
+  height: 80px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-bottom: 1px solid lightgrey;
+}
+
+.DietryOptions__main {
+  padding-top: 25px;
+  position: relative;
+  padding-bottom: 30px;
+}
+
+.DietryOptions__block {
+  display: flex;
+  height: 20%;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.DietryOptions__wrapper {
+  background: white;
+  width: 350px;
+  height: 180px;
+  position: absolute;
+  right: 110px;
+  top: 60px;
+  /* min-height: 100vh; */
+  /* display: flex; */
+  justify-content: space-between;
+  flex-direction: column;
+  /* box-sizing: border-box; */
+  font-family: UberMoveText, sans-serif;
+  /* font-size: 18px; */
+  color: #1f1f1f;
+  z-index: 20;
+  padding-left: 15px;
+  padding-bottom: 0;
+  border-radius: 10px;
+}
+
+.DietryOptions_lia {
+  font-weight: 600;
+  margin-right: 150px;
+}
+
+.DietryOptions_lib {
+  font-weight: 600;
+  margin-right: 117px;
+}
+
+.DietryOptions_lic {
+  font-weight: 600;
+  margin-right: 186px;
+}
+
+.Dietry_opt_img {
+  height: 18px;
+}

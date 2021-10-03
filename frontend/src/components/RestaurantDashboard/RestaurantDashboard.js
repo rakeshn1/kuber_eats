@@ -11,6 +11,8 @@ import { connect } from "react-redux";
 import { Container } from "../../Container/Container";
 import { BACKEND_HOST, BACKEND_PORT } from "../../config";
 import { CuisineOptions } from "../DropDown/CuisineOptions";
+import { DeliveryTypes } from "../DropDown/DeliveryTypes";
+import { DietaryTypes } from "../DropDown/DietaryTypes";
 import Option from "../DropDown/Option";
 
 function RestaurantDashboard(props) {
@@ -19,6 +21,8 @@ function RestaurantDashboard(props) {
   const [restaurantMenu, setRestaurantMenu] = useState({});
   const [edit, setEdit] = useState(false);
   const [optionSelected, setOptionSelected] = useState([]);
+  const [deliveryOptionSelected, setDeliveryOptionSelected] = useState([]);
+  const [dietaryOptionSelected, setDietaryOptionSelected] = useState([]);
   const initState = {
     email: "",
     publicContact: ""
@@ -40,10 +44,22 @@ function RestaurantDashboard(props) {
       event.preventDefault();
       if (formValid(error)) {
         let categoriesToSend;
+        let deliveryToSend;
+        let dietaryToSend;
         if (optionSelected.length > 0) {
           categoriesToSend = optionSelected;
         } else {
           categoriesToSend = props.restaurantData.categories;
+        }
+        if (deliveryOptionSelected.length > 0) {
+          deliveryToSend = deliveryOptionSelected;
+        } else {
+          deliveryToSend = props.restaurantData.deliveryType;
+        }
+        if (dietaryOptionSelected.length > 0) {
+          dietaryToSend = dietaryOptionSelected;
+        } else {
+          dietaryToSend = props.restaurantData.dietary;
         }
         let updatedData = {
           id: props.restaurantData.id,
@@ -54,7 +70,9 @@ function RestaurantDashboard(props) {
           largeImageUrl: props.restaurantData.largeImageUrl,
           location: event.target.location.value,
           timings: event.target.time1.value + "-" + event.target.time2.value,
-          categories: categoriesToSend
+          categories: categoriesToSend,
+          deliveryType: deliveryToSend,
+          dietary: dietaryToSend
         };
         const response = await axios({
           method: "put",
@@ -118,6 +136,14 @@ function RestaurantDashboard(props) {
     setOptionSelected(() => selected);
   };
 
+  const handleDeliveryChange = selected => {
+    setDeliveryOptionSelected(() => selected);
+  };
+
+  const handleDietaryChange = selected => {
+    setDietaryOptionSelected(() => selected);
+  };
+
   const handleEdit = () => {
     setEdit(() => true);
     window.scrollTo(0, 0);
@@ -135,6 +161,22 @@ function RestaurantDashboard(props) {
       return optionSelected;
     } else {
       return props.restaurantData.categories;
+    }
+  };
+
+  const selectDeliveryValues = () => {
+    if (deliveryOptionSelected.length > 0) {
+      return deliveryOptionSelected;
+    } else {
+      return props.restaurantData.deliveryType;
+    }
+  };
+
+  const selectDietaryValues = () => {
+    if (dietaryOptionSelected.length > 0) {
+      return dietaryOptionSelected;
+    } else {
+      return props.restaurantData.dietary;
     }
   };
 
@@ -323,6 +365,28 @@ function RestaurantDashboard(props) {
                   />
                 </div>
                 <br />
+                <p className="Pidentifiers">Dietary Type</p>
+                <div
+                  className="PSearch"
+                  data-toggle="popover"
+                  data-trigger="focus"
+                  data-content="Please select Dietary Type(s)"
+                >
+                  <ReactSelect
+                    options={DietaryTypes}
+                    isMulti
+                    closeMenuOnSelect={false}
+                    hideSelectedOptions={false}
+                    disabled={!edit}
+                    components={{
+                      Option
+                    }}
+                    onChange={handleDietaryChange}
+                    allowSelectAll={true}
+                    value={selectDietaryValues()}
+                  />
+                </div>
+                <br />
                 <p className="Pidentifiers">Cuisine</p>
                 <div
                   className="PSearch"
@@ -342,6 +406,28 @@ function RestaurantDashboard(props) {
                     onChange={handleChange}
                     allowSelectAll={true}
                     value={selectValues()}
+                  />
+                </div>
+                <br />
+                <p className="Pidentifiers">Delivery Type</p>
+                <div
+                  className="PSearch"
+                  data-toggle="popover"
+                  data-trigger="focus"
+                  data-content="Please select Delivery Type(s)"
+                >
+                  <ReactSelect
+                    options={DeliveryTypes}
+                    isMulti
+                    closeMenuOnSelect={false}
+                    hideSelectedOptions={false}
+                    disabled={!edit}
+                    components={{
+                      Option
+                    }}
+                    onChange={handleDeliveryChange}
+                    allowSelectAll={true}
+                    value={selectDeliveryValues()}
                   />
                 </div>
                 <br />

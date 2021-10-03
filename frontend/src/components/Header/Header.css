@@ -35,5 +35,111 @@
 }
 
 .Header__order-delivery {
-  display: flex;
+  margin-left: 40px;
+  padding: 4px;
+  height: 48px;
+  background: #eeeeee;
+  border-radius: 500px;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.Delivery_button_container {
+  margin-left: 40px;
+  padding: 4px;
+  height: 48px;
+  background: #eeeeee;
+  border-radius: 500px;
+  box-sizing: border-box;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.Delivery_button_d {
+  margin-left: 10px;
+  margin-right: 10px;
+  font-family: UberMoveText, sans-serif;
+  text-align: center;
+  cursor: pointer;
+}
+
+.Delivery_button_d_s {
+  margin-left: 1px;
+  line-height: 40px;
+  background: white;
+  border-radius: 500px;
+  display: inline-block;
+  width: 80px;
+  text-align: center;
+  font-family: UberMoveText, sans-serif;
+  cursor: pointer;
+}
+
+.Delivery_button_p {
+  margin-left: 10px;
+  margin-right: 10px;
+  font-family: UberMoveText, sans-serif;
+  text-align: center;
+  cursor: pointer;
+}
+
+.Delivery_button_p_s {
+  margin-left: 1px;
+  line-height: 40px;
+  background: white;
+  border-radius: 500px;
+  display: inline-block;
+  width: 70px;
+  text-align: center;
+  font-family: UberMoveText, sans-serif;
+  cursor: pointer;
+}
+
+.HOrder-delivery__location-arrow {
+  width: 12px;
+  height: 15px;
+  margin: 12px;
+  position: absolute;
+}
+
+.HOrder-delivery__location-enter {
+  width: 165px;
+  flex-grow: 1;
+  font-size: 18px;
+  line-height: 24px;
+  outline: none;
+  padding-left: 36px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  background: #eeeeee;
+  border-radius: 500px;
+  font-family: UberMoveText, sans-serif;
+}
+
+.Dietry_button_container {
+  margin-left: 40px;
+  padding: 4px;
+  height: 48px;
+  background: #eeeeee;
+  border-radius: 500px;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.Dietry_button_d {
+  display: inline-block;
+  margin-left: 10px;
+  margin-right: 10px;
+  font-family: UberMoveText, sans-serif;
+  text-align: center;
+  cursor: pointer;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.Dietry_downArrow {
+  width: 12px;
+  height: 12px;
+  margin-right: 10px;
+  cursor: pointer;
 }

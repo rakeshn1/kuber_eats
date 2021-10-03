@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import Header from "./components/Header/Header.jsx";
-import { Main } from "./components/Main/Main.jsx";
+import Main from "./components/Main/Main.jsx";
 import { Footer } from "./components/Footer/Footer.jsx";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { RestaurantPage } from "./components/Restaurant-page/Restaurant-page.jsx";

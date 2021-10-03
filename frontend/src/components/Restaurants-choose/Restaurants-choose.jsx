@@ -78,7 +78,7 @@ function RestaurantChoose(props) {
             })}{" "}
           </p>
           <p className="Restaurants-choose__delivery-time">
-            {props.etaRange.min} - {props.etaRange.max} min
+            {/*{props.etaRange.min} - {props.etaRange.max} min*/}
           </p>
         </div>
       </Link>
