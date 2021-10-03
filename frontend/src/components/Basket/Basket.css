@@ -1,0 +1,104 @@
+.Basket {
+  position: fixed;
+  top: 0;
+  min-height: 101vh;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 20;
+  overflow-y: scroll;
+}
+
+.Basket__header {
+  height: 80px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-bottom: 1px solid lightgrey;
+}
+
+.Basket__main {
+  padding-top: 25px;
+  position: relative;
+  padding-bottom: 30px;
+}
+
+.Basket__choose {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #1f1f1f;
+  font-family: Roboto, sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.Basket__select {
+  height: 50px;
+  width: 80px;
+  background: lightgrey;
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid gray;
+}
+
+.Basket__payment {
+  background: rgb(62, 153, 32);
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px, rgba(0, 0, 0, 0.04) 0px 4px 4px;
+  padding: 20px;
+  width: 100%;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: Roboto, sans-serif;
+  font-size: 18px;
+  margin: 0 auto 10px;
+}
+
+.Basket__payment-wrapper {
+  background: var(--white);
+  position: sticky;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+}
+
+.Basket__amount-dishes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 25px;
+  min-width: 25px;
+  border: 1px solid white;
+}
+
+.Basket__block {
+  display: flex;
+  height: 20%;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.Basket__wrapper {
+  background: white;
+  width: 30%;
+  position: absolute;
+  right: 0;
+  top: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  box-sizing: border-box;
+  font-family: Roboto, sans-serif;
+  font-size: 18px;
+  color: #1f1f1f;
+  z-index: 20;
+  padding-left: 15px;
+  padding-bottom: 0;
+}
+
+.Basket__close {
+  cursor: pointer;
+}

@@ -1,0 +1,87 @@
+.Dish__list {
+  margin-top: 32px;
+  margin-left: -16px;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-right: 0;
+  scroll-behavior: smooth;
+}
+
+.Dish {
+  padding: 16px;
+  display: flex;
+  flex-basis: 50%;
+  padding-right: 0;
+  min-height: 160px;
+  cursor: pointer;
+}
+
+.Dish__wrapper {
+  display: flex;
+  border: 1px solid var(--border_grey);
+  position: relative;
+  width: 100%;
+}
+
+.Dish__wrapper:hover::before {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: var(--border_dark_grey);
+  opacity: 0.04;
+}
+
+.Dish__inBasket {
+  border: 1px solid green;
+}
+
+.Dish__inBasketCount {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 30px;
+  text-align: center;
+  color: var(--white);
+  background: green;
+  height: 35px;
+  width: 35px;
+}
+
+.Dish__header {
+  display: flex;
+  flex-direction: column;
+}
+
+.Dish__about {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+  flex-grow: 1;
+  position: relative;
+}
+
+.Dish__name {
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--font_black);
+}
+
+.Dish__recipe {
+  color: var(--font_grey);
+  font-size: 13px;
+  line-height: 21px;
+}
+
+.Dish__photo {
+  box-sizing: border-box;
+  width: 160px;
+  min-height: 160px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  object-fit: cover;
+}

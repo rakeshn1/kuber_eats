@@ -1,0 +1,16 @@
+.Footer {
+  background: var(--background_black);
+}
+
+.Footer__wrapper {
+  margin: 0 auto;
+  width: 1000px;
+  border-bottom: 1px solid var(--border_grey);
+}
+
+.Footer__logo {
+  margin-top: 56px;
+  margin-bottom: 40px;
+  width: 192px;
+  height: 20px;
+}
