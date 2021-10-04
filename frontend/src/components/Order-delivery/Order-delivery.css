@@ -1,0 +1,59 @@
+.Order-delivery {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+
+.Order-delivery__time {
+  font-family: var(--main_font);
+  height: 40px;
+  width: 60px;
+  align-self: center;
+  font-size: 16px;
+  color: var(--font_black);
+  text-align: center;
+  background: none;
+  border: 1px solid var(--border_grey);
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.Order-delivery__to {
+  align-self: center;
+  margin: 0 9px;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 19px;
+  color: var(--font_grey);
+}
+
+.Order-delivery__location {
+  align-self: center;
+  border-radius: 2px;
+  width: 292px;
+  display: flex;
+  position: relative;
+}
+
+.Order-delivery__location-arow {
+  width: 12px;
+  height: 15px;
+  margin: 12px;
+  position: absolute;
+}
+
+.Order-delivery__location-enter {
+  flex-grow: 1;
+  font-size: 16px;
+  line-height: 24px;
+  outline: none;
+  padding-left: 36px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border: 1px solid var(--border_grey);
+  border-radius: 2px;
+}
+
+.Order-delivery__location-enter:focus {
+  border: 1px solid var(--font_black);
+}
