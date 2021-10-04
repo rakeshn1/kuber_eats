@@ -24,21 +24,12 @@ import RestaurantDishDisplay from "./components/RestaurantDashboard/RestaurantDi
 import AddDish from "./components/AddDish/AddDish";
 import PaginationTable from "./components/Orders/restaurantOrders";
 import UserOrders from "./components/Orders/UserOrders";
-import { UserFavorites } from "./components/Favorites/UserFavorites";
+import UserFavorites from "./components/Favorites/UserFavorites";
+import CheckOut from "./components/CheckOut/CheckOut";
 import { setUser } from "./redux/user";
 import { setRestaurant } from "./redux/restaurant";
 import { setIsUserLoggedIn } from "./redux/userLogin";
 import { setIsRestaurantLoggedIn } from "./redux/restaurantLogin";
-
-// const Routing = (props) =>{
-//   const history = useHistory()
-//   useEffect(()=>{
-//     if(!props.user){
-//       history.push('/')
-//     }
-//   },[])
-//   return (<></>)
-// }
 
 class App extends React.PureComponent {
   constructor(props) {
@@ -101,6 +92,13 @@ class App extends React.PureComponent {
     window.localStorage.setItem("basketOrders", JSON.stringify([...newArray]));
   };
 
+  clearBasket = () => {
+    this.setState({
+      basketOrders: []
+    });
+    window.localStorage.removeItem("basketOrders");
+  };
+
   renderRestaurantPage = props => {
     return (
       <RestaurantPage
@@ -153,6 +151,11 @@ class App extends React.PureComponent {
           <Route path="/userProfile" exact component={UserProfile} />
           <Route path="/userFavorites" exact component={UserFavorites} />
           <Route path="/userOrders" exact component={UserOrders} />
+          <Route
+            path="/checkOut"
+            exact
+            component={() => <CheckOut clearBasket={this.clearBasket} />}
+          />
           <Route path="/dishes" exact component={RestaurantDishDisplay} />
           <Route path="/addDish" exact component={AddDish} />
           <Route path="/restaurantOrders" exact component={PaginationTable} />
@@ -160,32 +163,6 @@ class App extends React.PureComponent {
         <Footer />
       </Router>
     );
-    // }else{
-    //   return (<></>
-    //       // <Dashboard obj = {this}/>
-    //       // <>
-    //       //   <Router>
-    //       //     <ScrollToTop>
-    //       //       {this.state.isBasketOpen && (
-    //       //           <Basket
-    //       //               basketOrders={this.state.basketOrders}
-    //       //               setOpenBasket={this.setOpenBasket}
-    //       //               removeFromBasket={this.removeFromBasket}
-    //       //               addToBasket={this.addToBasket}
-    //       //           />
-    //       //       )}
-    //       //       <Header open={this.setOpenBasket} />
-    //       //       <Route path="/" exact component={Main} />
-    //       //       <Route
-    //       //           path="/restaurant-page/:id"
-    //       //           component={this.renderRestaurantPage}
-    //       //       />
-    //       //     </ScrollToTop>
-    //       //   </Router>
-    //       //   <Footer />
-    //       // </>
-    //   );
-    // }
   }
 }
 

@@ -13,8 +13,8 @@ function Main(props) {
   useEffect(() => {
     (async () => {
       const response = await fetch(
-        //`http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants`
-        "https://uber-eats-mates.herokuapp.com/api/v1/restaurants"
+        `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants`
+        //"https://uber-eats-mates.herokuapp.com/api/v1/restaurants"
       );
       let loadedRestaurants = await response.json();
       //********************************TOBEDELETED*********************************************************************************

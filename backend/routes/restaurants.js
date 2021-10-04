@@ -118,10 +118,10 @@ router.post('/create', async (req, res) => {
     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
     const deliveryType = JSON.stringify(req.body.deliveryType);
 
-    const sqlQuery = 'INSERT INTO restaurants (title, email, Password, deliveryType) VALUES (?,?,?, ?)';
+    const sqlQuery = 'INSERT INTO restaurants (title, email, Password, location, deliveryType) VALUES (?,?,?,?,?)';
     console.log(sqlQuery);
     const [rows] = await pool.query(sqlQuery, [req.body.title, req.body.email,
-      hashedPassword, deliveryType]);
+      hashedPassword, req.body.location, deliveryType]);
     console.log(rows);
     if (rows.affectedRows) {
       res.status(200).json({ msg: 'Successfully created a Restaurant user' });

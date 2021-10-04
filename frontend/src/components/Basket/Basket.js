@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Basket.css";
+import { useHistory } from "react-router-dom";
 import basketImage from "./image/basket.svg";
 import { DishInBasket } from "../DishInBasket/DishInBasket";
 
-export function Basket(props: any) {
+export function Basket(props) {
+  const history = useHistory();
+  const modalRef = useRef();
+
   function totalCount() {
-    let total: number = 0;
-    props.basketOrders.map((basketOrder: any) => {
+    let total = 0;
+    props.basketOrders.map(basketOrder => {
       total += basketOrder.count;
       return false;
     });
@@ -16,26 +20,30 @@ export function Basket(props: any) {
   let count = totalCount();
 
   function totalMoney() {
-    let total:number = 0;
-    props.basketOrders.map((basketOrder: any) => {
+    let total = 0;
+    props.basketOrders.map(basketOrder => {
       total += basketOrder.dishInfo.price * basketOrder.count;
       return false;
     });
     return total;
   }
 
-  let money: number = totalMoney();
+  let money = totalMoney();
+
+  const closeModal = e => {
+    if (modalRef.current === e.target) {
+      props.setOpenBasket();
+    }
+  };
+
+  function handleClick(e) {
+    e.preventDefault();
+    props.setOpenBasket();
+    history.push("/checkOut");
+  }
 
   return (
-    <div
-      className="Basket"
-      onClick={event => {
-        let target = event.target as HTMLTextAreaElement;
-        if (target.matches(".Basket")) {
-          props.setOpenBasket();
-        }
-      }}
-    >
+    <div className="Basket" onClick={closeModal} ref={modalRef}>
       <div className="Basket__wrapper">
         <div className="Basket__block">
           <div className="Basket__header">
@@ -61,7 +69,7 @@ export function Basket(props: any) {
           </div>
 
           <div className="Basket__main">
-            {props.basketOrders.map((basketOrder: any, i: number) => {
+            {props.basketOrders.map((basketOrder, i) => {
               return (
                 <DishInBasket
                   basketOrder={basketOrder}
@@ -75,12 +83,12 @@ export function Basket(props: any) {
             })}
           </div>
         </div>
-        <div className="Basket__payment-wrapper">
+        <div className="Basket__payment-wrapper" onClick={handleClick}>
           <div className=" Basket__payment">
             <div className="Basket__amount-dishes">{count}</div>
             <span className="basket__next-step">Pay</span>
             <span className="basket__price basket__price--payment">
-              {money / 100}$.
+              {money}$.
             </span>
           </div>
         </div>

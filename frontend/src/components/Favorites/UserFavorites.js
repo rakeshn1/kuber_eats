@@ -1,36 +1,45 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./UserFavorites.css";
 import RestaurantChoose from "../Restaurants-choose/Restaurants-choose";
 import { Container } from "../../Container/Container";
+import { BACKEND_HOST, BACKEND_PORT } from "../../config";
+import { connect } from "react-redux";
 
-export class UserFavorites extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      searchValue: "",
-      restaurants: []
-    };
-  }
+function UserFavorites(props) {
+  const [restaurants, setRestaurants] = useState([]);
 
-  componentDidMount() {
+  useEffect(() => {
     (async () => {
       const response = await fetch(
-        "https://uber-eats-mates.herokuapp.com/api/v1/restaurants"
+        `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants`
+        //"https://uber-eats-mates.herokuapp.com/api/v1/restaurants"
       );
-      const loadedRestaurants = await response.json();
-      await this.setState({
-        restaurants: loadedRestaurants
-      });
+      let loadedRestaurants = await response.json();
+      await setRestaurants(() => loadedRestaurants);
     })();
-  }
-  render() {
-    return (
-      <Container>
-        <main className="FMain">
-          <p className="FMain__city">Your Favorite Restaurants</p>
-          <div className="FMain__restaurants-list">
-            {this.state.restaurants.length > 0
-              ? this.state.restaurants.map((restaurant, i) => {
+  }, []);
+
+  const ifFavoritesInclude = restaurant => {
+    if (props.user.favorites.includes(restaurant.uuid)) {
+      return true;
+    }
+    return false;
+  };
+
+  return (
+    <Container>
+      <main className="FMain">
+        <p className="FMain__city">Your Favorite Restaurants</p>
+        <div className="FMain__restaurants-list">
+          {restaurants.length > 0
+            ? restaurants
+                .filter((restaurant, i) => {
+                  return (
+                    props.user.favorites.length > 0 &&
+                    ifFavoritesInclude(restaurant)
+                  );
+                })
+                .map((restaurant, i) => {
                   return (
                     <RestaurantChoose
                       key={i}
@@ -43,10 +52,20 @@ export class UserFavorites extends React.Component {
                     />
                   );
                 })
-              : ""}
-          </div>
-        </main>
-      </Container>
-    );
-  }
+            : ""}
+        </div>
+      </main>
+    </Container>
+  );
 }
+
+function mapStateToProps(globalState) {
+  return {
+    user: globalState.user
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  null
+)(UserFavorites);

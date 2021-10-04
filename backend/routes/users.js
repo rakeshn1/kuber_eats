@@ -167,7 +167,7 @@ router.post('/orders', async (req, res) => {
         address: row.address,
       }));
       console.log(rowData);
-      console.log('Fetched the restaurant orders from DB');
+      console.log('Fetched the user orders from DB');
       res.status(200).json(rowData);
     }
   } catch (e) {
@@ -182,13 +182,14 @@ router.post('/orders', async (req, res) => {
 router.post('/createOrder', async (req, res) => {
   try {
     req.body.description = JSON.stringify(req.body.description);
+    req.body.address = JSON.stringify(req.body.address);
     // req.body.dateTime = JSON.stringify(req.body.dateTime);
-    const sqlQuery = 'INSERT INTO orders (description, totalCost, dateTime, deliveryStatus, status, deliveryType, customerID, restaurantID) VALUES (?,?,?,?,?,?,?,?)';
+    const sqlQuery = 'INSERT INTO orders (description, totalCost, dateTime, deliveryStatus, status, deliveryType, customerID, restaurantID, address) VALUES (?,?,?,?,?,?,?,?,?)';
     console.log(sqlQuery);
     const [rows] = await pool.query(sqlQuery,
       [req.body.description, req.body.totalCost, req.body.dateTime, req.body.deliveryStatus,
-        // eslint-disable-next-line max-len
-        req.body.status, req.body.deliveryType, req.body.customerID, req.body.restaurantID]);
+        req.body.status, req.body.deliveryType, req.body.customerID, req.body.restaurantID,
+        req.body.address]);
     console.log(rows);
     if (rows.affectedRows) {
       res.status(200).json({ msg: 'Successfully created an Order' });

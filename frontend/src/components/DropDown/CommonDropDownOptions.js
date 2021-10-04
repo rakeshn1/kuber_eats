@@ -1,4 +1,5 @@
 export const allDeliveryStatus = {
+  orderReceived: "Order Received",
   preparing: "Preparing",
   pickUpReady: "Pick Up Ready",
   pickedUp: "Picked Up",

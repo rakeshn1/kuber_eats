@@ -14,7 +14,7 @@ export class RestaurantMenu extends React.PureComponent {
           {this.props.restaurantMenu
             ? this.props.restaurantMenu.sections.map((section, i) => {
                 return (
-                  <div key={section.uuid}>
+                  <div key={section.uuid} className="RMenu_title">
                     <span className={"RMenu__type"} id={`${section.title}`}>
                       {section.title}
                     </span>

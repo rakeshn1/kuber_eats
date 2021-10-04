@@ -1,0 +1,216 @@
+.CBasket {
+  position: fixed;
+  min-height: 101vh;
+  left: 0;
+  width: 100%;
+  z-index: 20;
+  overflow-y: scroll;
+}
+
+.CBasket__header {
+  height: 80px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-bottom: 1px solid lightgrey;
+  bottom: 0;
+  border-top: 1px solid #191616;
+}
+
+.CBasket__headerT {
+  height: 80px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-bottom: 1px solid lightgrey;
+  border-top: 2px solid #191616;
+}
+
+.CBasket__main {
+  padding-top: 25px;
+  position: relative;
+  padding-bottom: 30px;
+}
+
+.CBasket__mainT {
+  padding-top: 25px;
+  position: relative;
+  padding-bottom: 30px;
+}
+
+.MCBasket__choose {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #1f1f1f;
+  font-family: UberMoveText-Medium, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.MCBasket__chooseT {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #1f1f1f;
+  font-family: UberMoveText-Medium, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.MCBasket__select {
+  height: 50px;
+  width: 80px;
+  border-radius: 0;
+  border: none;
+}
+
+.MCBasket__selectT {
+  height: 50px;
+  width: 80px;
+  background: lightgrey;
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid gray;
+}
+
+.CBasket__payment {
+  background: rgb(62, 153, 32);
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px, rgba(0, 0, 0, 0.04) 0px 4px 4px;
+  padding: 20px;
+  width: 406px;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: UberMoveText-Medium, Helvetica, sans-serif;
+  font-size: 18px;
+}
+
+.CBasket__paymentT {
+  background: black;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px, rgba(0, 0, 0, 0.04) 0px 4px 4px;
+  padding: 20px;
+  width: 100%;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: UberMoveText-Medium, Helvetica, sans-serif;
+  font-size: 18px;
+  margin: 0 auto 10px;
+}
+
+.CBasket__payment-wrapper {
+  background: var(--white);
+  position: sticky;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  cursor: pointer;
+}
+
+.CBasket__amount-dishes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 25px;
+  min-width: 25px;
+  border: 1px solid white;
+}
+
+.CBasket__block {
+  display: flex;
+  height: 20%;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.CBasket__blockT {
+  display: flex;
+  height: 20%;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.CBasket__wrapper {
+  background: white;
+  width: 30%;
+  position: absolute;
+  right: 0;
+  top: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  box-sizing: border-box;
+  font-family: UberMoveText-Medium, Helvetica, sans-serif;
+  font-size: 18px;
+  color: #1f1f1f;
+  z-index: 20;
+  padding-left: 15px;
+  padding-bottom: 0;
+}
+
+.CBasket__wrapperT {
+  background: #efefef;
+  width: 70%;
+  position: absolute;
+  top: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  box-sizing: border-box;
+  font-family: UberMoveText-Medium, Helvetica, sans-serif;
+  font-size: 18px;
+  color: #1f1f1f;
+  z-index: 20;
+  padding-left: 15px;
+  padding-bottom: 0;
+}
+
+.CBasket__close {
+  cursor: pointer;
+}
+
+.Cbasket__next-stepT {
+  align-content: center;
+  margin-left: 140px;
+}
+
+.coButton {
+  background: #ccc;
+  border-radius: 50px;
+  cursor: pointer;
+  display: inline-block;
+  width: 110px;
+  height: 40px;
+  justify-content: center;
+  line-height: 2;
+  font-weight: bold;
+}
+
+.coButtonA {
+  background: #ccc;
+  border-radius: 50px;
+  cursor: pointer;
+  display: inline-block;
+  width: 140px;
+  height: 40px;
+  justify-content: center;
+  line-height: 2;
+  font-weight: bold;
+  font-family: UberMoveText-Medium, Helvetica, sans-serif;
+  margin-bottom: 20px;
+}
+
+.h2 {
+  font-family: UberMoveText-Medium, Helvetica, sans-serif;
+}
+
+.extraContent {
+  align-content: center;
+  font-size: 12px;
+  font-family: UberMoveText-Medium, Helvetica, sans-serif;
+}

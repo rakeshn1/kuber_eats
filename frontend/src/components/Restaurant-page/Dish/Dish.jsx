@@ -1,5 +1,6 @@
 import React from "react";
 import "./Dish.css";
+import Swal from "sweetalert2";
 
 export function Dish(props) {
   const restaurantMenu = props.restaurantMenu;
@@ -26,10 +27,45 @@ export function Dish(props) {
     if (isDishInBasket !== -1) {
       orders[isDishInBasket].count++;
     } else {
-      orders.push({
-        dishInfo: restaurantMenu.items[props.id],
-        count: 1
-      });
+      if (orders.length > 0) {
+        if (
+          orders[0].dishInfo.restaurantID !==
+          restaurantMenu.items[props.id].restaurantID
+        ) {
+          Swal.fire({
+            title: "Create new Order?",
+            text:
+              "Your order contains items from another restaurant. Do you want to discard those and add items from this restaurant?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#57b846",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes"
+          }).then(result => {
+            if (result.isConfirmed) {
+              orders = [];
+              orders.push({
+                dishInfo: restaurantMenu.items[props.id],
+                count: 1
+              });
+              props.addToBasket(orders);
+              return;
+            } else {
+              return;
+            }
+          });
+        } else {
+          orders.push({
+            dishInfo: restaurantMenu.items[props.id],
+            count: 1
+          });
+        }
+      } else {
+        orders.push({
+          dishInfo: restaurantMenu.items[props.id],
+          count: 1
+        });
+      }
     }
     props.addToBasket(orders);
   }
@@ -63,8 +99,8 @@ export function Dish(props) {
           <div className="dish__footer">
             <span className="dish__price">
               {restaurantMenu.items[props.id] &&
-                restaurantMenu.items[props.id].price / 100}
-              ₴
+                restaurantMenu.items[props.id].price}
+              $
             </span>
           </div>
         </div>

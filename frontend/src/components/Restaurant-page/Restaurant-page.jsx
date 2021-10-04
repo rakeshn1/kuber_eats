@@ -17,8 +17,8 @@ export class RestaurantPage extends React.PureComponent {
   componentDidMount() {
     (async () => {
       const response = await fetch(
-        //`http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/${this.state.id}`
-        `https://uber-eats-mates.herokuapp.com/api/v1/restaurants/${this.state.id}`
+        `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/${this.state.id}`
+        //`https://uber-eats-mates.herokuapp.com/api/v1/restaurants/${this.state.id}`
       );
       const loadedRestaurant = await response.json();
       await this.setState({
