@@ -55,6 +55,9 @@ function UserProfile(props) {
           },
           favorites: props.userData.favorites
         };
+        axios.defaults.headers.common["authorization"] = JSON.parse(
+          localStorage.getItem("token")
+        );
         const response = await axios({
           method: "put",
           url: `http://${BACKEND_HOST}:${BACKEND_PORT}/users/update`,
@@ -91,6 +94,9 @@ function UserProfile(props) {
       if (file) {
         let bodyFormData = new FormData();
         bodyFormData.append("image", file);
+        axios.defaults.headers.common["authorization"] = JSON.parse(
+          localStorage.getItem("token")
+        );
         const response = await axios({
           method: "post",
           url: `http://${BACKEND_HOST}:${BACKEND_PORT}/users/uploadImage`,

@@ -39,6 +39,9 @@ const PaginationTable = props => {
 
   useEffect(async () => {
     try {
+      axios.defaults.headers.common["authorization"] = JSON.parse(
+        localStorage.getItem("token")
+      );
       const response = await axios({
         method: "post",
         url: `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/orders`,
@@ -56,11 +59,19 @@ const PaginationTable = props => {
       }
     } catch (e) {
       console.log(e);
-      Swal2.fire({
-        icon: "error",
-        title: "Oops...",
-        text: e
-      });
+      if (e.response && e.response.status === 401) {
+        Swal2.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Unauthorized to access API"
+        });
+      } else {
+        Swal2.fire({
+          icon: "error",
+          title: "Oops...",
+          text: e
+        });
+      }
     }
   }, []);
 
@@ -106,6 +117,9 @@ const PaginationTable = props => {
         });
       },
       preConfirm: status => {
+        axios.defaults.headers.common["authorization"] = JSON.parse(
+          localStorage.getItem("token")
+        );
         return axios({
           method: "put",
           url: `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/orderUpdate`,

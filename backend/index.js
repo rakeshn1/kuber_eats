@@ -7,9 +7,11 @@ const app = express();
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const passport = require('passport');
 const configurations = require('./config.json');
 
 const connectionPool = require('./dbConnection');
+const passPortConfig = require('./passport');
 
 app.use(express.static(`${__dirname}/public`));
 
@@ -29,11 +31,15 @@ app.use(express.static(`${__dirname}/public`));
 app.use('/images', express.static(`${__dirname}/public/images`));
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Origin', `http://${configurations.frontEndHost}:${configurations.frontEndPort}`);
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, Authorization, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
   res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
   next();
 });
+
+app.use(passport.initialize());
+passPortConfig(passport);
 
 app.use('/users', usersRouter);
 app.use('/restaurants', restaurantRouter);

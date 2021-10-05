@@ -8,6 +8,7 @@ import signUpReducer from "./signUp";
 import deliveryTypeReducer from "./deliveryType";
 import locationReducer from "./location";
 import dietaryReducer from "./dietary";
+import tokenReducer from "./userToken";
 
 const storeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -20,7 +21,8 @@ const rootReducer = combineReducers({
   signUpMessage: signUpReducer,
   deliveryType: deliveryTypeReducer,
   location: locationReducer,
-  dietary: dietaryReducer
+  dietary: dietaryReducer,
+  token: tokenReducer
 });
 
 const store = createStore(rootReducer, storeEnhancers());

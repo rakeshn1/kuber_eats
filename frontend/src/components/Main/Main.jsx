@@ -5,6 +5,8 @@ import RestaurantChoose from "../Restaurants-choose/Restaurants-choose";
 import { Container } from "../../Container/Container";
 import { connect } from "react-redux";
 import { BACKEND_HOST, BACKEND_PORT } from "../../config";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 function Main(props) {
   const [searchValue, setSearchValue] = useState("");
@@ -12,45 +14,66 @@ function Main(props) {
 
   useEffect(() => {
     (async () => {
-      const response = await fetch(
-        `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants`
-        //"https://uber-eats-mates.herokuapp.com/api/v1/restaurants"
-      );
-      let loadedRestaurants = await response.json();
-      //********************************TOBEDELETED*********************************************************************************
-      for (let i = 0; i < loadedRestaurants.length; i++) {
-        if (i % 2 === 0) {
-          loadedRestaurants[i].deliveryType = [
-            { value: "delivery", label: "Delivery" }
-          ];
-          loadedRestaurants[i].location = "Sunnyvale";
-          loadedRestaurants[i].dietary = [{ value: "vegan", label: "Vegan" }];
+      try {
+        axios.defaults.headers.common["authorization"] = JSON.parse(
+          localStorage.getItem("token")
+        );
+        const response = await axios({
+          method: "get",
+          url: `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants`
+          //"https://uber-eats-mates.herokuapp.com/api/v1/restaurants"
+        });
+        let loadedRestaurants = await response.data;
+        //********************************TOBEDELETED*********************************************************************************
+        // for (let i = 0; i < loadedRestaurants.length; i++) {
+        //   if (i % 2 === 0) {
+        //     loadedRestaurants[i].deliveryType = [
+        //       { value: "delivery", label: "Delivery" }
+        //     ];
+        //     loadedRestaurants[i].location = "Sunnyvale";
+        //     loadedRestaurants[i].dietary = [{ value: "vegan", label: "Vegan" }];
+        //   } else {
+        //     loadedRestaurants[i].deliveryType = [
+        //       { value: "delivery", label: "Delivery" },
+        //       { value: "pickUp", label: "Pick up" }
+        //     ];
+        //     loadedRestaurants[i].location = "SanJose";
+        //     loadedRestaurants[i].dietary = [
+        //       { value: "nonVegetarian", label: "Non Vegetarian" },
+        //       { value: "vegetarian", label: "Vegetarian" }
+        //     ];
+        //   }
+        // }
+        //       loadedRestaurants[0].deliveryType = [{ value: "delivery", label: "Delivery" }]
+        //       loadedRestaurants[0].dietary = [{ value: "vegetarian", label: "Vegetarian" }]
+        //       loadedRestaurants[0].location = "Sunnyvale"
+        //       loadedRestaurants[1].deliveryType = [{ value: "delivery", label: "Delivery" },
+        //         { value: "pickUp", label: "Pick up" }]
+        //       loadedRestaurants[1].dietary = [{ value: "nonVegetarian", label: "Non Vegetarian" },{ value: "vegetarian", label: "Vegetarian" }]
+        //       loadedRestaurants[1].location = "San Jose"
+        //       loadedRestaurants[2].deliveryType = [{ value: "delivery", label: "Delivery" },
+        //         { value: "pickUp", label: "Pick up" }]
+        //       loadedRestaurants[2].dietary = [{ value: "vegan", label: "Vegan" }]
+        //       loadedRestaurants[2].location = "San Jose"
+        //       loadedRestaurants = loadedRestaurants.slice(0,3)
+        //********************************TOBEDELETED*********************************************************************************
+        await setRestaurants(() => loadedRestaurants);
+      } catch (e) {
+        console.log(e);
+        if (e.response.status === 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Unauthorized to access API"
+          });
         } else {
-          loadedRestaurants[i].deliveryType = [
-            { value: "delivery", label: "Delivery" },
-            { value: "pickUp", label: "Pick up" }
-          ];
-          loadedRestaurants[i].location = "SanJose";
-          loadedRestaurants[i].dietary = [
-            { value: "nonVegetarian", label: "Non Vegetarian" },
-            { value: "vegetarian", label: "Vegetarian" }
-          ];
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: e
+          });
         }
       }
-      //       loadedRestaurants[0].deliveryType = [{ value: "delivery", label: "Delivery" }]
-      //       loadedRestaurants[0].dietary = [{ value: "vegetarian", label: "Vegetarian" }]
-      //       loadedRestaurants[0].location = "Sunnyvale"
-      //       loadedRestaurants[1].deliveryType = [{ value: "delivery", label: "Delivery" },
-      //         { value: "pickUp", label: "Pick up" }]
-      //       loadedRestaurants[1].dietary = [{ value: "nonVegetarian", label: "Non Vegetarian" },{ value: "vegetarian", label: "Vegetarian" }]
-      //       loadedRestaurants[1].location = "San Jose"
-      //       loadedRestaurants[2].deliveryType = [{ value: "delivery", label: "Delivery" },
-      //         { value: "pickUp", label: "Pick up" }]
-      //       loadedRestaurants[2].dietary = [{ value: "vegan", label: "Vegan" }]
-      //       loadedRestaurants[2].location = "San Jose"
-      //       loadedRestaurants = loadedRestaurants.slice(0,3)
-      //********************************TOBEDELETED*********************************************************************************
-      await setRestaurants(() => loadedRestaurants);
     })();
   }, []);
 

@@ -20,6 +20,9 @@ function RestaurantChoose(props) {
         id: props.userData.id,
         restaurantID: props.uuid
       };
+      axios.defaults.headers.common["authorization"] = JSON.parse(
+        localStorage.getItem("token")
+      );
       const response = await axios({
         method: "put",
         url: `http://${BACKEND_HOST}:${BACKEND_PORT}/users/updateFavorites`,

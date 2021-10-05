@@ -154,7 +154,13 @@ class App extends React.PureComponent {
           <Route
             path="/checkOut"
             exact
-            component={() => <CheckOut clearBasket={this.clearBasket} />}
+            component={() => {
+              if (this.props.isUserLoggedIn) {
+                return <CheckOut clearBasket={this.clearBasket} />;
+              } else {
+                return <RestaurantLogin />;
+              }
+            }}
           />
           <Route path="/dishes" exact component={RestaurantDishDisplay} />
           <Route path="/addDish" exact component={AddDish} />
@@ -169,7 +175,8 @@ class App extends React.PureComponent {
 function mapStateToProps(globalState) {
   return {
     user: globalState.user,
-    restaurant: globalState.restaurant
+    restaurant: globalState.restaurant,
+    isUserLoggedIn: globalState.isUserLoggedIn
   };
 }
 

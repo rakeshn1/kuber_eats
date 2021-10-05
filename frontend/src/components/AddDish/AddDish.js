@@ -59,6 +59,9 @@ function AddDish(props) {
           customizationIds: props.dishData.customizationIds,
           restaurantID: props.restaurantData.id
         };
+        axios.defaults.headers.common["authorization"] = JSON.parse(
+          localStorage.getItem("token")
+        );
         const response = await axios({
           method: "put",
           url: `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/editDish`,
@@ -83,6 +86,9 @@ function AddDish(props) {
           // customizationIds: event.target.customizationIds.value,
           restaurantID: props.restaurantData.id
         };
+        axios.defaults.headers.common["authorization"] = JSON.parse(
+          localStorage.getItem("token")
+        );
         const response = await axios({
           method: "post",
           url: `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/addDish`,
@@ -99,11 +105,19 @@ function AddDish(props) {
       }
     } catch (e) {
       console.log(e);
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: e
-      });
+      if (e.response && e.response.status === 401) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Unauthorized to access API"
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: e
+        });
+      }
     }
   }
 

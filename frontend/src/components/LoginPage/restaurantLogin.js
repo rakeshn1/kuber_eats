@@ -7,12 +7,14 @@ import { setIsRestaurantLoggedIn } from "../../redux/restaurantLogin";
 import { BACKEND_HOST, BACKEND_PORT } from "../../config";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { setToken } from "../../redux/userToken";
 
 function RestaurantLogin(props) {
   const history = useHistory();
   async function handleClick(event) {
     try {
       event.preventDefault();
+      axios.defaults.withCredentials = true;
       const response = await axios({
         method: "post",
         url: `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/login`,
@@ -22,21 +24,34 @@ function RestaurantLogin(props) {
         }
       });
       if (response.status == 200) {
-        localStorage.setItem("restaurant", JSON.stringify(response.data));
+        localStorage.setItem(
+          "restaurant",
+          JSON.stringify(response.data.restaurantData)
+        );
         localStorage.setItem("isRestaurantLoggedIn", true);
+        localStorage.setItem("token", JSON.stringify(response.data.token));
         props.setIsRestaurantLoggedIn();
-        props.setRestaurant(response.data);
+        props.setToken(response.data.token);
+        props.setRestaurant(response.data.restaurantData);
         history.push("/restaurantDashBoard");
       } else {
         throw new Error("Username/Password is invalid");
       }
     } catch (e) {
       console.log(e);
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: e
-      });
+      if (e.response.status === 401) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Username/Password is invalid"
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: e
+        });
+      }
     }
   }
   return (
@@ -124,7 +139,8 @@ function RestaurantLogin(props) {
 function mapDispatchToProps(dispatch) {
   return {
     setRestaurant: restaurantData => dispatch(setRestaurant(restaurantData)),
-    setIsRestaurantLoggedIn: () => dispatch(setIsRestaurantLoggedIn())
+    setIsRestaurantLoggedIn: () => dispatch(setIsRestaurantLoggedIn()),
+    setToken: token => dispatch(setToken(token))
   };
 }
 

@@ -1,11 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
 import "./login.css";
+import Swal from "sweetalert2";
+import axios from "axios";
 import { Link, useHistory } from "react-router-dom";
 import { setUser } from "../../redux/user";
 import { setIsUserLoggedIn } from "../../redux/userLogin";
-import Swal from "sweetalert2";
-import axios from "axios";
+import { setToken } from "../../redux/userToken";
 import { BACKEND_HOST, BACKEND_PORT } from "../../config";
 
 function Login(props) {
@@ -13,6 +14,7 @@ function Login(props) {
   async function handleClick(event) {
     try {
       event.preventDefault();
+      axios.defaults.withCredentials = true;
       const response = await axios({
         method: "post",
         url: `http://${BACKEND_HOST}:${BACKEND_PORT}/users/login`,
@@ -23,21 +25,31 @@ function Login(props) {
       });
       if (response.status == 200) {
         //return <Redirect to={"/dashBoard"} />
-        localStorage.setItem("user", JSON.stringify(response.data));
+        localStorage.setItem("user", JSON.stringify(response.data.userData));
         localStorage.setItem("isUserLoggedIn", JSON.stringify(true));
+        localStorage.setItem("token", JSON.stringify(response.data.token));
         props.setIsUserLoggedIn();
-        props.setUser(response.data);
+        props.setToken(response.data.token);
+        props.setUser(response.data.userData);
         history.push("/dashBoard");
       } else {
         throw new Error("Username/Password is invalid");
       }
     } catch (e) {
       console.log(e);
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: e
-      });
+      if (e.response.status === 401) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Username/Password is invalid"
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: e
+        });
+      }
     }
   }
   return (
@@ -121,7 +133,8 @@ function Login(props) {
 function mapDispatchToProps(dispatch) {
   return {
     setUser: userData => dispatch(setUser(userData)),
-    setIsUserLoggedIn: () => dispatch(setIsUserLoggedIn())
+    setIsUserLoggedIn: () => dispatch(setIsUserLoggedIn()),
+    setToken: token => dispatch(setToken(token))
   };
 }
 

@@ -5,6 +5,7 @@ import { removeUser } from "../../redux/user";
 import { removeRestaurant } from "../../redux/restaurant";
 import { unSetIsRestaurantLoggedIn } from "../../redux/restaurantLogin";
 import { unSetIsUserLoggedIn } from "../../redux/userLogin";
+import { removeToken } from "../../redux/userToken";
 import { useHistory } from "react-router-dom";
 import { BACKEND_HOST, BACKEND_PORT } from "../../config";
 
@@ -25,6 +26,8 @@ function PersonalAreaBar(props) {
       localStorage.removeItem("restaurant");
       localStorage.removeItem("isRestaurantLoggedIn");
     }
+    props.removeToken();
+    localStorage.removeItem("token");
     history.push("/");
   };
   return (
@@ -68,7 +71,8 @@ function mapDispatchToProps(dispatch) {
     removeUser: () => dispatch(removeUser()),
     unSetIsUserLoggedIn: () => dispatch(unSetIsUserLoggedIn()),
     removeRestaurant: () => dispatch(removeRestaurant()),
-    unSetIsRestaurantLoggedIn: () => dispatch(unSetIsRestaurantLoggedIn())
+    unSetIsRestaurantLoggedIn: () => dispatch(unSetIsRestaurantLoggedIn()),
+    removeToken: () => dispatch(removeToken())
   };
 }
 

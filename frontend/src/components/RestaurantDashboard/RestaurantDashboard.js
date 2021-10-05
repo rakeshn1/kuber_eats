@@ -28,14 +28,38 @@ function RestaurantDashboard(props) {
     publicContact: ""
   };
   const [error, setError] = useState(initState);
+  const cachedData = JSON.parse(localStorage.getItem("restaurant"));
 
   useEffect(() => {
     (async () => {
-      const response = await fetch(
-        `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/${props.restaurantData.id}` //${this.state.id}`
-      );
-      const loadedRestaurant = await response.json();
-      setRestaurantMenu(() => loadedRestaurant);
+      try {
+        axios.defaults.headers.common["authorization"] = JSON.parse(
+          localStorage.getItem("token")
+        );
+        const response = await axios({
+          method: "get",
+          url: `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/${
+            props.restaurantData.id ? props.restaurantData.id : cachedData.id
+          }` //${this.state.id}`
+        });
+        const loadedRestaurant = await response.data;
+        setRestaurantMenu(() => loadedRestaurant);
+      } catch (e) {
+        console.log(e);
+        if (e.response.status === 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Unauthorized to access API"
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: e
+          });
+        }
+      }
     })();
   }, []);
 
@@ -74,6 +98,9 @@ function RestaurantDashboard(props) {
           deliveryType: deliveryToSend,
           dietary: dietaryToSend
         };
+        axios.defaults.headers.common["authorization"] = JSON.parse(
+          localStorage.getItem("token")
+        );
         const response = await axios({
           method: "put",
           url: `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/update`,

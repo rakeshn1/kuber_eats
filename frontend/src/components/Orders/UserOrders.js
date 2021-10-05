@@ -30,6 +30,9 @@ const UserOrders = props => {
 
   useEffect(async () => {
     try {
+      axios.defaults.headers.common["authorization"] = JSON.parse(
+        localStorage.getItem("token")
+      );
       const response = await axios({
         method: "post",
         url: `http://${BACKEND_HOST}:${BACKEND_PORT}/users/orders`,

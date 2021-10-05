@@ -1,13 +1,14 @@
 const express = require('express');
-
-const router = express.Router();
 const bcrypt = require('bcrypt');
-
-const saltRounds = 10;
+const jwt = require('jsonwebtoken');
+const passport = require('passport');
 const pool = require('../dbConnection');
 const upload = require('../fileUploader');
 const configurations = require('../config.json');
 
+const router = express.Router();
+const saltRounds = 10;
+const checkAuth = passport.authenticate('jwt', { session: false });
 const selectQuery = 'SELECT * FROM users';
 
 /* GET users listing. */
@@ -53,7 +54,7 @@ router.post('/create', async (req, res) => {
 });
 
 /* Update user */
-router.put('/update', async (req, res) => {
+router.put('/update', checkAuth, async (req, res) => {
   try {
     req.body.dob = JSON.stringify(req.body.dob);
     req.body.address = JSON.stringify(req.body.address);
@@ -109,11 +110,16 @@ router.post('/login', async (req, res) => {
         }
       }
       if (flag) {
+        // eslint-disable-next-line no-underscore-dangle
+        const payload = { _id: userData.id, username: userData.name };
+        const token = `JWT ${jwt.sign(payload, configurations.secret, {
+          expiresIn: 1008000,
+        })}`;
         console.log('User credentials are valid');
-        res.status(200).json(userData);
+        res.status(200).json({ userData, token });
       } else {
         console.log('User credentials are Invalid');
-        res.status(400).json({ msg: 'User name or password is invalid' });
+        res.status(401).json({ msg: 'User name or password is invalid' });
       }
     } else {
       res.status(400).json({ msg: 'No users  present' });
@@ -128,7 +134,7 @@ router.post('/login', async (req, res) => {
 });
 
 /* Upload image */
-router.post('/uploadImage', upload.single('image'), async (req, res) => {
+router.post('/uploadImage', checkAuth, upload.single('image'), async (req, res) => {
   try {
     if (req.file) {
       const url = `http://${configurations.host}:${configurations.port}/images/${req.file.filename}`;
@@ -148,7 +154,7 @@ router.post('/uploadImage', upload.single('image'), async (req, res) => {
   }
 });
 
-router.post('/orders', async (req, res) => {
+router.post('/orders', checkAuth, async (req, res) => {
   try {
     const query = 'SELECT o.id, o.description, o.totalCost, o.dateTime, o.deliveryStatus, o.deliveryType, o.status, o.customerID,o.restaurantID, o.address, r.title FROM orders o join restaurants r on o.restaurantID = r.id where o.customerID = ?';
     const [rows] = await pool.query(query, req.body.userID);
@@ -179,7 +185,7 @@ router.post('/orders', async (req, res) => {
   }
 });
 
-router.post('/createOrder', async (req, res) => {
+router.post('/createOrder', checkAuth, async (req, res) => {
   try {
     req.body.description = JSON.stringify(req.body.description);
     req.body.address = JSON.stringify(req.body.address);
@@ -205,7 +211,7 @@ router.post('/createOrder', async (req, res) => {
   }
 });
 
-router.put('/updateFavorites', async (req, res) => {
+router.put('/updateFavorites', checkAuth, async (req, res) => {
   try {
     const updated = req.body.favorites;
     const index = updated.indexOf(req.body.restaurantID);

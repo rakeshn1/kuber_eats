@@ -1,15 +1,17 @@
 const express = require('express');
+const passport = require('passport');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const pool = require('../dbConnection');
+const configurations = require('../config.json');
 
 const router = express.Router();
-const bcrypt = require('bcrypt');
-
 const saltRounds = 10;
-const pool = require('../dbConnection');
-
 const selectQuery = 'SELECT * FROM restaurants';
+const checkAuth = passport.authenticate('jwt', { session: false });
 
 /* GET users listing. */
-router.get('/', async (req, res) => {
+router.get('/', checkAuth, async (req, res) => {
   try {
     const [rows] = await pool.query(selectQuery);
     let rowsToSend;
@@ -43,7 +45,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', checkAuth, async (req, res) => {
   try {
     const restaurantQuery = `SELECT * FROM restaurants WHERE id = ${req.params.id}`;
     const dishQuery = `SELECT * FROM Dishes WHERE restaurantID = ${req.params.id}`;
@@ -138,7 +140,7 @@ router.post('/create', async (req, res) => {
 });
 
 /* Update details */
-router.put('/update', async (req, res) => {
+router.put('/update', checkAuth, async (req, res) => {
   try {
     // req.body.location = JSON.stringify(req.body.location);
     const categories = [];
@@ -211,8 +213,12 @@ router.post('/login', async (req, res) => {
         }
       }
       if (flag) {
+        const payload = { _id: restaurantData.id, username: restaurantData.title };
+        const token = `JWT ${jwt.sign(payload, configurations.secret, {
+          expiresIn: 1008000,
+        })}`;
         console.log('Restaurant User credentials are valid');
-        res.status(200).json(restaurantData);
+        res.status(200).json({ restaurantData, token });
       } else {
         console.log('Restaurant User credentials are Invalid');
         res.status(400).json({ msg: 'Restaurant User name or password is invalid' });
@@ -229,7 +235,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.post('/addDish', async (req, res) => {
+router.post('/addDish', checkAuth, async (req, res) => {
   try {
     req.body.category = JSON.stringify(req.body.category);
     const sqlQuery = 'INSERT INTO Dishes (title, imageUrl, ingredients, description, price, category, rules, customizationIds, restaurantID) VALUES (?,?,?,?,?,?,?,?,?)';
@@ -253,7 +259,7 @@ router.post('/addDish', async (req, res) => {
   }
 });
 
-router.put('/editDish', async (req, res) => {
+router.put('/editDish', checkAuth, async (req, res) => {
   try {
     req.body.category = JSON.stringify(req.body.category);
     const sqlQuery = 'UPDATE Dishes SET title = ?, imageUrl = ?, ingredients = ?, description = ?, price = ?, category = ?, rules = ?, customizationIds = ? WHERE id = ?';
@@ -277,7 +283,7 @@ router.put('/editDish', async (req, res) => {
   }
 });
 
-router.post('/orders', async (req, res) => {
+router.post('/orders', checkAuth, async (req, res) => {
   try {
     const query = 'SELECT o.id, o.description, o.totalCost, o.dateTime, o.deliveryStatus, o.deliveryType, o.status, o.customerID,o.restaurantID, u.name, u.nickname, u.number, u.dob, u.email, u.address, u.imageUrl  FROM orders o join users u on o.customerID = u.id where o.restaurantID = ?';
     const [rows] = await pool.query(query, req.body.restaurantID);
@@ -314,7 +320,7 @@ router.post('/orders', async (req, res) => {
   }
 });
 
-router.put('/orderUpdate', async (req, res) => {
+router.put('/orderUpdate', checkAuth, async (req, res) => {
   try {
     const sqlQuery = 'UPDATE orders SET deliveryStatus = ? WHERE id = ?';
     const [rows] = await pool.query(sqlQuery, [req.body.deliveryStatus, req.body.id]);
