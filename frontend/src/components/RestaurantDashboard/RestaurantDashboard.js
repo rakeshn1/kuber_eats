@@ -46,7 +46,7 @@ function RestaurantDashboard(props) {
         setRestaurantMenu(() => loadedRestaurant);
       } catch (e) {
         console.log(e);
-        if (e.response.status === 401) {
+        if (e.response && e.response.status === 401) {
           Swal.fire({
             icon: "error",
             title: "Oops...",

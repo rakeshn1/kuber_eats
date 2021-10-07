@@ -4,6 +4,8 @@ import { RestaurantPreview } from "../Restaurant-preview/Restaurant-preview";
 import { PropositionType } from "./Proposition-type/Proposition-type";
 import { Menu } from "./Menu/Menu";
 import { BACKEND_HOST, BACKEND_PORT } from "../../config";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 export class RestaurantPage extends React.PureComponent {
   constructor(props) {
@@ -16,14 +18,35 @@ export class RestaurantPage extends React.PureComponent {
 
   componentDidMount() {
     (async () => {
-      const response = await fetch(
-        `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/${this.state.id}`
-        //`https://uber-eats-mates.herokuapp.com/api/v1/restaurants/${this.state.id}`
-      );
-      const loadedRestaurant = await response.json();
-      await this.setState({
-        restaurantMenu: loadedRestaurant
-      });
+      try {
+        axios.defaults.headers.common["authorization"] = JSON.parse(
+          localStorage.getItem("token")
+        );
+        const response = await axios({
+          method: "get",
+          url: `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/${this.state.id}`
+          //`https://uber-eats-mates.herokuapp.com/api/v1/restaurants/${this.state.id}`
+        });
+        const loadedRestaurant = await response.data;
+        await this.setState({
+          restaurantMenu: loadedRestaurant
+        });
+      } catch (e) {
+        console.log(e);
+        if (e.response && e.response.status === 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Unauthorized to access API"
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: e
+          });
+        }
+      }
     })();
   }
 

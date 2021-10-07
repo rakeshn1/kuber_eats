@@ -8,6 +8,7 @@ import { setUser } from "../../redux/user";
 import { setIsUserLoggedIn } from "../../redux/userLogin";
 import { setToken } from "../../redux/userToken";
 import { BACKEND_HOST, BACKEND_PORT } from "../../config";
+import { unSetIsRestaurantLoggedIn } from "../../redux/restaurantLogin";
 
 function Login(props) {
   const history = useHistory();
@@ -24,11 +25,11 @@ function Login(props) {
         }
       });
       if (response.status == 200) {
-        //return <Redirect to={"/dashBoard"} />
         localStorage.setItem("user", JSON.stringify(response.data.userData));
         localStorage.setItem("isUserLoggedIn", JSON.stringify(true));
         localStorage.setItem("token", JSON.stringify(response.data.token));
-        props.setIsUserLoggedIn();
+        props.unSetIsRestaurantLoggedIn();
+        await props.setIsUserLoggedIn();
         props.setToken(response.data.token);
         props.setUser(response.data.userData);
         history.push("/dashBoard");
@@ -134,7 +135,8 @@ function mapDispatchToProps(dispatch) {
   return {
     setUser: userData => dispatch(setUser(userData)),
     setIsUserLoggedIn: () => dispatch(setIsUserLoggedIn()),
-    setToken: token => dispatch(setToken(token))
+    setToken: token => dispatch(setToken(token)),
+    unSetIsRestaurantLoggedIn: () => dispatch(unSetIsRestaurantLoggedIn())
   };
 }
 

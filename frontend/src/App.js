@@ -26,6 +26,7 @@ import PaginationTable from "./components/Orders/restaurantOrders";
 import UserOrders from "./components/Orders/UserOrders";
 import UserFavorites from "./components/Favorites/UserFavorites";
 import CheckOut from "./components/CheckOut/CheckOut";
+import NoPermissionPage from "./components/NoPermissionPage";
 import { setUser } from "./redux/user";
 import { setRestaurant } from "./redux/restaurant";
 import { setIsUserLoggedIn } from "./redux/userLogin";
@@ -112,10 +113,6 @@ class App extends React.PureComponent {
     return <Login setIsLoggedIn={this.setIsLoggedIn} />;
   };
 
-  renderDashboard = () => {
-    return <Dashboard obj={this} />;
-  };
-
   render() {
     //if(!this.state.isLoggedIn){
     return (
@@ -134,37 +131,127 @@ class App extends React.PureComponent {
             open={this.setOpenBasket}
             login={this.props.user || this.props.restaurant}
           />
-          <Route path="/" exact component={this.renderLoginPage} />
+          <Route
+            path="/"
+            exact
+            render={() => {
+              if (JSON.parse(localStorage.getItem("isUserLoggedIn"))) {
+                return <Main />;
+              } else if (
+                JSON.parse(localStorage.getItem("isRestaurantLoggedIn"))
+              ) {
+                return <RestaurantDashboard />;
+              } else {
+                return <Login setIsLoggedIn={this.setIsLoggedIn} />;
+              }
+            }}
+          />
           <Route path="/userSignUp" exact component={UserSignUp} />
           <Route path="/restaurantSignup" exact component={RestaurantSignUp} />
           <Route path="/restaurantLogin" exact component={RestaurantLogin} />
-          <Route path="/dashBoard" exact component={Main} />
+          <Route
+            path="/dashBoard"
+            exact
+            render={() => {
+              if (JSON.parse(localStorage.getItem("isRestaurantLoggedIn"))) {
+                return <NoPermissionPage />;
+              } else {
+                return <Main />;
+              }
+            }}
+          />
           <Route
             path="/restaurantDashBoard"
             exact
-            component={RestaurantDashboard}
+            render={() => {
+              if (JSON.parse(localStorage.getItem("isUserLoggedIn"))) {
+                return <NoPermissionPage />;
+              } else {
+                return <RestaurantDashboard />;
+              }
+            }}
           />
           <Route
             path="/restaurant-page/:id"
             component={this.renderRestaurantPage}
           />
-          <Route path="/userProfile" exact component={UserProfile} />
-          <Route path="/userFavorites" exact component={UserFavorites} />
-          <Route path="/userOrders" exact component={UserOrders} />
           <Route
-            path="/checkOut"
+            path="/userProfile"
             exact
-            component={() => {
-              if (this.props.isUserLoggedIn) {
-                return <CheckOut clearBasket={this.clearBasket} />;
+            render={() => {
+              if (JSON.parse(localStorage.getItem("isRestaurantLoggedIn"))) {
+                return <NoPermissionPage />;
               } else {
-                return <RestaurantLogin />;
+                return <UserProfile />;
               }
             }}
           />
-          <Route path="/dishes" exact component={RestaurantDishDisplay} />
-          <Route path="/addDish" exact component={AddDish} />
-          <Route path="/restaurantOrders" exact component={PaginationTable} />
+          <Route
+            path="/userFavorites"
+            exact
+            render={() => {
+              if (JSON.parse(localStorage.getItem("isRestaurantLoggedIn"))) {
+                return <NoPermissionPage />;
+              } else {
+                return <UserFavorites />;
+              }
+            }}
+          />
+          <Route
+            path="/userOrders"
+            exact
+            render={() => {
+              if (JSON.parse(localStorage.getItem("isRestaurantLoggedIn"))) {
+                return <NoPermissionPage />;
+              } else {
+                return <UserOrders />;
+              }
+            }}
+          />
+          <Route
+            path="/checkOut"
+            exact
+            render={() => {
+              if (this.props.isUserLoggedIn) {
+                return <CheckOut clearBasket={this.clearBasket} />;
+              } else {
+                return <NoPermissionPage />;
+              }
+            }}
+          />
+          <Route
+            path="/dishes"
+            exact
+            render={() => {
+              if (JSON.parse(localStorage.getItem("isUserLoggedIn"))) {
+                return <NoPermissionPage />;
+              } else {
+                return <RestaurantDishDisplay />;
+              }
+            }}
+          />
+          <Route
+            path="/addDish"
+            exact
+            render={() => {
+              if (JSON.parse(localStorage.getItem("isUserLoggedIn"))) {
+                return <NoPermissionPage />;
+              } else {
+                return <AddDish />;
+              }
+            }}
+          />
+          <Route
+            path="/restaurantOrders"
+            exact
+            render={() => {
+              if (JSON.parse(localStorage.getItem("isUserLoggedIn"))) {
+                return <NoPermissionPage />;
+              } else {
+                return <PaginationTable />;
+              }
+            }}
+          />
         </ScrollToTop>
         <Footer />
       </Router>
@@ -176,7 +263,8 @@ function mapStateToProps(globalState) {
   return {
     user: globalState.user,
     restaurant: globalState.restaurant,
-    isUserLoggedIn: globalState.isUserLoggedIn
+    isUserLoggedIn: globalState.isUserLoggedIn,
+    isRestaurantLoggedIn: globalState.isRestaurantLoggedIn
   };
 }
 

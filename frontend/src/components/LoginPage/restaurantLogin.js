@@ -8,6 +8,7 @@ import { BACKEND_HOST, BACKEND_PORT } from "../../config";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { setToken } from "../../redux/userToken";
+import { unSetIsUserLoggedIn } from "../../redux/userLogin";
 
 function RestaurantLogin(props) {
   const history = useHistory();
@@ -30,7 +31,8 @@ function RestaurantLogin(props) {
         );
         localStorage.setItem("isRestaurantLoggedIn", true);
         localStorage.setItem("token", JSON.stringify(response.data.token));
-        props.setIsRestaurantLoggedIn();
+        props.unSetIsUserLoggedIn();
+        await props.setIsRestaurantLoggedIn();
         props.setToken(response.data.token);
         props.setRestaurant(response.data.restaurantData);
         history.push("/restaurantDashBoard");
@@ -140,7 +142,8 @@ function mapDispatchToProps(dispatch) {
   return {
     setRestaurant: restaurantData => dispatch(setRestaurant(restaurantData)),
     setIsRestaurantLoggedIn: () => dispatch(setIsRestaurantLoggedIn()),
-    setToken: token => dispatch(setToken(token))
+    setToken: token => dispatch(setToken(token)),
+    unSetIsUserLoggedIn: () => dispatch(unSetIsUserLoggedIn())
   };
 }
 
