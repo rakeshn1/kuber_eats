@@ -1,5 +1,5 @@
 /*
-index file to run backend
+index file for testing
  */
 const express = require('express');
 
@@ -10,7 +10,7 @@ const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const configurations = require('./config.json');
 
-const connectionPool = require('./dbConnection');
+// const connectionPool = require('./dbConnection');
 const passPortConfig = require('./passport');
 
 app.use(express.static(`${__dirname}/public`));
@@ -44,21 +44,24 @@ passPortConfig(passport);
 app.use('/users', usersRouter);
 app.use('/restaurants', restaurantRouter);
 
-(async () => {
-  try {
-    const [rows] = await connectionPool.query('SELECT * FROM users');
-    if (rows) {
-      console.log('DB connection successful..');
-      app.listen(configurations.port, () => {
-        console.log(`Backend server started listening on port ${configurations.port}`);
-      });
-    }
-  } catch (e) {
-    console.error('Error fetching data from DB:');
-    console.error(e);
-    process.exit(0);
-  }
-})();
+// const pro = () => new Promise((resolve) => {
+//   (async () => {
+//     try {
+//       const [rows] = await connectionPool.query('SELECT * FROM users');
+//       if (rows) {
+//         console.log('DB connection successful..');
+const server = app.listen(configurations.port, () => {
+  console.log(`Backend server started listening on port ${configurations.port}`);
+});
+//         resolve(server);
+//       }
+//     } catch (e) {
+//       console.error('Error fetching data from DB:');
+//       console.error(e);
+//       process.exit(0);
+//     }
+//   })();
+// });
 
 process.on('uncaughtException', (err) => {
   console.error('UNCAUGHT EXCEPTION IN THE PROCESS:');
@@ -66,3 +69,4 @@ process.on('uncaughtException', (err) => {
   process.exit(0);
 });
 
+module.exports = server;
