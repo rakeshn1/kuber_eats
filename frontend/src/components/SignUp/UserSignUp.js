@@ -19,8 +19,12 @@ function UserSignUp(props) {
   const history = useHistory();
   async function handleClick(event) {
     try {
+      const truth =
+        event.target.username.value.length > 0 &&
+        event.target.email.value.length > 0 &&
+        event.target.password.value.length > 0;
       event.preventDefault();
-      if (formValid(error)) {
+      if (formValid(error) && truth) {
         const response = await axios({
           method: "post",
           url: `http://${BACKEND_HOST}:${BACKEND_PORT}/users/create`,
@@ -44,11 +48,19 @@ function UserSignUp(props) {
       }
     } catch (e) {
       console.log(e);
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Error:" + e
-      });
+      if (e.response && e.response.status === 409) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: e.response.data.msg
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Error:" + e
+        });
+      }
     }
   }
 

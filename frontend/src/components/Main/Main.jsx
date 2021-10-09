@@ -84,7 +84,7 @@ function Main(props) {
   const ifTagsInclude = restaurant => {
     for (let i = 0; i < restaurant.tags.length; i++) {
       if (
-        restaurant.tags[i].name
+        restaurant.tags[i].title
           .toLowerCase()
           .includes(searchValue.toLocaleLowerCase())
       ) {

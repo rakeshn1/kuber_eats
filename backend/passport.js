@@ -21,7 +21,7 @@ module.exports = (passport) => {
       } else {
         const [rowse] = await pool.query(query2);
         if (rowse && rowse.length > 0 && rowse[0].title === jwtPayload.username) {
-          callback(null, rows[0]);
+          callback(null, rowse[0]);
         } else {
           callback(null, false);
         }

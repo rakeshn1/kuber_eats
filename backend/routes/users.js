@@ -31,6 +31,11 @@ router.get('/', async (req, res) => {
 /* Create user */
 router.post('/create', async (req, res) => {
   try {
+    const emailCheck = await pool.query(`SELECT * from users where email = '${req.body.email}'`);
+    if (emailCheck[0].length > 0) {
+      console.log('Email is already registered');
+      return res.status(409).json({ msg: 'The email is already registered' });
+    }
     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
 
     const sqlQuery = 'INSERT INTO users (name, email, password, favorites) VALUES (?,?,?,?)';
@@ -89,7 +94,7 @@ router.post('/login', async (req, res) => {
       // eslint-disable-next-line no-plusplus
       for (let i = 0; i < rows.length; i++) {
         const row = rows[i];
-        if (row.name === req.body.name) {
+        if (row.email === req.body.email) {
           // eslint-disable-next-line no-await-in-loop
           const result = await bcrypt.compare(req.body.password, row.password);
           if (result) {

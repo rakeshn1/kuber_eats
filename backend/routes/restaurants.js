@@ -16,7 +16,8 @@ router.get('/', checkAuth, async (req, res) => {
     const [rows] = await pool.query(selectQuery);
     let rowsToSend;
     if (rows.length > 0) {
-      rowsToSend = rows.map((row) => {
+      rowsToSend = rows.map(async (row) => {
+        const Dishes = await pool.query(`SELECT title FROM Dishes WHERE restaurantID = ${row.id}`);
         const rowData = {};
         rowData.uuid = row.id;
         rowData.title = row.title;
@@ -24,17 +25,20 @@ router.get('/', checkAuth, async (req, res) => {
         rowData.largeImageUrl = row.largeImageUrl;
         rowData.location = row.location;
         rowData.categories = JSON.parse(row.categories);
-        rowData.tags = JSON.parse(row.tags);
+        // eslint-disable-next-line prefer-destructuring
+        rowData.tags = Dishes[0];
         rowData.etaRange = JSON.parse(row.etaRange);
         rowData.rawRatingStats = JSON.parse(row.rawRatingStats);
         rowData.publicContact = JSON.parse(row.publicContact);
         rowData.deliveryType = JSON.parse(row.deliveryType);
         rowData.dietary = JSON.parse(row.dietary);
-        return rowData;
+        return Promise.resolve(rowData);
       });
-      console.log(rows);
-      console.log('Fetched the restaurant data from DB');
-      res.status(200).json(rowsToSend);
+      Promise.all(rowsToSend).then((to) => {
+        console.log(rows);
+        console.log('Fetched the restaurant data from DB');
+        res.status(200).json(to);
+      });
     }
   } catch (e) {
     console.error('Error fetching data from DB:');
@@ -115,8 +119,14 @@ router.get('/:id', checkAuth, async (req, res) => {
 });
 
 /* Create user */
+// eslint-disable-next-line consistent-return
 router.post('/create', async (req, res) => {
   try {
+    const emailCheck = await pool.query(`SELECT * from restaurants where email = '${req.body.email}'`);
+    if (emailCheck[0].length > 0) {
+      console.log('Email is already registered');
+      return res.status(409).json({ msg: 'The email is already registered' });
+    }
     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
     const deliveryType = JSON.stringify(req.body.deliveryType);
 
@@ -221,7 +231,7 @@ router.post('/login', async (req, res) => {
         res.status(200).json({ restaurantData, token });
       } else {
         console.log('Restaurant User credentials are Invalid');
-        res.status(400).json({ msg: 'Restaurant User name or password is invalid' });
+        res.status(401).json({ msg: 'Restaurant User name or password is invalid' });
       }
     } else {
       res.status(400).json({ msg: 'No Restaurant users  present' });

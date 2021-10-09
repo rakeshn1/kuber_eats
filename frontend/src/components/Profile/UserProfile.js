@@ -17,7 +17,8 @@ function UserProfile(props) {
   const [edit, setEdit] = useState(false);
   const initState = {
     email: "",
-    number: ""
+    number: "",
+    pinCode: ""
   };
   const [error, setError] = useState(initState);
 
@@ -153,10 +154,19 @@ function UserProfile(props) {
         break;
       case "number":
         newError.number =
+          value &&
           JSON.stringify(value).match(/\d/g).length === 10 &&
           /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g.test(value)
             ? ""
             : "Enter a 10 digit phone number";
+        break;
+      case "pinCode":
+        newError.pinCode =
+          value &&
+          JSON.stringify(value).match(/\d/g).length === 5 &&
+          /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g.test(value)
+            ? ""
+            : "Enter a 5 digit pin code";
         break;
       default:
         break;
@@ -350,12 +360,19 @@ function UserProfile(props) {
               </div>
               <br />
               <p className="Pidentifiers">Pincode</p>
+              {error.pinCode.length > 0 && (
+                <>
+                  {" "}
+                  <span className="invalid-feedback">{error.pinCode}</span>
+                </>
+              )}
               <div className="PSearch">
                 <input
                   type="number"
                   name="pinCode"
                   className="PSearch__text"
                   placeholder="Pin Code"
+                  onChange={formValChange}
                   disabled={!edit}
                   defaultValue={
                     props.userData &&

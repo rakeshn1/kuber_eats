@@ -232,6 +232,7 @@ function RestaurantDashboard(props) {
         break;
       case "publicContact":
         newError.publicContact =
+          value &&
           JSON.stringify(value).match(/\d/g).length === 10 &&
           /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g.test(value)
             ? ""
