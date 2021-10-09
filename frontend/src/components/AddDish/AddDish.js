@@ -40,67 +40,79 @@ function AddDish(props) {
   async function handleClick(event) {
     try {
       event.preventDefault();
-      if (edit) {
-        let categoriesToSend;
-        if (optionSelected.length > 0) {
-          categoriesToSend = optionSelected;
-        } else {
-          categoriesToSend = props.dishData.category;
-        }
-        let updatedData = {
-          id: props.dishData.id,
-          title: event.target.title.value,
-          ingredients: event.target.ingredients.value,
-          description: event.target.description.value,
-          price: event.target.price.value,
-          category: categoriesToSend,
-          imageUrl: props.dishData.imageUrl,
-          rules: props.dishData.rules,
-          customizationIds: props.dishData.customizationIds,
-          restaurantID: props.restaurantData.id
-        };
-        axios.defaults.headers.common["authorization"] = JSON.parse(
-          localStorage.getItem("token")
-        );
-        const response = await axios({
-          method: "put",
-          url: `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/editDish`,
-          data: updatedData
+      if (
+        event.target.title.value.length <= 0 ||
+        event.target.ingredients.value.length <= 0 ||
+        event.target.description.value.length <= 0 ||
+        event.target.price.value <= 0
+      ) {
+        Swal.fire({
+          title: "Please enter all the values in required format",
+          confirmButtonColor: "black"
         });
-        if (response.status == 200) {
-          Swal.fire("Successfully saved the data", "", "success");
-          props.setDish(initialState);
-          history.push("/dishes");
-        } else {
-          throw new Error(response.data.msg);
-        }
       } else {
-        let updatedData = {
-          title: event.target.title.value,
-          ingredients: event.target.ingredients.value,
-          description: event.target.description.value,
-          price: event.target.price.value,
-          category: optionSelected,
-          imageUrl: props.dishData.imageUrl,
-          // rules: props.dishData.rules.value,
-          // customizationIds: event.target.customizationIds.value,
-          restaurantID: props.restaurantData.id
-        };
-        axios.defaults.headers.common["authorization"] = JSON.parse(
-          localStorage.getItem("token")
-        );
-        const response = await axios({
-          method: "post",
-          url: `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/addDish`,
-          data: updatedData
-        });
-        if (response.status == 200) {
-          Swal.fire("Successfully saved the data", "", "success");
-          localStorage.setItem("user", JSON.stringify(updatedData));
-          props.setDish(initialState);
-          history.push("/dishes");
+        if (edit) {
+          let categoriesToSend;
+          if (optionSelected.length > 0) {
+            categoriesToSend = optionSelected;
+          } else {
+            categoriesToSend = props.dishData.category;
+          }
+          let updatedData = {
+            id: props.dishData.id,
+            title: event.target.title.value,
+            ingredients: event.target.ingredients.value,
+            description: event.target.description.value,
+            price: event.target.price.value,
+            category: categoriesToSend,
+            imageUrl: props.dishData.imageUrl,
+            rules: props.dishData.rules,
+            customizationIds: props.dishData.customizationIds,
+            restaurantID: props.restaurantData.id
+          };
+          axios.defaults.headers.common["authorization"] = JSON.parse(
+            localStorage.getItem("token")
+          );
+          const response = await axios({
+            method: "put",
+            url: `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/editDish`,
+            data: updatedData
+          });
+          if (response.status == 200) {
+            Swal.fire("Successfully saved the data", "", "success");
+            props.setDish(initialState);
+            history.push("/dishes");
+          } else {
+            throw new Error(response.data.msg);
+          }
         } else {
-          throw new Error(response.data.msg);
+          let updatedData = {
+            title: event.target.title.value,
+            ingredients: event.target.ingredients.value,
+            description: event.target.description.value,
+            price: event.target.price.value,
+            category: optionSelected,
+            imageUrl: props.dishData.imageUrl,
+            // rules: props.dishData.rules.value,
+            // customizationIds: event.target.customizationIds.value,
+            restaurantID: props.restaurantData.id
+          };
+          axios.defaults.headers.common["authorization"] = JSON.parse(
+            localStorage.getItem("token")
+          );
+          const response = await axios({
+            method: "post",
+            url: `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/addDish`,
+            data: updatedData
+          });
+          if (response.status == 200) {
+            Swal.fire("Successfully saved the data", "", "success");
+            localStorage.setItem("user", JSON.stringify(updatedData));
+            props.setDish(initialState);
+            history.push("/dishes");
+          } else {
+            throw new Error(response.data.msg);
+          }
         }
       }
     } catch (e) {
