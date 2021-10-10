@@ -136,6 +136,9 @@ const PaginationTable = props => {
               const newState = prevState.map(prev => {
                 if (prev.id === orderId) {
                   prev.deliveryStatus = status;
+                  if (status === "delivered") {
+                    prev.status = "deliveredOrder";
+                  }
                 }
                 return prev;
               });
