@@ -250,6 +250,7 @@ function AddDish(props) {
                 <input
                   type="number"
                   name="price"
+                  step="0.01"
                   className="PSearch__text"
                   placeholder="Price"
                   defaultValue={props.dishData && props.dishData.price}
