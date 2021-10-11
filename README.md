@@ -8,7 +8,7 @@ Instructions to start
   - edit backend host and port in config.js file
   - execute 'npm start'
   - application starts at port 3000
-3. Backend command:
+2. Backend command:
   - Navigate backend/ folder
   - execute 'npm install'
   - edit host and port for backend as well as for database
