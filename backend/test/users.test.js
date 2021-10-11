@@ -26,7 +26,7 @@ describe('/GET all users(internal API)', () => {
 describe('/POST login', () => {
   it('it should login a user', (done) => {
     const userCredentials = {
-      name: 'qwe',
+      email: 'rakesh.nagarajappa@sjsu.edu',
       password: 'q',
     };
     chai.request(server)
@@ -36,7 +36,7 @@ describe('/POST login', () => {
         res.should.have.status(200);
         res.body.should.be.a('object');
         res.body.should.have.property('userData');
-        res.body.userData.should.have.property('name').eql(userCredentials.name);
+        res.body.userData.should.have.property('name').eql('qwe');
         res.body.should.have.property('token');
         userInfo = res.body.userData;
         userInfo.token = res.body.token;
