@@ -29,7 +29,7 @@ router.get('/', checkAuth, async (req, res) => {
         rowData.tags = Dishes[0];
         rowData.etaRange = JSON.parse(row.etaRange);
         rowData.rawRatingStats = JSON.parse(row.rawRatingStats);
-        rowData.publicContact = JSON.parse(row.publicContact);
+        rowData.publicContact = row.publicContact;
         rowData.deliveryType = JSON.parse(row.deliveryType);
         rowData.dietary = JSON.parse(row.dietary);
         return Promise.resolve(rowData);
@@ -68,7 +68,7 @@ router.get('/:id', checkAuth, async (req, res) => {
         rowData.tags = JSON.parse(row.tags);
         rowData.etaRange = JSON.parse(row.etaRange);
         rowData.rawRatingStats = JSON.parse(row.rawRatingStats);
-        rowData.publicContact = JSON.parse(row.publicContact);
+        rowData.publicContact = row.publicContact;
         rowData.deliveryType = JSON.parse(row.deliveryType);
         rowData.dietary = JSON.parse(row.dietary);
         rowData.sections = [];
@@ -334,6 +334,9 @@ router.put('/orderUpdate', checkAuth, async (req, res) => {
   try {
     const sqlQuery = 'UPDATE orders SET deliveryStatus = ? WHERE id = ?';
     const [rows] = await pool.query(sqlQuery, [req.body.deliveryStatus, req.body.id]);
+    if (req.body.deliveryStatus === 'delivered') {
+      await pool.query('UPDATE orders SET status = ? WHERE id = ?', ['deliveredOrder', req.body.id]);
+    }
     console.log(sqlQuery, req.body.id);
     console.log(rows);
     if (rows.affectedRows) {

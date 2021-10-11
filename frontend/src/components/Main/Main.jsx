@@ -60,7 +60,7 @@ function Main(props) {
         await setRestaurants(() => loadedRestaurants);
       } catch (e) {
         console.log(e);
-        if (e.response.status === 401) {
+        if (e.response && e.response.status === 401) {
           Swal.fire({
             icon: "error",
             title: "Oops...",
