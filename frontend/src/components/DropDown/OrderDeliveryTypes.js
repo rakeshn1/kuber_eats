@@ -4,5 +4,6 @@ export const OrderDeliveryTypes = [
   { value: "onTheWay", label: "On the Way" },
   { value: "delivered", label: "Delivered" },
   { value: "pickUpReady", label: "Pick Up Ready" },
-  { value: "pickedUp", label: "Picked Up" }
+  { value: "pickedUp", label: "Picked Up" },
+  { value: "cancelled", label: "Cancelled Order" }
 ];

@@ -4,7 +4,8 @@ export const allDeliveryStatus = {
   pickUpReady: "Pick Up Ready",
   pickedUp: "Picked Up",
   onTheWay: "On the Way",
-  delivered: "Delivered"
+  delivered: "Delivered",
+  cancelled: "Cancelled Order"
 };
 
 export const allOrderStatus = {

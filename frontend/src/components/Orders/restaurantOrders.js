@@ -88,13 +88,15 @@ const PaginationTable = props => {
     orderReceived: "Order Received",
     preparing: "Preparing",
     onTheWay: "On the Way",
-    delivered: "Delivered"
+    delivered: "Delivered",
+    cancelled: "Cancel Order"
   };
   const pickUpOptions = {
     orderReceived: "Order Received",
     preparing: "Preparing",
     pickUpReady: "Pick Up Ready",
-    pickedUp: "Picked Up"
+    pickedUp: "Picked Up",
+    cancelled: "Cancel Order"
   };
 
   const editStatus = (description, options, orderId) => {
@@ -120,13 +122,19 @@ const PaginationTable = props => {
         axios.defaults.headers.common["authorization"] = JSON.parse(
           localStorage.getItem("token")
         );
+        let data = {
+          deliveryStatus: status,
+          id: orderId
+        };
+        if (status === "delivered") {
+          data.status = "deliveredOrder";
+        } else if (status === "cancelled") {
+          data.status = "cancelledOrder";
+        }
         return axios({
           method: "put",
           url: `http://${BACKEND_HOST}:${BACKEND_PORT}/restaurants/orderUpdate`,
-          data: {
-            deliveryStatus: status,
-            id: orderId
-          }
+          data
         })
           .then(response => {
             if (response.status !== 200) {
@@ -138,6 +146,8 @@ const PaginationTable = props => {
                   prev.deliveryStatus = status;
                   if (status === "delivered") {
                     prev.status = "deliveredOrder";
+                  } else if (status === "cancelled") {
+                    prev.status = "cancelledOrder";
                   }
                 }
                 return prev;

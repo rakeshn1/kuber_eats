@@ -334,8 +334,8 @@ router.put('/orderUpdate', checkAuth, async (req, res) => {
   try {
     const sqlQuery = 'UPDATE orders SET deliveryStatus = ? WHERE id = ?';
     const [rows] = await pool.query(sqlQuery, [req.body.deliveryStatus, req.body.id]);
-    if (req.body.deliveryStatus === 'delivered') {
-      await pool.query('UPDATE orders SET status = ? WHERE id = ?', ['deliveredOrder', req.body.id]);
+    if (req.body.status) {
+      await pool.query('UPDATE orders SET status = ? WHERE id = ?', [req.body.status, req.body.id]);
     }
     console.log(sqlQuery, req.body.id);
     console.log(rows);
