@@ -2,8 +2,10 @@ const express = require('express');
 const passport = require('passport');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const Restaurants = require('../models/RestaurantsModel');
 const pool = require('../dbConnection');
 const configurations = require('../config.json');
+const Users = require("../models/UsersModel");
 
 const router = express.Router();
 const saltRounds = 10;
@@ -11,11 +13,11 @@ const selectQuery = 'SELECT * FROM restaurants';
 const checkAuth = passport.authenticate('jwt', { session: false });
 
 /* GET users listing. */
-router.get('/', checkAuth, async (req, res) => {
+router.get('/',  async (req, res) => {
   try {
-    const [rows] = await pool.query(selectQuery);
+    const rows = await Restaurants.find({});
     let rowsToSend;
-    if (rows.length > 0) {
+    if (rows) {
       rowsToSend = rows.map(async (row) => {
         const Dishes = await pool.query(`SELECT title FROM Dishes WHERE restaurantID = ${row.id}`);
         const rowData = {};
@@ -122,20 +124,26 @@ router.get('/:id', checkAuth, async (req, res) => {
 // eslint-disable-next-line consistent-return
 router.post('/create', async (req, res) => {
   try {
-    const emailCheck = await pool.query(`SELECT * from restaurants where email = '${req.body.email}'`);
-    if (emailCheck[0].length > 0) {
+    const emailCheck = await Restaurants.findOne({ email: req.body.email });
+    if (emailCheck) {
       console.log('Email is already registered');
       return res.status(409).json({ msg: 'The email is already registered' });
     }
     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
     const deliveryType = JSON.stringify(req.body.deliveryType);
 
-    const sqlQuery = 'INSERT INTO restaurants (title, email, Password, location, deliveryType) VALUES (?,?,?,?,?)';
-    console.log(sqlQuery);
-    const [rows] = await pool.query(sqlQuery, [req.body.title, req.body.email,
-      hashedPassword, req.body.location, deliveryType]);
+    const newRestaurant = new Restaurants({
+      title: req.body.title,
+      email: req.body.email,
+      password: hashedPassword,
+      location: req.body.location,
+      deliveryType,
+    });
+
+    const rows = await newRestaurant.save();
     console.log(rows);
-    if (rows.affectedRows) {
+    // eslint-disable-next-line no-underscore-dangle
+    if (rows._doc) {
       res.status(200).json({ msg: 'Successfully created a Restaurant user' });
     } else {
       throw new Error("DB didn't return success response");

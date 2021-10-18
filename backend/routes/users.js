@@ -2,19 +2,21 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
-const pool = require('../dbConnection');
+const Users = require('../models/UsersModel');
+const Orders = require('../models/OrdersModel');
+// const pool = require('../dbConnection');
 const upload = require('../fileUploader');
 const configurations = require('../config.json');
 
 const router = express.Router();
 const saltRounds = 10;
 const checkAuth = passport.authenticate('jwt', { session: false });
-const selectQuery = 'SELECT * FROM users';
+// const selectQuery = 'SELECT * FROM users';
 
 /* GET users listing. */
 router.get('/', async (req, res) => {
   try {
-    const [rows] = await pool.query(selectQuery);
+    const rows = await Users.find({});
     if (rows) {
       console.log('Fetched the data from DB');
       res.status(200).json(rows);
@@ -31,19 +33,23 @@ router.get('/', async (req, res) => {
 /* Create user */
 router.post('/create', async (req, res) => {
   try {
-    const emailCheck = await pool.query(`SELECT * from users where email = '${req.body.email}'`);
-    if (emailCheck[0].length > 0) {
+    const emailCheck = await Users.findOne({ email: req.body.email });
+    if (emailCheck) {
       console.log('Email is already registered');
       return res.status(409).json({ msg: 'The email is already registered' });
     }
     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+    const newUser = new Users({
+      name: req.body.name,
+      email: req.body.email,
+      password: hashedPassword,
+      favorites: req.body.favorites,
+    });
 
-    const sqlQuery = 'INSERT INTO users (name, email, password, favorites) VALUES (?,?,?,?)';
-    console.log(sqlQuery);
-    // eslint-disable-next-line max-len
-    const [rows] = await pool.query(sqlQuery, [req.body.name, req.body.email, hashedPassword, JSON.stringify(req.body.favorites)]);
+    const rows = await newUser.save();
     console.log(rows);
-    if (rows.affectedRows) {
+    // eslint-disable-next-line no-underscore-dangle
+    if (rows._doc) {
       console.log('Successfully created user');
       res.status(200).json({ msg: 'Successfully created user' });
     } else {
@@ -63,14 +69,16 @@ router.put('/update', checkAuth, async (req, res) => {
   try {
     req.body.dob = JSON.stringify(req.body.dob);
     req.body.address = JSON.stringify(req.body.address);
-    const sqlQuery = 'UPDATE users SET name = ?, nickname = ?, number = ?, email = ?, dob = ?, address = ?, imageUrl = ? WHERE id = ?';
-    console.log(sqlQuery);
-    const [rows] = await pool.query(sqlQuery,
-      [req.body.name, req.body.nickname, req.body.number, req.body.email,
-        // eslint-disable-next-line max-len
-        req.body.dob, req.body.address, req.body.imageUrl, req.body.id]);
-    console.log(rows);
-    if (rows.affectedRows) {
+    const rows = await Users.updateOne({ _id: req.body.id }, {
+      name: req.body.name,
+      nickname: req.body.nickname,
+      number: req.body.number,
+      email: req.body.email,
+      dob: req.body.dob,
+      address: req.body.address,
+      imageUrl: req.body.imageUrl,
+    });
+    if (rows.modifiedCount === 1) {
       res.status(200).json({ msg: 'Successfully updated the user details' });
     } else {
       throw new Error("DB didn't return success response");
@@ -87,7 +95,7 @@ router.put('/update', checkAuth, async (req, res) => {
 /* Check Login credentials */
 router.post('/login', async (req, res) => {
   try {
-    const [rows] = await pool.query(selectQuery);
+    const rows = await Users.find({});
     let flag = false;
     let userData;
     if (rows.length > 0) {
@@ -99,7 +107,8 @@ router.post('/login', async (req, res) => {
           const result = await bcrypt.compare(req.body.password, row.password);
           if (result) {
             userData = {
-              id: row.id,
+              // eslint-disable-next-line no-underscore-dangle
+              id: row._id,
               name: row.name,
               nickname: row.nickname,
               number: row.number,
@@ -195,14 +204,22 @@ router.post('/createOrder', checkAuth, async (req, res) => {
     req.body.description = JSON.stringify(req.body.description);
     req.body.address = JSON.stringify(req.body.address);
     // req.body.dateTime = JSON.stringify(req.body.dateTime);
-    const sqlQuery = 'INSERT INTO orders (description, totalCost, dateTime, deliveryStatus, status, deliveryType, customerID, restaurantID, address) VALUES (?,?,?,?,?,?,?,?,?)';
-    console.log(sqlQuery);
-    const [rows] = await pool.query(sqlQuery,
-      [req.body.description, req.body.totalCost, req.body.dateTime, req.body.deliveryStatus,
-        req.body.status, req.body.deliveryType, req.body.customerID, req.body.restaurantID,
-        req.body.address]);
+    const newOrder = new Orders({
+      description: req.body.description,
+      email: req.body.email,
+      totalCost: req.body.totalCost,
+      dateTime: req.body.dateTime,
+      deliveryStatus: req.body.deliveryStatus,
+      status: req.body.status,
+      deliveryType: req.body.deliveryType,
+      customerID: req.body.customerID,
+      restaurantID: req.body.restaurantID,
+      address: req.body.address,
+    });
+    const rows = await newOrder.save();
     console.log(rows);
-    if (rows.affectedRows) {
+    // eslint-disable-next-line no-underscore-dangle
+    if (rows._doc) {
       res.status(200).json({ msg: 'Successfully created an Order' });
     } else {
       throw new Error("DB didn't return success response");
@@ -216,7 +233,7 @@ router.post('/createOrder', checkAuth, async (req, res) => {
   }
 });
 
-router.put('/updateFavorites', checkAuth, async (req, res) => {
+router.put('/updateFavorites',async (req, res) => {
   try {
     const updated = req.body.favorites;
     const index = updated.indexOf(req.body.restaurantID);
@@ -225,12 +242,11 @@ router.put('/updateFavorites', checkAuth, async (req, res) => {
     } else {
       updated.push(req.body.restaurantID);
     }
-    const sqlQuery = 'UPDATE users SET favorites = ? WHERE id = ?';
-    console.log(sqlQuery);
-    const [rows] = await pool.query(sqlQuery,
-      [JSON.stringify(updated), req.body.id]);
+    const rows = await Users.updateOne({ _id: req.body.id }, {
+      favorites: JSON.stringify(updated),
+    });
     console.log(rows);
-    if (rows.affectedRows) {
+    if (rows.modifiedCount === 1) {
       res.status(200).json({ msg: 'Successfully updated the user favorites' });
     } else {
       throw new Error("DB didn't return success response");

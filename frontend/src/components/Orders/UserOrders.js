@@ -17,12 +17,16 @@ import Swal2 from "sweetalert2";
 import { BACKEND_HOST, BACKEND_PORT } from "../../config";
 import { default as ReactSelect } from "react-select";
 import { OrderDeliveryTypes } from "../DropDown/OrderDeliveryTypes";
+import Receipt from "./Receipt";
 import Option from "../DropDown/Option";
 import Test from "./modal";
+import DietryOptions from "../Header/DietryOptions";
 
 const UserOrders = props => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [page, setPage] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [orderShow, setOrderShow] = useState({});
   const [orders, setOrders] = useState([]);
   const [filterOrders, setFilterOrders] = useState([]);
   const [optionSelected, setOptionSelected] = useState([]);
@@ -55,6 +59,18 @@ const UserOrders = props => {
       });
     }
   }, []);
+
+  const changeOrderStatus = orderId => {
+    setOrders(prevState => {
+      const newState = prevState.map(prev => {
+        if (prev.id === orderId) {
+          prev.deliveryStatus = "cancelled";
+        }
+        return prev;
+      });
+      return newState;
+    });
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -95,12 +111,26 @@ const UserOrders = props => {
     }
   };
 
+  const setOpenOptions = () => {
+    setOpen(prevState => {
+      return !prevState;
+    });
+  };
+
   const viewCustomer = order => {
-    Swal(<Test order={order} />);
+    setOrderShow(() => order);
+    setOpenOptions();
   };
 
   return (
     <main className="TRestaurant-pageU">
+      {open && (
+        <Receipt
+          setOptions={setOpenOptions}
+          order={orderShow}
+          changeOrderStatus={changeOrderStatus}
+        />
+      )}
       <Container>
         <main className="TdMain">
           <h3>Filter orders based on order status:</h3>
