@@ -43,7 +43,7 @@ router.post('/create', async (req, res) => {
       name: req.body.name,
       email: req.body.email,
       password: hashedPassword,
-      favorites: req.body.favorites,
+      favorites: JSON.stringify(req.body.favorites),
     });
 
     const rows = await newUser.save();
@@ -113,8 +113,8 @@ router.post('/login', async (req, res) => {
               nickname: row.nickname,
               number: row.number,
               email: row.email,
-              dob: JSON.parse(row.dob),
-              address: JSON.parse(row.address),
+              dob: row.dob ? JSON.parse(row.dob) : row.dob,
+              address: row.address ? JSON.parse(row.address) : row.address,
               imageUrl: row.imageUrl,
               favorites: JSON.parse(row.favorites),
             };
@@ -170,13 +170,44 @@ router.post('/uploadImage', checkAuth, upload.single('image'), async (req, res) 
 
 router.post('/orders', checkAuth, async (req, res) => {
   try {
-    const query = 'SELECT o.id, o.description, o.totalCost, o.dateTime, o.deliveryStatus, o.deliveryType, o.status, o.customerID,o.restaurantID, o.address, r.title FROM orders o join restaurants r on o.restaurantID = r.id where o.customerID = ?';
-    const [rows] = await pool.query(query, req.body.userID);
+    const rows = await Orders.aggregate([
+      {
+        $match: {
+          $and: [{ customerID: req.body.userID }],
+        },
+      },
+      { $set: { resObjID: { $toObjectId: '$restaurantID' } } },
+      {
+        $lookup: {
+          from: 'restaurants',
+          localField: 'resObjID',
+          foreignField: '_id',
+          as: 'restaurantRow',
+        },
+      },
+      { $unwind: '$restaurantRow' },
+      {
+        $project: {
+          _id: 1,
+          description: 1,
+          totalCost: 1,
+          dateTime: 1,
+          deliveryStatus: 1,
+          deliveryType: 1,
+          status: 1,
+          customerID: 1,
+          restaurantID: 1,
+          address: 1,
+          title: '$restaurantRow.title',
+        },
+      },
+    ]);
     if (rows.length > 0) {
       const rowData = rows.map((row) => ({
-        id: row.id,
+        // eslint-disable-next-line no-underscore-dangle
+        id: row._id,
         description: row.description,
-        totalCost: row.totalCost,
+        totalCost: parseFloat(row.totalCost.toJSON().$numberDecimal),
         dateTime: row.dateTime,
         deliveryStatus: row.deliveryStatus,
         status: row.status,
@@ -233,7 +264,7 @@ router.post('/createOrder', checkAuth, async (req, res) => {
   }
 });
 
-router.put('/updateFavorites',async (req, res) => {
+router.put('/updateFavorites', async (req, res) => {
   try {
     const updated = req.body.favorites;
     const index = updated.indexOf(req.body.restaurantID);
