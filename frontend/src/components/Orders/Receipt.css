@@ -1,0 +1,143 @@
+.RBasket {
+  position: fixed;
+  top: 0;
+  min-height: 101vh;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 20;
+  overflow-y: scroll;
+}
+
+.RBasket__header {
+  height: 80px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-bottom: 1px solid lightgrey;
+}
+
+.RBasket__main {
+  padding-top: 25px;
+  position: relative;
+  padding-bottom: 30px;
+}
+
+.RBasket__choose {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #1f1f1f;
+  font-family: Roboto, sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.RBasket__select {
+  height: 50px;
+  width: 80px;
+  background: lightgrey;
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid gray;
+}
+
+.RBasket__payment {
+  background: rgb(30, 23, 23);
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px, rgba(0, 0, 0, 0.04) 0px 4px 4px;
+  padding: 20px;
+  width: 100%;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: Roboto, sans-serif;
+  font-size: 18px;
+  margin: 0 auto 10px;
+}
+
+.RBasket__payment-wrapper {
+  background: var(--white);
+  position: sticky;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  cursor: pointer;
+}
+
+.RBasket__amount-dishes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 25px;
+  min-width: 25px;
+  border: 1px solid white;
+}
+
+.RBasket__block {
+  display: flex;
+  height: 20%;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.RBasket__wrapper {
+  background: white;
+  width: 40%;
+  position: absolute;
+  right: 400px;
+  top: 40px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  box-sizing: border-box;
+  font-family: Roboto, sans-serif;
+  font-size: 18px;
+  color: #1f1f1f;
+  z-index: 20;
+  padding-left: 15px;
+  padding-bottom: 0;
+}
+
+.RBasket__close {
+  cursor: pointer;
+}
+
+.CancelButton {
+  margin-top: 20px;
+  margin-left: 1px;
+  margin-bottom: 20px;
+  line-height: 40px;
+  background: #1f1e1e;
+  border-radius: 500px;
+  display: inline-block;
+  width: 150px;
+  text-align: justify;
+  font-family: UberMoveText, sans-serif;
+  cursor: pointer;
+  color: white;
+}
+
+.RBasket__main {
+  position: relative;
+  font-weight: bold;
+  font-family: UberMoveText-Medium, Helvetica, sans-serif;
+  border-bottom: 1px solid lightgrey;
+  border-right: 1px solid lightgrey;
+  border-top: 1px solid lightgrey;
+  border-left: 1px solid lightgrey;
+}
+
+.status {
+  font-weight: bolder;
+  font-size: larger;
+  line-height: 80px;
+  background: #c2bfbf;
+}
+
+.closeIcon {
+  position: absolute;
+  right: 30px;
+  top: 10px;
+  cursor: pointer;
+}
