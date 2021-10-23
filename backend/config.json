@@ -10,5 +10,6 @@
     "password" : "nubereats",
     "database" : "nubereats"
   },
+  "mongoDbConfiguration" : "mongodb+srv://admin:nubereats@cluster0.louvw.mongodb.net/nuberEats?retryWrites=true&w=majority",
   "secret" : "TheIlluminatiHeadQuartersIsInLondon"
 }
