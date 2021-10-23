@@ -281,25 +281,29 @@ const PaginationTable = props => {
                         {allDeliveryStatus[order.deliveryStatus]}
                       </TableCell>
                       <TableCell className="px-01">
-                        <MdIcons.MdModeEdit
-                          title={"Click to view details and edit the status"}
-                          style={{
-                            height: "20px",
-                            width: "40px",
-                            cursor: "pointer"
-                          }}
-                          onClick={() =>
-                            editStatus(
-                              order.description,
-                              order.deliveryType &&
-                                order.deliveryType.toLocaleLowerCase() ==
-                                  "delivery"
-                                ? deliveryOptions
-                                : pickUpOptions,
-                              order.id
-                            )
-                          }
-                        ></MdIcons.MdModeEdit>
+                        {order.deliveryStatus !== "cancelled" ? (
+                          <MdIcons.MdModeEdit
+                            title={"Click to view details and edit the status"}
+                            style={{
+                              height: "20px",
+                              width: "40px",
+                              cursor: "pointer"
+                            }}
+                            onClick={() =>
+                              editStatus(
+                                order.description,
+                                order.deliveryType &&
+                                  order.deliveryType.toLocaleLowerCase() ==
+                                    "delivery"
+                                  ? deliveryOptions
+                                  : pickUpOptions,
+                                order.id
+                              )
+                            }
+                          ></MdIcons.MdModeEdit>
+                        ) : (
+                          "-"
+                        )}
                       </TableCell>
                     </TableRow>
                   );

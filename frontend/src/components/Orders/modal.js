@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import "./modal.css";
 import { allDeliveryStatus } from "../DropDown/CommonDropDownOptions";
 
 export default function Test(props) {
   const basketOrders = JSON.parse(props.order.description);
+
   function totalCount() {
     let total = 0;
     basketOrders.map(basketOrder => {
@@ -21,7 +22,7 @@ export default function Test(props) {
       total += basketOrder.dishInfo.price * basketOrder.count;
       return false;
     });
-    return total;
+    return Math.round(total * 100) / 100;
   }
 
   let money = totalMoney();

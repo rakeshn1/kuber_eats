@@ -31,7 +31,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --env=jest-environment-jsdom-sixteen",
     "eject": "react-scripts eject",
     "rename-index": "node -e \"require('fs').rename('./build/index.html', './build/200.html', (err) => { console.log(err ? err : 'File renamed!') })\"",
     "predeploy": "npm run build && npm run rename-index",
@@ -54,6 +54,9 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.1.2",
+    "jest-environment-jsdom-sixteen": "^2.0.0",
     "prettier": "1.18.2",
     "surge": "^0.21.3"
   },
