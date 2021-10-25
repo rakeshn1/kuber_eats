@@ -179,11 +179,11 @@ class App extends React.PureComponent {
             path="/userProfile"
             exact
             render={() => {
-              if (JSON.parse(localStorage.getItem("isRestaurantLoggedIn"))) {
-                return <NoPermissionPage />;
-              } else {
-                return <UserProfile />;
-              }
+              // if (JSON.parse(localStorage.getItem("isRestaurantLoggedIn"))) {
+              //   return <NoPermissionPage />;
+              // } else {
+              return <UserProfile />;
+              //}
             }}
           />
           <Route
