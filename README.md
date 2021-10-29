@@ -1,6 +1,8 @@
 # kuber_eats
 A prototype of uber eats application
 
+### [Demo](https://youtu.be/yB1u71u5c2U)
+
 Instructions to start
 1. Frontend:
   - Navigate to frontend/ folder
