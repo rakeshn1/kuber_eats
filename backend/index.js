@@ -16,8 +16,11 @@ const passPortConfig = require('./passport');
 
 app.use(express.static(`${__dirname}/public`));
 
-const usersRouter = require('./routes/users');
-const restaurantRouter = require('./routes/restaurants');
+// const usersRouter = require('./routes/users');
+// const restaurantRouter = require('./routes/restaurants');
+
+const usersRouter = require('./kafkaRoutes/users');
+const restaurantRouter = require('./kafkaRoutes/restaurants');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
