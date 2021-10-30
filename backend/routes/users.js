@@ -6,6 +6,7 @@ const Users = require('../models/UsersModel');
 const Orders = require('../models/OrdersModel');
 // const pool = require('../dbConnection');
 const upload = require('../fileUploader');
+const kafka = require('../kafka/client');
 const configurations = require('../config.json');
 
 const router = express.Router();
@@ -151,8 +152,7 @@ router.post('/login', async (req, res) => {
 router.post('/uploadImage', checkAuth, upload.single('image'), async (req, res) => {
   try {
     if (req.file) {
-      const url = `http://${configurations.host}:${configurations.port}/images/${req.file.filename}`;
-      req.file.imageUrl = url;
+      req.file.imageUrl = req.file.location;
       console.log(req.file);
       res.status(200).json(req.file);
     } else {
