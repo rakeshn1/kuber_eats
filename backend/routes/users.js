@@ -198,6 +198,7 @@ router.post('/orders', checkAuth, async (req, res) => {
           customerID: 1,
           restaurantID: 1,
           address: 1,
+          deliveryNote: 1,
           title: '$restaurantRow.title',
         },
       },
@@ -216,6 +217,7 @@ router.post('/orders', checkAuth, async (req, res) => {
         restaurantID: row.restaurantID,
         name: row.title,
         address: row.address,
+        deliveryNote: row.deliveryNote,
       }));
       console.log(rowData);
       console.log('Fetched the user orders from DB');
@@ -246,6 +248,7 @@ router.post('/createOrder', checkAuth, async (req, res) => {
       customerID: req.body.customerID,
       restaurantID: req.body.restaurantID,
       address: req.body.address,
+      deliveryNote: req.body.deliveryNote,
     });
     const rows = await newOrder.save();
     console.log(rows);

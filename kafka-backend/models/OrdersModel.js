@@ -13,6 +13,7 @@ const orderSchema = new Schema({
   restaurantID: { type: 'string' },
   address: { type: 'string' },
   additionalAddresses: { type: 'string' },
+  deliveryNote: { type: 'string' },
 },
 {
   versionKey: false,

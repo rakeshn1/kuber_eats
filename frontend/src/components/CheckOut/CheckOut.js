@@ -19,6 +19,7 @@ function CheckOut(props) {
   ];
   const [addresses, setAddresses] = useState([]);
   const [selectAddresses, setSelectAddresses] = useState({});
+  const [note, setNote] = useState("");
 
   function totalCount() {
     let total = 0;
@@ -103,7 +104,8 @@ function CheckOut(props) {
         restaurantID: basketOrders[0].dishInfo.restaurantID,
         address: selectAddresses.addressLine
           ? selectAddresses
-          : props.user.address
+          : props.user.address,
+        deliveryNote: note
       };
       axios.defaults.headers.common["authorization"] = JSON.parse(
         localStorage.getItem("token")
@@ -128,6 +130,10 @@ function CheckOut(props) {
         text: e
       });
     }
+  }
+
+  function handleChange(e) {
+    setNote(e.target.value);
   }
 
   return (
@@ -209,6 +215,14 @@ function CheckOut(props) {
             <div>
               <span className="coButtonA" onClick={handleAddAddress}>
                 + Add address
+              </span>
+              <span>
+                <textarea
+                  className="deliveryNote"
+                  onChange={handleChange}
+                  value={note}
+                  placeholder="Add a delivery note"
+                />
               </span>
             </div>
           </div>
