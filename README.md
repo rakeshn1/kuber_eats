@@ -13,6 +13,9 @@ Instructions to start
 2. Backend command:
   - Navigate to backend/ folder
   - execute 'npm install'
-  - edit host and port for backend as well as for database
+  - edit host and port for backend as well as for database in config file
   - execute 'node index.js'
   - application starts listening at port 5676
+  - Navigate to kafka-backend/ folder
+  - execute 'npm install'
+  - execute 'node server.js'
