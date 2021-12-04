@@ -7,20 +7,18 @@ const app = express();
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
-const passport = require('passport');
+const { graphqlHTTP } = require('express-graphql');
+// const passport = require('passport');
 const mongoose = require('mongoose');
 const configurations = require('./config.json');
-
+const schema = require('./graphQL/schema');
 // const connectionPool = require('./dbConnection');
-const passPortConfig = require('./passport');
+// const passPortConfig = require('./passport');
 
 app.use(express.static(`${__dirname}/public`));
 
-// const usersRouter = require('./routes/users');
-// const restaurantRouter = require('./routes/restaurants');
-
-const usersRouter = require('./kafkaRoutes/users');
-const restaurantRouter = require('./kafkaRoutes/restaurants');
+const usersRouter = require('./routes/users');
+const restaurantRouter = require('./routes/restaurants');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -42,11 +40,19 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(passport.initialize());
-passPortConfig(passport);
+// app.use(passport.initialize());
+// passPortConfig(passport);
 
 app.use('/users', usersRouter);
 app.use('/restaurants', restaurantRouter);
+
+app.use(
+  '/graphql',
+  graphqlHTTP({
+    schema,
+    graphiql: true,
+  }),
+);
 
 // (async () => {
 //   try {

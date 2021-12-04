@@ -6,7 +6,6 @@ const Users = require('../models/UsersModel');
 const Orders = require('../models/OrdersModel');
 // const pool = require('../dbConnection');
 const upload = require('../fileUploader');
-const kafka = require('../kafka/client');
 const configurations = require('../config.json');
 
 const router = express.Router();
