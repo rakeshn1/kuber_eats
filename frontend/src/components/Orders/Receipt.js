@@ -181,7 +181,12 @@ function Receipt(props) {
         {props.order.deliveryNote && props.order.deliveryNote.length > 0 && (
           <div className="RBasket__main">
             Delivery Note:{" "}
-            <span className="<Mbasket__dish">{props.order.deliveryNote}</span>
+            <span
+              className="<Mbasket__dish"
+              style={{ "overflow-wrap": "anywhere" }}
+            >
+              {props.order.deliveryNote}
+            </span>
           </div>
         )}
         <div className="RBasket__main">

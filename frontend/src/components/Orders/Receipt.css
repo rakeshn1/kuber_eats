@@ -97,6 +97,7 @@
   z-index: 20;
   padding-left: 15px;
   padding-bottom: 0;
+  padding-right: 15px;
 }
 
 .RBasket__close {
@@ -126,6 +127,10 @@
   border-right: 1px solid lightgrey;
   border-top: 1px solid lightgrey;
   border-left: 1px solid lightgrey;
+}
+
+.RBasket__dish {
+  overflow-wrap: anywhere;
 }
 
 .status {
