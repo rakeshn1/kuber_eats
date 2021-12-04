@@ -1,11 +1,11 @@
 kafka-topics --create --topic response_topic --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
 
-kafka-topics --create --topic userAuth --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+kafka-topics.sh --create --topic userAuth --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
 
-kafka-topics --create --topic userOrder --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+kafka-topics.sh --create --topic userOrder --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
 
-kafka-topics --create --topic imageUpload --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+kafka-topics.sh --create --topic imageUpload --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
 
-kafka-topics --create --topic restaurantBasic --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+kafka-topics.sh --create --topic restaurantBasic --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
 
-kafka-topics --create --topic restaurantDishnOrder --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+kafka-topics.sh --create --topic restaurantDishnOrder --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1

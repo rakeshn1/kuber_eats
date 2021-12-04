@@ -27,7 +27,7 @@ describe('/POST login', () => {
   it('it should login a user', (done) => {
     const userCredentials = {
       email: 'rakesh.nagarajappa@sjsu.edu',
-      password: 'q',
+      password: 'Zerodhaacc1',
     };
     chai.request(server)
       .post('/users/login')

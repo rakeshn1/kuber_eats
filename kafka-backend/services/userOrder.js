@@ -58,6 +58,10 @@ const viewUserOrders = async (msg, callback) => {
       res.status = 200;
       res.data = rowData;
       callback(null, res);
+    } else {
+      res.status = 200;
+      res.data = [];
+      callback(null, res);
     }
   } catch (e) {
     console.error('Error fetching orders from DB:');

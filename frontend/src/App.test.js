@@ -10,8 +10,8 @@ import UserOrders from "./components/Orders/UserOrders";
 import Main from "./components/Main/Main";
 import UserProfile from "./components/Profile/UserProfile";
 
-describe("Frontend testing", () => {
-  test("render and check the dashboard page", async () => {
+describe("Ui pages testing", () => {
+  test("Job seeker landing page", async () => {
     render(
       <Provider store={store}>
         <BrowserRouter>
@@ -27,7 +27,7 @@ describe("Frontend testing", () => {
     // expect(await screen.findByText('Taco')).toBeInTheDocument()
     // screen.debug();
   });
-  test("render and check User orders page", () => {
+  test("Company review page", () => {
     render(
       <Provider store={store}>
         {/*<BrowserRouter>*/}
@@ -41,7 +41,37 @@ describe("Frontend testing", () => {
     expect(screen.getByText("Select...")).toBeInTheDocument();
     //screen.debug();
   });
-  test("renders and  verify User profile page", () => {
+  test("Company salaries page", () => {
+    render(
+      <Provider store={store}>
+        <BrowserRouter>
+          <UserProfile />
+        </BrowserRouter>
+      </Provider>
+    );
+
+    expect(screen.getByText("Name")).toBeInTheDocument();
+    expect(screen.getByText("Email")).toBeInTheDocument();
+    expect(screen.getByText("Nick name")).toBeInTheDocument();
+    //screen.debug();
+  });
+
+  test("Sign up page", () => {
+    render(
+      <Provider store={store}>
+        <BrowserRouter>
+          <UserProfile />
+        </BrowserRouter>
+      </Provider>
+    );
+
+    expect(screen.getByText("Name")).toBeInTheDocument();
+    expect(screen.getByText("Email")).toBeInTheDocument();
+    expect(screen.getByText("Nick name")).toBeInTheDocument();
+    //screen.debug();
+  });
+
+  test("Company salaries page", () => {
     render(
       <Provider store={store}>
         <BrowserRouter>

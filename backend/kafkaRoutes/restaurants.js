@@ -15,7 +15,7 @@ const saltRounds = 10;
 const checkAuth = passport.authenticate('jwt', { session: false });
 
 /* GET Restaurants listing. */
-router.get('/', checkAuth, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     req.body.path = 'getAllRestaurants';
     kafka.make_request('restaurantBasic', req.body, (error, result) => {
