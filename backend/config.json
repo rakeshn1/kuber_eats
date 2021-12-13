@@ -10,10 +10,10 @@
     "password" : "nubereats",
     "database" : "nubereats"
   },
-  "mongoDbConfiguration" : "mongodb+srv://admin:nubereats@cluster0.louvw.mongodb.net/nuberEats?retryWrites=true&w=majority",
+  "mongoDbConfiguration" : "",
   "secret" : "TheIlluminatiHeadQuartersIsInLondon",
-  "S3_ACCESS_KEY" : "AKIAZ7QRCVUMYQ7XWEXZ",
-  "S3_SECRET_ACCESS_KEY" : "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",
+  "S3_ACCESS_KEY" : "",
+  "S3_SECRET_ACCESS_KEY" : "",
   "S3_BUCKET_REGION" : "us-east-2",
   "S3_BUCKET_NAME" : "kuber-eats-pictures"
 }
